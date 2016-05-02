@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Eclipse-PatchFragment: true
+Bundle-Name: Eclipse Class Decompiler Win32 Fragment
+Bundle-SymbolicName: org.sf.feeling.decompiler.win32;singleton:=true
+Bundle-Version: 1.0.4.qualifier
+Bundle-Vendor: Chen Chao
+Fragment-Host: org.sf.feeling.decompiler
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ClassPath: decompiler_win32.jar,.
+Eclipse-PlatformFilter: (osgi.os=win32)
+Bundle-Localization: fragment

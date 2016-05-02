@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.sf.feeling.decompiler"
+      label="%featureName"
+      version="1.0.4.qualifier"
+      provider-name="%providerName"
+      plugin="org.sf.feeling.decompiler"
+      os="linux,macosx,win32">
+
+   <description url="%aboutURL">
+      %description
+   </description>
+
+   <copyright url="%copyrightURL">
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <url>
+      <update label="Eclipse Class Decompiler Update" url="http://feeling.sourceforge.net/update"/>
+      <discovery label="%updateSiteName" url="http://feeling.sourceforge.net/update"/>
+   </url>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.workbench"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.eclipse.jdt.debug.ui"/>
+      <import plugin="org.eclipse.debug.ui"/>
+      <import plugin="org.eclipse.jdt.launching"/>
+      <import plugin="org.eclipse.core.expressions"/>
+   </requires>
+
+   <plugin
+         id="org.sf.feeling.decompiler"
+         os="linux,macosx,win32"
+         download-size="0"
+         install-size="0"
+         version="1.0.4.qualifier"
+         unpack="false"/>
+         
+   <plugin
+         id="org.sf.feeling.decompiler.source"
+         os="linux,macosx,win32"
+         download-size="0"
+         install-size="0"
+         version="1.0.4.qualifier"
+         unpack="false"/>
+
+   <plugin
+         id="org.sf.feeling.decompiler.win32"
+         os="win32"
+         download-size="0"
+         install-size="0"
+         version="1.0.4.qualifier"
+         fragment="true"
+         unpack="false"/>
+
+</feature>
+

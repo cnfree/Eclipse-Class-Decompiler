@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+###############################################################################
+# Copyright (c) 2016 Chen Chao(cnfree2000@hotmail.com).
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+#
+# Contributors:
+#  Chen Chao  - initial API and implementation
+###############################################################################
+-->
+<site>
+   <description name="Chen Chao&apos;s Personal Open Source Projects Update" url="http://feeling.sourceforge.net/update">
+      Chen Chao&apos;s Personal Open Source Projects Update
+   </description>
+   <feature url="features/org.sf.feeling.decompiler_1.0.4.qualifier.jar" id="org.sf.feeling.decompiler" version="1.0.4.qualifier" os="linux,macosx,win32">
+      <category name="Eclipse Class Decompiler"/>
+   </feature>
+   <category-def name="Eclipse Class Decompiler" label="Eclipse Class Decompiler">
+      <description>
+         Eclipse Class Decompiler is a plug-in that seamlessly integrates Jad and JD-Core with Eclipse.
+      </description>
+   </category-def>
+</site>
