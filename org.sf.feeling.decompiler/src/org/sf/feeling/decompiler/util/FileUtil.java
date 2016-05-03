@@ -25,6 +25,7 @@ import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -428,5 +429,20 @@ public class FileUtil
 		}
 		is.close( );
 		zos.close( );
+	}
+
+	public static boolean isZipFile( String path )
+	{
+		if ( path == null )
+			return false;
+		try
+		{
+			new ZipFile( path );
+			return true;
+		}
+		catch ( IOException e )
+		{
+			return false;
+		}
 	}
 }

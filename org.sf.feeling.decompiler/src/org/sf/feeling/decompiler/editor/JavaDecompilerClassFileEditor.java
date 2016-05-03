@@ -15,6 +15,7 @@ import java.io.File;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IBuffer;
@@ -182,8 +183,7 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 
 			String packageName = DecompileUtil.getPackageName( source );
 			String classFullName = packageName == null ? storeInput.getName( )
-					: packageName
-							+ "." //$NON-NLS-1$
+					: packageName + "." //$NON-NLS-1$
 							+ storeInput.getName( ).replaceAll( "(?i)\\.class", //$NON-NLS-1$
 									"" ); //$NON-NLS-1$
 
@@ -203,8 +203,7 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 							"org.eclipse.jdt.ui.CompilationUnitEditor" ); //$NON-NLS-1$
 			try
 			{
-				ReflectionUtils.invokeMethod( editor,
-						"setPartName", //$NON-NLS-1$
+				ReflectionUtils.invokeMethod( editor, "setPartName", //$NON-NLS-1$
 						new Class[]{
 							String.class
 						},
@@ -212,8 +211,7 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 							storeInput.getName( )
 						} );
 
-				ReflectionUtils.invokeMethod( editor,
-						"setTitleImage", //$NON-NLS-1$
+				ReflectionUtils.invokeMethod( editor, "setTitleImage", //$NON-NLS-1$
 						new Class[]{
 							Image.class
 						},
@@ -253,11 +251,12 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 			if ( input instanceof InternalClassFileEditorInput )
 			{
 				InternalClassFileEditorInput classInput = (InternalClassFileEditorInput) input;
-				File parent = classInput.getClassFile( )
+
+				IPath relativePath = classInput.getClassFile( )
 						.getParent( )
-						.getPath( )
-						.toFile( );
-				if ( !parent.isFile( ) )
+						.getPath( );
+				String location = UIUtil.getPathLocation( relativePath );
+				if ( !( FileUtil.isZipFile( location ) || FileUtil.isZipFile( relativePath.toOSString( ) ) ) )
 				{
 					doSetInput( new DecompilerClassEditorInput( EFS.getLocalFileSystem( )
 							.getStore( classInput.getClassFile( ).getPath( ) ) ) );

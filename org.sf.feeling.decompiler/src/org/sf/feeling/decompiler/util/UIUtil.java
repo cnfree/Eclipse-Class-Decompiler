@@ -16,6 +16,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -272,4 +277,15 @@ public class UIUtil
 		return Platform.OS_WIN32.equalsIgnoreCase( Platform.getOS( ) );
 	}
 
+	public static String getPathLocation( IPath path )
+	{
+		IWorkspace workspace = ResourcesPlugin.getWorkspace( );
+		IWorkspaceRoot root = workspace.getRoot( );
+		IResource resource = root.findMember( path );
+		if ( resource != null )
+		{
+			return resource.getLocation( ).toOSString( );
+		}
+		return null;
+	}
 }
