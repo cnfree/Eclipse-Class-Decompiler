@@ -12,11 +12,15 @@
 package org.sf.feeling.decompiler;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IFileEditorMapping;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.IPreferenceConstants;
+import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.registry.EditorDescriptor;
 import org.eclipse.ui.internal.registry.EditorRegistry;
 import org.eclipse.ui.internal.registry.FileEditorMapping;
@@ -34,7 +38,7 @@ public class Startup implements IStartup
 				.syncExec( new SetupClassFileAssociationRunnable( ) );
 	}
 
-	private static class SetupClassFileAssociationRunnable implements Runnable
+	public static class SetupClassFileAssociationRunnable implements Runnable
 	{
 
 		public void run( )
@@ -43,33 +47,57 @@ public class Startup implements IStartup
 					.getPreferenceStore( );
 			if ( prefs.getBoolean( JavaDecompilerPlugin.DEFAULT_EDITOR ) )
 			{
-				EditorRegistry registry = (EditorRegistry) PlatformUI
-						.getWorkbench( ).getEditorRegistry( );
+				updateClassDefaultEditor( );
 
-				IFileEditorMapping[] mappings = registry
-						.getFileEditorMappings( );
+				IPreferenceStore store = WorkbenchPlugin.getDefault( )
+						.getPreferenceStore( );
+				store.addPropertyChangeListener(
+						new IPropertyChangeListener( ) {
 
-				// Search Class file editor mappings
-				IFileEditorMapping classNoSource = null;
-				IFileEditorMapping classPlain = null;
-				for ( int i = 0; i < mappings.length; i++ )
+							public void propertyChange(
+									PropertyChangeEvent event )
+							{
+								if ( IPreferenceConstants.RESOURCES
+										.equals( event.getProperty( ) ) )
+								{
+									updateClassDefaultEditor( );
+								}
+							}
+						} );
+
+			}
+		}
+
+		protected void updateClassDefaultEditor( )
+		{
+			EditorRegistry registry = (EditorRegistry) PlatformUI
+					.getWorkbench( ).getEditorRegistry( );
+
+			IFileEditorMapping[] mappings = registry.getFileEditorMappings( );
+
+			IFileEditorMapping classNoSource = null;
+			IFileEditorMapping classPlain = null;
+
+			for ( int i = 0; i < mappings.length; i++ )
+			{
+				IFileEditorMapping mapping = mappings[i];
+				if ( mapping.getExtension( ).equals( "class without source" ) ) //$NON-NLS-1$
 				{
-					IFileEditorMapping mapping = mappings[i];
-					if ( mapping.getExtension( )
-							.equals( "class without source" ) ) //$NON-NLS-1$
-					{
-						classNoSource = mapping;
-					}
-					else if ( mapping.getExtension( ).equals( "class" ) ) //$NON-NLS-1$
-					{
-						classPlain = mapping;
-					}
+					classNoSource = mapping;
 				}
+				else if ( mapping.getExtension( ).equals( "class" ) ) //$NON-NLS-1$
+				{
+					classPlain = mapping;
+				}
+			}
 
-				IFileEditorMapping[] classMappings = new IFileEditorMapping[]{
-						classNoSource, classPlain
-				};
+			IFileEditorMapping[] classMappings = new IFileEditorMapping[]{
+					classNoSource, classPlain
+			};
 
+			boolean needUpdate = checkDefaultEditor( classMappings );
+			if ( needUpdate )
+			{
 				for ( int i = 0; i < classMappings.length; i++ )
 				{
 					IFileEditorMapping mapping = classMappings[i];
@@ -89,6 +117,20 @@ public class Startup implements IStartup
 						(FileEditorMapping[]) mappings );
 				registry.saveAssociations( );
 			}
+		}
+
+		protected boolean checkDefaultEditor(
+				IFileEditorMapping[] classMappings )
+		{
+			for ( int i = 0; i < classMappings.length; i++ )
+			{
+				IFileEditorMapping mapping = classMappings[i];
+				if ( mapping.getDefaultEditor( ) != null
+						&& !mapping.getDefaultEditor( ).getId( ).equals(
+								JavaDecompilerPlugin.EDITOR_ID ) )
+					return true;
+			}
+			return false;
 		}
 	}
 

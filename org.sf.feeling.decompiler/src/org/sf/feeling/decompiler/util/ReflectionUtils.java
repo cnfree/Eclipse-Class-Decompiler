@@ -24,7 +24,9 @@ public class ReflectionUtils
 	{
 		Method method = null;
 
-		for ( Class clazz = object.getClass( ); clazz != Object.class; clazz = clazz.getSuperclass( ) )
+		for ( Class clazz = object
+				.getClass( ); clazz != Object.class; clazz = clazz
+						.getSuperclass( ) )
 		{
 			try
 			{
@@ -45,14 +47,11 @@ public class ReflectionUtils
 	{
 
 		Method method = getDeclaredMethod( object, methodName, parameterTypes );
-
-		method.setAccessible( true );
-
 		try
 		{
 			if ( null != method )
 			{
-
+				method.setAccessible( true );
 				return method.invoke( object, parameters );
 			}
 		}
@@ -92,11 +91,13 @@ public class ReflectionUtils
 
 		Field field = getDeclaredField( object, fieldName );
 
-		field.setAccessible( true );
-
 		try
 		{
-			field.set( object, value );
+			if ( field != null )
+			{
+				field.setAccessible( true );
+				field.set( object, value );
+			}
 		}
 		catch ( Exception e )
 		{
@@ -110,11 +111,13 @@ public class ReflectionUtils
 
 		Field field = getDeclaredField( object, fieldName );
 
-		field.setAccessible( true );
-
 		try
 		{
-			return field.get( object );
+			if ( field != null )
+			{
+				field.setAccessible( true );
+				return field.get( object );
+			}
 
 		}
 		catch ( Exception e )
