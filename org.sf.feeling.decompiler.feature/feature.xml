@@ -45,7 +45,7 @@
          os="linux,macosx,win32"
          download-size="0"
          install-size="0"
-         version="1.0.4.qualifier"
+         version="1.0.5.qualifier"
          unpack="false"/>
 
    <plugin
@@ -53,7 +53,7 @@
          os="linux,macosx,win32"
          download-size="0"
          install-size="0"
-         version="1.0.4.qualifier"
+         version="1.0.5.qualifier"
          unpack="false"/>
 
    <plugin
@@ -61,7 +61,7 @@
          os="win32"
          download-size="0"
          install-size="0"
-         version="1.0.4.qualifier"
+         version="1.0.5.qualifier"
          fragment="true"
          unpack="false"/>
 
