@@ -181,54 +181,58 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 			String source = DecompileUtil.decompiler( storeInput,
 					decompilerType );
 
-			String packageName = DecompileUtil.getPackageName( source );
-			String classFullName = packageName == null ? storeInput.getName( )
-					: packageName + "." //$NON-NLS-1$
-							+ storeInput.getName( ).replaceAll( "(?i)\\.class", //$NON-NLS-1$
-									"" ); //$NON-NLS-1$
-
-			File file = new File( System.getProperty( "java.io.tmpdir" ), //$NON-NLS-1$
-					storeInput.getName( ).replaceAll( "(?i)\\.class", ".java" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-			FileUtil.writeToFile( file, source );
-			file.deleteOnExit( );
-
-			DecompilerClassEditorInput editorInput = new DecompilerClassEditorInput( EFS.getLocalFileSystem( )
-					.getStore( new Path( file.getAbsolutePath( ) ) ) );
-			editorInput.setToolTipText( classFullName );
-
-			IEditorPart editor = PlatformUI.getWorkbench( )
-					.getActiveWorkbenchWindow( )
-					.getActivePage( )
-					.openEditor( editorInput,
-							"org.eclipse.jdt.ui.CompilationUnitEditor" ); //$NON-NLS-1$
-			try
+			if ( source != null )
 			{
-				ReflectionUtils.invokeMethod( editor, "setPartName", //$NON-NLS-1$
-						new Class[]{
-							String.class
-						},
-						new String[]{
-							storeInput.getName( )
-						} );
+				String packageName = DecompileUtil.getPackageName( source );
+				String classFullName = packageName == null ? storeInput.getName( )
+						: packageName + "." //$NON-NLS-1$
+								+ storeInput.getName( )
+										.replaceAll( "(?i)\\.class", //$NON-NLS-1$
+												"" ); //$NON-NLS-1$
 
-				ReflectionUtils.invokeMethod( editor, "setTitleImage", //$NON-NLS-1$
-						new Class[]{
-							Image.class
-						},
-						new Object[]{
-							JavaDecompilerPlugin.getImageDescriptor( "icons/decompiler.png" ) //$NON-NLS-1$
-									.createImage( )
-						} );
+				File file = new File( System.getProperty( "java.io.tmpdir" ), //$NON-NLS-1$
+						storeInput.getName( )
+								.replaceAll( "(?i)\\.class", ".java" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+				FileUtil.writeToFile( file, source );
+				file.deleteOnExit( );
 
-				ReflectionUtils.setFieldValue( editor,
-						"fIsEditingDerivedFileAllowed", //$NON-NLS-1$
-						Boolean.valueOf( false ) );
+				DecompilerClassEditorInput editorInput = new DecompilerClassEditorInput( EFS.getLocalFileSystem( )
+						.getStore( new Path( file.getAbsolutePath( ) ) ) );
+				editorInput.setToolTipText( classFullName );
+
+				IEditorPart editor = PlatformUI.getWorkbench( )
+						.getActiveWorkbenchWindow( )
+						.getActivePage( )
+						.openEditor( editorInput,
+								"org.eclipse.jdt.ui.CompilationUnitEditor" ); //$NON-NLS-1$
+				try
+				{
+					ReflectionUtils.invokeMethod( editor, "setPartName", //$NON-NLS-1$
+							new Class[]{
+								String.class
+							},
+							new String[]{
+								storeInput.getName( )
+							} );
+
+					ReflectionUtils.invokeMethod( editor, "setTitleImage", //$NON-NLS-1$
+							new Class[]{
+								Image.class
+							},
+							new Object[]{
+								JavaDecompilerPlugin.getImageDescriptor( "icons/decompiler.png" ) //$NON-NLS-1$
+										.createImage( )
+							} );
+
+					ReflectionUtils.setFieldValue( editor,
+							"fIsEditingDerivedFileAllowed", //$NON-NLS-1$
+							Boolean.valueOf( false ) );
+				}
+				catch ( Exception e )
+				{
+					JavaDecompilerPlugin.logError( e, "" ); //$NON-NLS-1$
+				}
 			}
-			catch ( Exception e )
-			{
-				JavaDecompilerPlugin.logError( e, "" ); //$NON-NLS-1$
-			}
-
 			Display.getDefault( ).asyncExec( new Runnable( ) {
 
 				public void run( )
@@ -258,8 +262,19 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 				String location = UIUtil.getPathLocation( relativePath );
 				if ( !( FileUtil.isZipFile( location ) || FileUtil.isZipFile( relativePath.toOSString( ) ) ) )
 				{
-					doSetInput( new DecompilerClassEditorInput( EFS.getLocalFileSystem( )
-							.getStore( classInput.getClassFile( ).getPath( ) ) ) );
+					String filePath = UIUtil.getPathLocation( classInput.getClassFile( )
+							.getPath( ) );
+					if ( filePath != null )
+					{
+						DecompilerClassEditorInput editorInput = new DecompilerClassEditorInput( EFS.getLocalFileSystem( )
+								.getStore( new Path( filePath ) ) );
+						doSetInput( editorInput );
+					}
+					else
+					{
+						doSetInput( new DecompilerClassEditorInput( EFS.getLocalFileSystem( )
+								.getStore( classInput.getClassFile( ).getPath( ) ) ) );
+					}
 					return;
 				}
 			}

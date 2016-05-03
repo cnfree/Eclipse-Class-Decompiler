@@ -21,9 +21,9 @@ import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.eclipse.ui.internal.registry.EditorDescriptor;
 import org.eclipse.ui.internal.registry.EditorRegistry;
 import org.eclipse.ui.internal.registry.FileEditorMapping;
+import org.sf.feeling.decompiler.util.ReflectionUtils;
 
 public class Startup implements IStartup
 {
@@ -51,27 +51,24 @@ public class Startup implements IStartup
 
 				IPreferenceStore store = WorkbenchPlugin.getDefault( )
 						.getPreferenceStore( );
-				store.addPropertyChangeListener(
-						new IPropertyChangeListener( ) {
+				store.addPropertyChangeListener( new IPropertyChangeListener( ) {
 
-							public void propertyChange(
-									PropertyChangeEvent event )
-							{
-								if ( IPreferenceConstants.RESOURCES
-										.equals( event.getProperty( ) ) )
-								{
-									updateClassDefaultEditor( );
-								}
-							}
-						} );
+					public void propertyChange( PropertyChangeEvent event )
+					{
+						if ( IPreferenceConstants.RESOURCES.equals( event.getProperty( ) ) )
+						{
+							updateClassDefaultEditor( );
+						}
+					}
+				} );
 
 			}
 		}
 
 		protected void updateClassDefaultEditor( )
 		{
-			EditorRegistry registry = (EditorRegistry) PlatformUI
-					.getWorkbench( ).getEditorRegistry( );
+			EditorRegistry registry = (EditorRegistry) PlatformUI.getWorkbench( )
+					.getEditorRegistry( );
 
 			IFileEditorMapping[] mappings = registry.getFileEditorMappings( );
 
@@ -107,27 +104,53 @@ public class Startup implements IStartup
 						if ( editor.getId( )
 								.equals( JavaDecompilerPlugin.EDITOR_ID ) )
 						{
-							( (FileEditorMapping) mapping ).setDefaultEditor(
-									(EditorDescriptor) editor );
+							try
+							{
+								ReflectionUtils.invokeMethod( (FileEditorMapping) mapping,
+										"setDefaultEditor",
+										new Class[]{
+											Class.forName( "org.eclipse.ui.IEditorDescriptor" )
+										},
+										new Object[]{
+											editor
+										} );
+							}
+							catch ( ClassNotFoundException e )
+							{
+							}
+							
+							try
+							{
+								ReflectionUtils.invokeMethod( (FileEditorMapping) mapping,
+										"setDefaultEditor",
+										new Class[]{
+											Class.forName( "org.eclipse.ui.internal.registry.EditorDescriptor" )
+										},
+										new Object[]{
+											editor
+										} );
+							}
+							catch ( ClassNotFoundException e )
+							{
+							}
 						}
 					}
 				}
 
-				registry.setFileEditorMappings(
-						(FileEditorMapping[]) mappings );
+				registry.setFileEditorMappings( (FileEditorMapping[]) mappings );
 				registry.saveAssociations( );
 			}
 		}
 
-		protected boolean checkDefaultEditor(
-				IFileEditorMapping[] classMappings )
+		protected boolean checkDefaultEditor( IFileEditorMapping[] classMappings )
 		{
 			for ( int i = 0; i < classMappings.length; i++ )
 			{
 				IFileEditorMapping mapping = classMappings[i];
 				if ( mapping.getDefaultEditor( ) != null
-						&& !mapping.getDefaultEditor( ).getId( ).equals(
-								JavaDecompilerPlugin.EDITOR_ID ) )
+						&& !mapping.getDefaultEditor( )
+								.getId( )
+								.equals( JavaDecompilerPlugin.EDITOR_ID ) )
 					return true;
 			}
 			return false;
