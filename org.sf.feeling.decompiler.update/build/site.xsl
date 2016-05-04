@@ -5,12 +5,12 @@
 <xsl:for-each select="site">
 	<html>
 	<head>
-	<title>cnfree's Projects Update</title>
+	<title>Chen Chao's Projects Update</title>
 	<style>@import url("http://feeling.sourceforge.net/update/site.css");</style>
 	</head>
 	<body>
-	<h1 class="title">cnfree's Projects Update</h1>
-	<p class="bodyText"><xsl:value-of select="description"/></p>
+	<h1 class="title">Chen Chao's Projects Update</h1>
+	<p class="bodyText"><xsl:value-of select="description"/> Any question, please mail to <a href=mailto:cnfree2000@hotmail.com>cnfree2000@hotmail.com</a></p>
 	<table width="100%" border="0" cellspacing="1" cellpadding="2">
 	<xsl:for-each select="category-def">
 		<xsl:sort select="@label" order="ascending" case-order="upper-first"/>
