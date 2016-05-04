@@ -1,10 +1,10 @@
 <STYLE type="text/css">
 td.spacer {padding-bottom: 10px; padding-top: 10px;}
 .title { font-family: sans-serif; color: #99AACC;}
-.bodyText { font-family: sans-serif; font-size: 9pt; color:#000000;  }
-.sub-header { font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 9pt; color: white;}
-.log-text {font-family: sans-serif; font-style: normal; font-weight: lighter; font-size: 8pt; color:black;}
-.big-header { font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 9pt; color: white; border-top:10px solid white;}
+.bodyText { font-family: sans-serif; font-size: 10pt; color:#000000;  }
+.sub-header { font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 10pt; color: white;}
+.log-text {font-family: sans-serif; font-style: normal; font-weight: lighter; font-size: 9pt; color:black;}
+.big-header { font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 10pt; color: white; border-top:11px solid white;}
 .light-row {background:#FFFFFF}
 .dark-row {background:#EEEEFF}
 .header {background:#99AADD}
