@@ -10,7 +10,7 @@
 	</head>
 	<body>
 	<h1 class="title">Chen Chao's Projects Update</h1>
-	<p class="bodyText"><xsl:value-of select="description"/> Any question, please mail to <a href=mailto:cnfree2000@hotmail.com>cnfree2000@hotmail.com</a></p>
+	<p class="bodyText"><xsl:value-of select="description"/> Any question, please mail to <a href="mailto:cnfree2000@hotmail.com">cnfree2000@hotmail.com</a>. </p>
 	<table width="100%" border="0" cellspacing="1" cellpadding="2">
 	<xsl:for-each select="category-def">
 		<xsl:sort select="@label" order="ascending" case-order="upper-first"/>
