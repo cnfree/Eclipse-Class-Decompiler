@@ -10,18 +10,19 @@
 	</head>
 	<body>
 	<h1 class="title">Chen Chao's Projects Update</h1>
-	<p class="bodyText"><xsl:value-of select="description"/> Any question, please mail to <a href="mailto:cnfree2000@hotmail.com">cnfree2000@hotmail.com</a>. </p>
-	<table width="100%" border="0" cellspacing="1" cellpadding="2">
+	<p class="bodyText"><xsl:value-of select="description"/> Any question, please mail to <a href="mailto:cnfree2000@hotmail.com">cnfree2000@hotmail.com</a>. <br/><br/></p>
 	<xsl:for-each select="category-def">
 		<xsl:sort select="@label" order="ascending" case-order="upper-first"/>
 		<xsl:sort select="@name" order="ascending" case-order="upper-first"/>
+		<p class="bodyText"><b><xsl:value-of select="@name"/></b> : <xsl:value-of select="description"/></p>
+		<table width="100%" border="0" cellspacing="1" cellpadding="2">
 	<xsl:if test="count(key('cat',@name)) != 0">
 			<tr class="header">
-				<td class="sub-header" width="30%">
-					<xsl:value-of select="@name"/>
+				<td class="sub-header" width="30%" style="text-indent: 10px;">
+					Feature Name
 				</td>
-				<td class="sub-header" width="70%">
-					<xsl:value-of select="@label"/>
+				<td class="sub-header" width="70%" style="text-indent: 10px;">
+					Feature Environments
 				</td>
 			</tr>
 			<xsl:for-each select="key('cat',@name)">
@@ -79,13 +80,16 @@
 			</xsl:for-each>
 			<tr><td class="spacer"><br/></td><td class="spacer"><br/></td></tr>
 		</xsl:if>
+		</table>
 	</xsl:for-each>
 	<xsl:if test="count(feature)  &gt; count(feature/category)">
+	<table width="100%" border="0" cellspacing="1" cellpadding="2">
 	<tr class="header">
 		<td class="sub-header" colspan="2">
 		Uncategorized
 		</td>
 	</tr>
+	</table>
 	</xsl:if>
 	<xsl:choose>
 	<xsl:when test="function-available('msxsl:node-set')">
@@ -98,6 +102,7 @@
 		</xsl:for-each>
 	   </xsl:variable>
 	   <xsl:variable name="myNodeSet" select="msxsl:node-set($rtf-nodes)/*"/>
+	   <table width="100%" border="0" cellspacing="1" cellpadding="2">
 	<xsl:for-each select="$myNodeSet">
 	<tr>
 		<xsl:choose>
@@ -149,8 +154,10 @@
 		</td>
 	</tr>
 	</xsl:for-each>
+	</table>
 	</xsl:when>
 	<xsl:otherwise>
+	<table width="100%" border="0" cellspacing="1" cellpadding="2">
 	<xsl:for-each select="feature[not(category)]">
 	<xsl:sort select="@id" order="ascending" case-order="upper-first"/>
 	<xsl:sort select="@version" order="ascending" />
@@ -204,9 +211,9 @@
 		</td>
 	</tr>
 	</xsl:for-each>
+	</table>
 	</xsl:otherwise>
 	</xsl:choose>
-	</table>
 	</body>
 	</html>
 </xsl:for-each>
