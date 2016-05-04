@@ -4,91 +4,40 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style>@import url("site.css");</style>
 <script type="text/javascript">
-	var returnval = 0;
-	var stylesheet, xmlFile, cache, doc;
+	var xhttp;
 	function init(){
-		// NSCP 7.1+ / Mozilla 1.4.1+ / Safari
-		// Use the standard DOM Level 2 technique, if it is supported
-		if (document.implementation && document.implementation.createDocument) {
-			xmlFile = document.implementation.createDocument("", "", null);
-			stylesheet = document.implementation.createDocument("", "", null);
-			if (xmlFile.load){
-				xmlFile.load("site.xml");
-				stylesheet.load("site.xsl");
-			} else {
-				var xmlhttp = getXHR();
-				xmlhttp.open("GET","site.xml",false);
-				xmlhttp.send(null);
-				xmlFile = xmlhttp.responseXML.documentElement;
-				xmlhttp.open("GET","site.xsl",false);
-				xmlhttp.send(null);
-				stylesheet = xmlhttp.responseXML.documentElement;
-				transform();
-				transform();
-			}
-			xmlFile.addEventListener("load", transform, false);
-			stylesheet.addEventListener("load", transform, false);
+		var xml = loadXMLDoc("site.xml");
+		var xsl = loadXMLDoc("site.xsl");
+		
+		if (window.ActiveXObject || "ActiveXObject" in window){
+		    document.getElementById("data").innerHTML = xml.transformNode(xsl.documentElement);
 		}
-		//IE 6.0+ solution
-		else if (window.ActiveXObject) {
-			xmlFile = new ActiveXObject("msxml2.DOMDocument.3.0");
-			xmlFile.async = false;
-			xmlFile.load("site.xml");
-			stylesheet = new ActiveXObject("msxml2.FreeThreadedDOMDocument.3.0");
-			stylesheet.async = false;
-			stylesheet.load("sqlFormatsite.xsl");
-			cache = new ActiveXObject("msxml2.XSLTemplate.3.0");
-			cache.stylesheet = stylesheet;
-			transformData();
+		else if (document.implementation && document.implementation.createDocument)
+		{
+			var processor = new XSLTProcessor();
+			processor.importStylesheet(xsl); 
+			var doc = processor.transformToDocument(xml);
+			document.getElementById("data").innerHTML = doc.documentElement.innerHTML;
 		}
 	}
-	function getXHR(){
-		if(window.XMLHttpRequest){
-			return new XMLHttpRequest();
-        }else{
-            var msxml = ['MSXML2.XMLHTTP.5.0', 'MSXML2.XMLHTTP.4.0', 'MSXML2.XMLHTTP.3.0', 'MSXML2.XMLHTTP', 'Microsoft.XMLHTTP'];
-            for(var i = 0; i < msxml.length; ++i){
-            	try{
-            		return new ActiveXObject(msxml[i]);
-            	}catch(e){}
-            }
-		}
-    }
-	// separate transformation function for IE 6.0+
-	function transformData(){
-		var processor = cache.createProcessor();
-		processor.input = xmlFile;
-		processor.transform();
-		data.innerHTML = processor.output;
-	}
-	// separate transformation function for NSCP 7.1+ and Mozilla 1.4.1+ 
-	function transform(){
-		returnval+=1;
-		if (returnval==2){
-			if(window.ActiveXObject || window.ActiveXObject !== undefined)
-			{
-				try
-				{
-					var xmlDoc = new ActiveXObject('Msxml2.DOMDocument');
-					var xslDoc = new ActiveXObject('Msxml2.DOMDocument'); 
-					xmlDoc.async = false;
-					xslDoc.async = false;  
-					xmlDoc.load("site.xml");
-					xslDoc.load("site.xsl");
-					document.getElementById("data").innerHTML = xmlDoc.documentElement.transformNode(xslDoc);
-				}
-				catch(e)
-				{
-					alert("Unable to do xml/xsl processing");
-				}
-			}
-			else
-			{
-				var processor = new XSLTProcessor();
-				processor.importStylesheet(stylesheet); 
-				doc = processor.transformToDocument(xmlFile);
-				document.getElementById("data").innerHTML = doc.documentElement.innerHTML;
-			}
+	
+	function loadXMLDoc(url) {
+		if (typeof XMLHttpRequest !== 'undefined')
+		{
+		    var xhr = new XMLHttpRequest();
+		    xhr.open('GET', url, false);
+		    try { xhr.responseType = 'msxml-document'; } catch(e){}
+		    xhr.send();
+		    return xhr.responseXML;
+		 }
+		 else {
+		    try {
+		      var xhr = new ActiveXObject('Msxml2.XMLHTTP.3.0');
+		      xhr.open('GET', url, false);
+		      xhr.send();
+		      return xhr.responseXML;
+		    }
+		    catch (e) {}
 		}
 	}
 </script>
