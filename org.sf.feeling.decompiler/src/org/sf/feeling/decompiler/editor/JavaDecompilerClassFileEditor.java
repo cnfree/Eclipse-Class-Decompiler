@@ -30,6 +30,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
@@ -171,7 +172,13 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 
 	protected void doSetInput( IEditorInput input ) throws CoreException
 	{
-		if ( input instanceof FileStoreEditorInput )
+		if ( input instanceof IFileEditorInput )
+		{
+			doSetInput( new DecompilerClassEditorInput( EFS.getLocalFileSystem( )
+					.getStore( new Path( UIUtil.getPathLocation( ( (IFileEditorInput) input ).getStorage( )
+							.getFullPath( ) ) ) ) ) );
+		}
+		else if ( input instanceof FileStoreEditorInput )
 		{
 
 			FileStoreEditorInput storeInput = (FileStoreEditorInput) input;
