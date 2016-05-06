@@ -174,9 +174,17 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 	{
 		if ( input instanceof IFileEditorInput )
 		{
-			doSetInput( new DecompilerClassEditorInput( EFS.getLocalFileSystem( )
-					.getStore( new Path( UIUtil.getPathLocation( ( (IFileEditorInput) input ).getStorage( )
-							.getFullPath( ) ) ) ) ) );
+			String filePath = UIUtil.getPathLocation( ( (IFileEditorInput) input ).getStorage( )
+					.getFullPath( ) );
+			if ( filePath == null || !new File( filePath ).exists( ) )
+			{
+				super.doSetInput( input );
+			}
+			else
+			{
+				doSetInput( new DecompilerClassEditorInput( EFS.getLocalFileSystem( )
+						.getStore( new Path( filePath ) ) ) );
+			}
 		}
 		else if ( input instanceof FileStoreEditorInput )
 		{
