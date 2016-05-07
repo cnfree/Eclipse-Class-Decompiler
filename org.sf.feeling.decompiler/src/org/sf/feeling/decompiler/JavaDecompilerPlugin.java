@@ -26,6 +26,7 @@ import org.sf.feeling.decompiler.editor.DecompilerType;
 import org.sf.feeling.decompiler.editor.JavaDecompilerBufferManager;
 import org.sf.feeling.decompiler.jad.JadDecompiler;
 import org.sf.feeling.decompiler.jad.JadLoader;
+import org.sf.feeling.decompiler.util.SortMemberUtil;
 
 public class JavaDecompilerPlugin extends AbstractUIPlugin
 		implements IPropertyChangeListener
@@ -128,6 +129,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 	{
 		super.start( context );
 		getPreferenceStore( ).addPropertyChangeListener( this );
+		SortMemberUtil.deleteDecompilerProject( );
 	}
 
 	public void stop( BundleContext context ) throws Exception

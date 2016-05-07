@@ -13,6 +13,7 @@ package org.sf.feeling.decompiler.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -39,7 +40,8 @@ public class FileUtil
 		{
 			if ( !file.getParentFile( ).exists( ) )
 				file.getParentFile( ).mkdirs( );
-			PrintWriter out = new PrintWriter( new OutputStreamWriter( new FileOutputStream( file ) ) );
+			PrintWriter out = new PrintWriter(
+					new OutputStreamWriter( new FileOutputStream( file ) ) );
 			out.print( string );
 			out.close( );
 		}
@@ -101,9 +103,10 @@ public class FileUtil
 				}
 				catch ( IOException f )
 				{
-					Logger.getLogger( FileUtil.class.getName( ) )
-							.log( Level.WARNING, "Close input stream failed.", //$NON-NLS-1$
-									f );
+					Logger.getLogger( FileUtil.class.getName( ) ).log(
+							Level.WARNING,
+							"Close input stream failed.", //$NON-NLS-1$
+							f );
 				}
 			}
 		}
@@ -168,13 +171,14 @@ public class FileUtil
 					desName = desDirectory
 							+ File.separator
 							+ allFile[currentFile].getName( );
-					if ( filter == null || filter.accept( new File( srcName ) ) )
+					if ( filter == null
+							|| filter.accept( new File( srcName ) ) )
 						copyFile( srcName, desName );
 				}
 				else
 				{
-					if ( !copyDirectory( allFile[currentFile].getPath( )
-							.toString( ),
+					if ( !copyDirectory(
+							allFile[currentFile].getPath( ).toString( ),
 							desDirectory
 									+ File.separator
 									+ allFile[currentFile].getName( )
@@ -298,8 +302,8 @@ public class FileUtil
 		deleteDirectory( monitor, directory, directory, step );
 	}
 
-	public static void cleanDirectory( IProgressMonitor monitor,
-			File directory, File base, int step ) throws IOException
+	public static void cleanDirectory( IProgressMonitor monitor, File directory,
+			File base, int step ) throws IOException
 	{
 		if ( !directory.exists( ) )
 		{
@@ -357,12 +361,13 @@ public class FileUtil
 		{
 			monitor.subTask( file.getAbsolutePath( )
 					.substring( base.getAbsolutePath( ).length( )
-							+ new Long( System.currentTimeMillis( ) ).toString( )
-									.length( )
+							+ new Long( System.currentTimeMillis( ) )
+									.toString( ).length( )
 							+ 2 ) );
 			if ( !file.exists( ) )
 			{
-				throw new FileNotFoundException( "File does not exist: " + file ); //$NON-NLS-1$
+				throw new FileNotFoundException(
+						"File does not exist: " + file ); //$NON-NLS-1$
 			}
 			if ( !file.delete( ) )
 			{
@@ -374,8 +379,8 @@ public class FileUtil
 
 	public static void recursiveZip( IProgressMonitor monitor,
 			ZipOutputStream zos, File file, final String path,
-			FileFilter filter, int step ) throws FileNotFoundException,
-			IOException
+			FileFilter filter, int step )
+			throws FileNotFoundException, IOException
 	{
 		if ( file.isDirectory( ) )
 		{
@@ -402,7 +407,8 @@ public class FileUtil
 			ZipEntry ze = new ZipEntry( path );
 			ze.setSize( file.length( ) );
 			zos.putNextEntry( ze );
-			BufferedInputStream fis = new BufferedInputStream( new FileInputStream( file ) );
+			BufferedInputStream fis = new BufferedInputStream(
+					new FileInputStream( file ) );
 			int i = 0;
 			while ( ( i = fis.read( bt ) ) != -1 )
 			{
@@ -414,7 +420,8 @@ public class FileUtil
 
 	public static void zipFile( File file, String zipFile ) throws Exception
 	{
-		ZipOutputStream zos = new ZipOutputStream( new FileOutputStream( zipFile ) );
+		ZipOutputStream zos = new ZipOutputStream(
+				new FileOutputStream( zipFile ) );
 		ZipEntry ze = null;
 		byte[] buf = new byte[1024];
 		int readLen = 0;
@@ -444,5 +451,35 @@ public class FileUtil
 		{
 			return false;
 		}
+	}
+
+	public static String getContent( File file )
+	{
+		if ( file == null || !file.exists( ) )
+			return null;
+		try
+		{
+			ByteArrayOutputStream out = new ByteArrayOutputStream( 4096 );
+			byte[] tmp = new byte[4096];
+			InputStream is = new BufferedInputStream(
+					new FileInputStream( file ) );
+			while ( true )
+			{
+				int r = is.read( tmp );
+				if ( r == -1 )
+					break;
+				out.write( tmp, 0, r );
+			}
+			byte[] bytes = out.toByteArray( );
+			is.close( );
+			out.close( );
+			String content = new String( bytes );
+			return content.trim( );
+		}
+		catch ( Exception e )
+		{
+			e.printStackTrace( );
+		}
+		return null;
 	}
 }
