@@ -73,7 +73,7 @@ public class SortMemberUtil
 					.getFile( className )
 					.getLocation( )
 					.toString( )
-					.replaceAll( "(?i)\\.class", ".java" ) );
+					.replaceAll( "(?i)\\.class", ".java" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
 			if ( !locationFile.getParentFile( ).exists( ) )
 				locationFile.getParentFile( ).mkdirs( );
@@ -86,7 +86,7 @@ public class SortMemberUtil
 
 			ICompilationUnit iCompilationUnit = packageFragment
 					.getCompilationUnit(
-							className.replaceAll( "(?i)\\.class", ".java" ) );
+							className.replaceAll( "(?i)\\.class", ".java" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 			iCompilationUnit.getResource( )
 					.setLocalTimeStamp( new Date( ).getTime( ) );
 			iCompilationUnit.becomeWorkingCopy( null );
@@ -114,7 +114,7 @@ public class SortMemberUtil
 	public static void deleteDecompilerProject( )
 	{
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace( ).getRoot( );
-		IProject project = root.getProject( ".decompiler" );
+		IProject project = root.getProject( ".decompiler" ); //$NON-NLS-1$
 		if ( project != null && project.exists( ) )
 		{
 			try
@@ -134,7 +134,7 @@ public class SortMemberUtil
 			return decompilerSourceFolder;
 
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace( ).getRoot( );
-		IProject project = root.getProject( ".decompiler" );
+		IProject project = root.getProject( ".decompiler" ); //$NON-NLS-1$
 		if ( project == null )
 			return null;
 		if ( !project.exists( ) )

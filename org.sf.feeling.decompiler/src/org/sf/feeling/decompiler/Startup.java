@@ -107,9 +107,9 @@ public class Startup implements IStartup
 							try
 							{
 								ReflectionUtils.invokeMethod( (FileEditorMapping) mapping,
-										"setDefaultEditor",
+										"setDefaultEditor", //$NON-NLS-1$
 										new Class[]{
-											Class.forName( "org.eclipse.ui.IEditorDescriptor" )
+											Class.forName( "org.eclipse.ui.IEditorDescriptor" ) //$NON-NLS-1$
 										},
 										new Object[]{
 											editor
@@ -122,9 +122,9 @@ public class Startup implements IStartup
 							try
 							{
 								ReflectionUtils.invokeMethod( (FileEditorMapping) mapping,
-										"setDefaultEditor",
+										"setDefaultEditor", //$NON-NLS-1$
 										new Class[]{
-											Class.forName( "org.eclipse.ui.internal.registry.EditorDescriptor" )
+											Class.forName( "org.eclipse.ui.internal.registry.EditorDescriptor" ) //$NON-NLS-1$
 										},
 										new Object[]{
 											editor
