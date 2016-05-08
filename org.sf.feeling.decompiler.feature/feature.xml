@@ -21,8 +21,8 @@
    </license>
 
    <url>
-      <update label="Eclipse Class Decompiler Updates" url="http://rawgit.com/cnfree/Eclipse-Class-Decompiler/master/update/"/>
-      <discovery label="%updateSiteName" url="http://rawgit.com/cnfree/Eclipse-Class-Decompiler/master/update/"/>
+      <update label="Eclipse Class Decompiler Updates" url="http://cnfree.github.io/Eclipse-Class-Decompiler/update/"/>
+      <discovery label="%updateSiteName" url="http://cnfree.github.io/Eclipse-Class-Decompiler/update/"/>
    </url>
 
    <requires>
