@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <description name="Chen Chao&apos;s Projects Update" url="https://cdn.rawgit.com/cnfree/Eclipse-Class-Decompiler/master/update/">
+   <description name="Chen Chao&apos;s Projects Update" url="https://rawgit.com/cnfree/Eclipse-Class-Decompiler/master/update/">
       Chen Chao&apos;s projects update site.
    </description>
    <feature url="features/org.sf.feeling.decompiler_1.0.6.qualifier.jar" id="org.sf.feeling.decompiler" version="1.0.6.qualifier" os="linux,macosx,win32" arch="x86,x86_64">
