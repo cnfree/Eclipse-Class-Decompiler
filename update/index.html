@@ -1,0 +1,87 @@
+<html>
+<head>
+<title>Chen Chao's Projects Update</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style>@import url("site.css");</style>
+<script type="text/javascript">
+	var stylesheet, xmlFile, cache, doc;
+	function init(){
+		var xml = loadXMLDoc("site.xml");
+		var xsl = loadXMLDoc("site.xsl");
+		
+		if (window.ActiveXObject || "ActiveXObject" in window){
+			try{
+				 document.getElementById("data").innerHTML = xml.transformNode(xsl.documentElement);
+			}
+		    catch(e){
+		    	displayAtIE6Plus();
+		    }
+		}
+		else if (window.ActiveXObject){
+			displayAtIE6Plus();
+		}
+		else if (document.implementation && document.implementation.createDocument)
+		{
+			var processor = new XSLTProcessor();
+			processor.importStylesheet(xsl); 
+			doc = processor.transformToDocument(xml);
+			document.getElementById("data").innerHTML = doc.documentElement.innerHTML;
+		}
+	}
+	
+	function displayAtIE6Plus(){
+		xmlFile = new ActiveXObject("msxml2.DOMDocument.3.0");
+		xmlFile.async = false;
+		xmlFile.load("site.xml");
+		stylesheet = new ActiveXObject("msxml2.FreeThreadedDOMDocument.3.0");
+		stylesheet.async = false;
+		stylesheet.load("site.xsl");
+		cache = new ActiveXObject("msxml2.XSLTemplate.3.0");
+		cache.stylesheet = stylesheet;
+		transformData();
+	}
+	
+	function loadXMLDoc(url) {
+		if (typeof XMLHttpRequest !== 'undefined')
+		{
+		    var xhr = new XMLHttpRequest();
+		    xhr.open('GET', url, false);
+		    try { xhr.responseType = 'msxml-document'; } catch(e){}
+		    xhr.send();
+		    return xhr.responseXML;
+		 }
+		 else {
+		    try {
+		      var xhr = new ActiveXObject('Msxml2.XMLHTTP.3.0');
+		      xhr.open('GET', url, false);
+		      xhr.send();
+		      return xhr.responseXML;
+		    }
+		    catch (e) {}
+		}
+	}
+	
+	// separate transformation function for IE 6.0+
+	function transformData(){
+		var processor = cache.createProcessor();
+		processor.input = xmlFile;
+		processor.transform();
+		data.innerHTML = processor.output;
+	}
+	// separate transformation function for NSCP 7.1+ and Mozilla 1.4.1+ 
+	function transform(){
+		returnval+=1;
+		if (returnval==2){
+			var processor = new XSLTProcessor();
+			processor.importStylesheet(stylesheet); 
+			doc = processor.transformToDocument(xmlFile);
+			document.getElementById("data").innerHTML = doc.documentElement.innerHTML;
+		}
+	}
+</script>
+</head>
+<body onload="init();">
+<!--[insert static HTML here]-->
+<div id="data"><!-- this is where the transformed data goes --></div>
+</body>
+</html>

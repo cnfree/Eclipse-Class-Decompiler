@@ -1,0 +1,12 @@
+<STYLE type="text/css">
+td.spacer {padding-bottom: 10px; padding-top: 10px;}
+.title { color: #99AACC;}
+.bodyText { font-size: 12pt; color:#000000; font-family: Times New Roman; }
+.sub-header { font-style: normal; font-weight: bold; font-size: 12pt; color: white; font-family: Times New Roman;}
+.log-text {font-style: normal; font-weight: lighter; font-size: 11pt; color:black ; font-family: Times New Roman;}
+.big-header { font-style: normal; font-weight: bold; font-size: 12pt; color: white; border-top:12px solid white; font-family: Times New Roman;}
+.light-row {background:#FFFFFF}
+.dark-row {background:#EEEEFF}
+.header {background:#99AADD}
+#indent {word-wrap : break-word;width :300px;text-indent:10px;}
+</STYLE>
