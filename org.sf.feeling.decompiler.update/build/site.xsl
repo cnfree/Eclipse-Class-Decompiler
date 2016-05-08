@@ -5,11 +5,11 @@
 <xsl:for-each select="site">
 	<html>
 	<head>
-	<title>Chen Chao's Projects Update</title>
-	<style>@import url("https://rawgit.com/cnfree/Eclipse-Class-Decompiler/master/update/site.css");</style>
+	<title>Chen Chao's Eclipse Class Decompiler Project Updates</title>
+	<style>@import url("site.css");</style>
 	</head>
 	<body>
-	<h1 class="title">Chen Chao's Projects Update</h1>
+	<h1 class="title">Chen Chao's Eclipse Class Decompiler Project Updates</h1>
 	<p class="bodyText"><xsl:value-of select="description"/> Any question, please mail to <a href="mailto:cnfree2000@hotmail.com">cnfree2000@hotmail.com</a>. <br/><br/></p>
 	<xsl:for-each select="category-def">
 		<xsl:sort select="@label" order="ascending" case-order="upper-first"/>
