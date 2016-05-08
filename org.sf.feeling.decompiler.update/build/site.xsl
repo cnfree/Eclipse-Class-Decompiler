@@ -6,7 +6,7 @@
 	<html>
 	<head>
 	<title>Chen Chao's Projects Update</title>
-	<style>@import url("http://feeling.sourceforge.net/update/site.css");</style>
+	<style>@import url("https://rawgit.com/cnfree/Eclipse-Class-Decompiler/master/update/site.css");</style>
 	</head>
 	<body>
 	<h1 class="title">Chen Chao's Projects Update</h1>
