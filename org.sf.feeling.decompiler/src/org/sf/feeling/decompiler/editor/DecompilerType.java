@@ -16,4 +16,5 @@ public interface DecompilerType
 
 	String JAD = "Jad"; //$NON-NLS-1$
 	String JDCORE = "JD-Core"; //$NON-NLS-1$
+	String CFR = "Class File Reader"; //$NON-NLS-1$
 }

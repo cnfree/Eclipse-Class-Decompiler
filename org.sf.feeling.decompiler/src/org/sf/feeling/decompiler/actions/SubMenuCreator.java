@@ -54,7 +54,8 @@ public class SubMenuCreator implements IMenuCreator
 
 		menuMgr.add( new DecompileWithJadAction( ) );
 		menuMgr.add( new DecompileWithJDCoreAction( ) );
-		
+		menuMgr.add( new DecompileWithCfrAction( ) );
+
 		IContributionItem[] items = menuMgr.getItems( );
 		for ( int i = 0; i < items.length; i++ )
 		{
@@ -62,7 +63,8 @@ public class SubMenuCreator implements IMenuCreator
 			IContributionItem newItem = item;
 			if ( item instanceof ActionContributionItem )
 			{
-				newItem = new ActionContributionItem( ( (ActionContributionItem) item ).getAction( ) );
+				newItem = new ActionContributionItem(
+						( (ActionContributionItem) item ).getAction( ) );
 			}
 			newItem.fill( menu, -1 );
 		}
@@ -105,7 +107,8 @@ public class SubMenuCreator implements IMenuCreator
 
 			dropDownMenuMgr.add( new DecompileWithJadAction( ) );
 			dropDownMenuMgr.add( new DecompileWithJDCoreAction( ) );
-
+			dropDownMenuMgr.add( new DecompileWithCfrAction( ) );
+			
 			dropDownMenuMgr.add( new Separator( ) );
 
 			List list = UIUtil.getExportSelections( );
@@ -119,7 +122,8 @@ public class SubMenuCreator implements IMenuCreator
 			}
 
 			dropDownMenuMgr.add( new Separator( ) );
-			dropDownMenuMgr.add( new PreferenceActionContributionItem( new DecompilerPeferenceAction( ) ) );
+			dropDownMenuMgr.add( new PreferenceActionContributionItem(
+					new DecompilerPeferenceAction( ) ) );
 		}
 	}
 }

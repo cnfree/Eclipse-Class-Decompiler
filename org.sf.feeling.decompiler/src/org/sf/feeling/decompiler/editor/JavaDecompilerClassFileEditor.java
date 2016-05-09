@@ -103,6 +103,11 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 							src = SourceMapperFactory.getSourceMapper( DecompilerType.JAD )
 									.findSource( cf.getType( ) );
 						}
+						else if ( DecompilerType.CFR.equals( decompilerType ) )
+						{
+							src = SourceMapperFactory.getSourceMapper( DecompilerType.CFR )
+									.findSource( cf.getType( ) );
+						}
 					}
 					if ( src == null )
 					{

@@ -19,7 +19,7 @@
             icon="icons/decompiler.png"
             extensions="class"
             class="org.sf.feeling.decompiler.editor.JavaDecompilerClassFileEditor"
-            id="net.sf.feeling.decompiler.ClassFileEditor"
+            id="org.sf.feeling.decompiler.ClassFileEditor"
             filenames="*.class without source">
             <contentTypeBinding
                contentTypeId="org.eclipse.jdt.core.javaClass"
@@ -29,7 +29,7 @@
    <extension         
          point="org.eclipse.ui.editorActions">
       <editorContribution
-            targetID="net.sf.feeling.decompiler.ClassFileEditor"
+            targetID="org.sf.feeling.decompiler.ClassFileEditor"
             id="org.sf.feeling.decompiler.ClassFileEditor.BreakpointRulerActions">
          <action
                label="Toggle Breakpoint"
@@ -45,7 +45,25 @@
             name="%Decompiler"
             category="org.eclipse.jdt.ui.preferences.JavaBasePreferencePage"
             class="org.sf.feeling.decompiler.preferences.JavaDecompilerPreferencePage"
-            id="net.sf.feeling.decompiler.Main">
+            id="org.sf.feeling.decompiler.Main">
+      </page>
+      <page
+            name="%Formatting"
+            category="org.sf.feeling.decompiler.Main"
+            class="org.sf.feeling.decompiler.preferences.JadPreferencePageFormat"
+            id="org.sf.feeling.decompiler.ui.preferences.jad.Formatting">
+      </page>
+      <page
+            name="%Directives"
+            category="org.sf.feeling.decompiler.Main"
+            class="org.sf.feeling.decompiler.preferences.JadPreferencePageDirect"
+            id="org.sf.feeling.decompiler.ui.preferences.jad.Directives">
+      </page>
+      <page
+            name="%Misc"
+            category="org.sf.feeling.decompiler.Main"
+            class="org.sf.feeling.decompiler.preferences.JadPreferencePageMisc"
+            id="org.sf.feeling.decompiler.ui.preferences.jad.Misc">
       </page>
    </extension>
    <extension
@@ -92,57 +110,71 @@
       <command  
             name="Decompile"  
             categoryId="org.sf.feeling.decompiler"  
-            id="net.sf.feeling.decompiler.decompile">  
+            id="org.sf.feeling.decompiler.decompile">  
       </command>  
       <command  
             name="Decompile With JD-Core"  
             categoryId="org.sf.feeling.decompiler"  
-            id="net.sf.feeling.decompiler.decompile.jdcore">  
+            id="org.sf.feeling.decompiler.decompile.jdcore">  
       </command> 
       <command  
             name="Decompile With Jad"  
             categoryId="org.sf.feeling.decompiler"  
-            id="net.sf.feeling.decompiler.decompile.jad">  
+            id="org.sf.feeling.decompiler.decompile.jad">  
+      </command>  
+      <command  
+            name="Decompile With Class File Reader"  
+            categoryId="org.sf.feeling.decompiler"  
+            id="org.sf.feeling.decompiler.decompile.cfr">  
       </command>  
    </extension> 
    <extension
  		point="org.eclipse.ui.bindings">
  		<key
       		sequence="Ctrl+Shift+Z"
-      		commandId="net.sf.feeling.decompiler.decompile"
+      		commandId="org.sf.feeling.decompiler.decompile"
       		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
       		sequence="Ctrl+Shift+D"
-      		commandId="net.sf.feeling.decompiler.decompile.jdcore"
+      		commandId="org.sf.feeling.decompiler.decompile.jdcore"
       		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
       		sequence="Ctrl+Shift+V"
-      		commandId="net.sf.feeling.decompiler.decompile.jad"
+      		commandId="org.sf.feeling.decompiler.decompile.jad"
+      		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+		</key>
+		<key
+      		sequence="Ctrl+Shift+F"
+      		commandId="org.sf.feeling.decompiler.decompile.cfr"
       		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
  	</extension>
  	<extension  
          point="org.eclipse.ui.handlers">  
       <handler  
-            commandId="net.sf.feeling.decompiler.decompile"  
+            commandId="org.sf.feeling.decompiler.decompile"  
             class="org.sf.feeling.decompiler.actions.DecompileHandler">  
       </handler>  
       <handler  
-            commandId="net.sf.feeling.decompiler.decompile.jdcore"  
+            commandId="org.sf.feeling.decompiler.decompile.jdcore"  
             class="org.sf.feeling.decompiler.actions.DecompileWithJDCoreHandler">  
       </handler>
       <handler  
-            commandId="net.sf.feeling.decompiler.decompile.jad"  
+            commandId="org.sf.feeling.decompiler.decompile.jad"  
             class="org.sf.feeling.decompiler.actions.DecompileWithJadHandler">  
+      </handler>
+       <handler  
+            commandId="org.sf.feeling.decompiler.decompile.cfr"  
+            class="org.sf.feeling.decompiler.actions.DecompileWithCfrHandler">  
       </handler>  
    </extension>  
    <extension
          point="org.eclipse.ui.popupMenus">
       <viewerContribution
             targetID="#ClassFileEditorContext"
-            id="net.sf.feeling.decompiler.ExportSouceMenuAction">
+            id="org.sf.feeling.decompiler.ExportSouceMenuAction">
          <action
                label="%ExportSource"
                class="org.sf.feeling.decompiler.actions.ExportSourceActionDelegate"
@@ -155,8 +187,8 @@
    </extension>
    <extension
        point="org.eclipse.ui.actionSetPartAssociations">
-      <actionSetPartAssociation targetID="net.sf.feeling.decompiler.decompilerActionSet">
-         <part id="net.sf.feeling.decompiler.ClassFileEditor"/>
+      <actionSetPartAssociation targetID="org.sf.feeling.decompiler.decompilerActionSet">
+         <part id="org.sf.feeling.decompiler.ClassFileEditor"/>
       </actionSetPartAssociation>
    </extension>
    <extension
@@ -164,7 +196,7 @@
          <actionSet
             label="%Decompiler"
             visible="false"
-            id="net.sf.feeling.decompiler.decompilerActionSet">
+            id="org.sf.feeling.decompiler.decompilerActionSet">
          <menu
                label="%DecompilerBar"
                id="decompilerMenu">
@@ -180,7 +212,7 @@
                enablesFor="*"
                hoverIcon="icons/decompiler.png"
                icon="icons/decompiler.png"
-               id="net.sf.feeling.decompiler.actions.DecompilerToolbarMenu"
+               id="org.sf.feeling.decompiler.actions.DecompilerToolbarMenu"
                label="%Decompiler"
                style="pulldown"
                toolbarPath="additions"
@@ -192,7 +224,7 @@
                hoverIcon="icons/etool16/export_wiz.gif"
                icon="icons/etool16/export_wiz.gif"
                disabledIcon="icons/dtool16/export_wiz.gif"
-               id="net.sf.feeling.decompiler.actions.ExportSourceMenu"
+               id="org.sf.feeling.decompiler.actions.ExportSourceMenu"
                label="%ExportSource"
                style="push"
                menubarPath="decompilerMenu/decompilerGroup">
@@ -202,7 +234,7 @@
                enablesFor="*"
                hoverIcon="icons/decompiler.png"
                icon="icons/decompiler.png"
-               id="net.sf.feeling.decompiler.actions.DecompilerMenu"
+               id="org.sf.feeling.decompiler.actions.DecompilerMenu"
                label="%DecompilerAction"
                style="pulldown"
                menubarPath="decompilerMenu/decompilerGroup">
@@ -210,7 +242,7 @@
          <action
                class="org.sf.feeling.decompiler.actions.PreferenceMenuItemAction"
                enablesFor="*"
-               id="net.sf.feeling.decompiler.actions.preferenceMenu"
+               id="org.sf.feeling.decompiler.actions.preferenceMenu"
                label="%Preferences"
                style="push"
                menubarPath="decompilerMenu/preferenceGroup">

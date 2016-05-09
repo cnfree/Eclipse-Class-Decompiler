@@ -32,7 +32,8 @@ public class StringChoiceFieldEditor extends FieldEditor
 	private String fOldKey;
 	private boolean fIsValid;
 
-	public StringChoiceFieldEditor( String name, String label, Composite parent )
+	public StringChoiceFieldEditor( String name, String label,
+			Composite parent )
 	{
 		super( name, label, parent );
 		initList( );
@@ -89,10 +90,14 @@ public class StringChoiceFieldEditor extends FieldEditor
 
 	protected void doLoadDefault( )
 	{
-		String value = getPreferenceStore( ).getDefaultString( getPreferenceName( ) );
+		String value = getPreferenceStore( )
+				.getDefaultString( getPreferenceName( ) );
 		int index = fCombo.indexOf( value );
 		if ( index >= 0 )
+		{
 			fCombo.select( index );
+			valueChanged( );
+		}
 	}
 
 	protected void doStore( )

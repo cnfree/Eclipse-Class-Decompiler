@@ -19,6 +19,7 @@ public class SourceMapperFactory
 
 	private static DecompilerSourceMapper jadSourceMapper;
 	private static DecompilerSourceMapper jdCoreSourceMapper;
+	private static DecompilerSourceMapper cfrSourceMapper;
 
 	public static DecompilerSourceMapper getSourceMapper( String decompiler )
 	{
@@ -37,6 +38,14 @@ public class SourceMapperFactory
 				jdCoreSourceMapper = new JDCoreSourceMapper( );
 			}
 			return jdCoreSourceMapper;
+		}
+		else if ( DecompilerType.CFR.equals( decompiler ) )
+		{
+			if ( cfrSourceMapper == null )
+			{
+				cfrSourceMapper = new JDCoreSourceMapper( );
+			}
+			return cfrSourceMapper;
 		}
 		return null;
 	}
