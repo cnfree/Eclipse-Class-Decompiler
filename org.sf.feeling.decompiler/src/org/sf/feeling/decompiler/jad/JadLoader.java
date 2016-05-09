@@ -28,17 +28,17 @@ public final class JadLoader
 
 		if ( Platform.OS_WIN32.equalsIgnoreCase( Platform.getOS( ) ) )
 		{
-			jadFileName = "jad.exe";
+			jadFileName = "jad"+System.currentTimeMillis( )+".exe";
 			jadFilePath = "/native/jad/win32/jad.exe";
 		}
 		else if ( Platform.OS_LINUX.equalsIgnoreCase( Platform.getOS( ) ) )
 		{
-			jadFileName = "jad";
+			jadFileName = "jad"+System.currentTimeMillis( );
 			jadFilePath = "/native/jad/linux/jad";
 		}
 		else if ( Platform.OS_MACOSX.equalsIgnoreCase( Platform.getOS( ) ) )
 		{
-			jadFileName = "jad";
+			jadFileName = "jad"+System.currentTimeMillis( );
 			jadFilePath = "/native/jad/macosx/jad";
 		}
 		else
