@@ -68,7 +68,7 @@ public final class JadLoader
 				fos.write( buf, 0, count );
 			}
 
-			return "\"" + jad.getAbsolutePath( ) + "\""; //$NON-NLS-1$ //$NON-NLS-2$
+			return jad.getAbsolutePath( );
 		}
 		catch ( IOException e )
 		{
