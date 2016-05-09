@@ -16,15 +16,40 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.eclipse.core.runtime.Platform;
+
 public final class JadLoader
 {
 
 	public static String loadJad( )
 	{
-		InputStream is = JadLoader.class.getResourceAsStream( "/native/jad.exe" ); //$NON-NLS-1$
+		String jadFileName = null;
+		String jadFilePath = null;
+
+		if ( Platform.OS_WIN32.equalsIgnoreCase( Platform.getOS( ) ) )
+		{
+			jadFileName = "jad.exe";
+			jadFilePath = "/native/jad/win32/jad.exe";
+		}
+		else if ( Platform.OS_LINUX.equalsIgnoreCase( Platform.getOS( ) ) )
+		{
+			jadFileName = "jad";
+			jadFilePath = "/native/jad/linux/jad";
+		}
+		else if ( Platform.OS_MACOSX.equalsIgnoreCase( Platform.getOS( ) ) )
+		{
+			jadFileName = "jad";
+			jadFilePath = "/native/jad/macosx/jad";
+		}
+		else
+		{
+			throw new Error( "Can't obtain jad executable file." ); //$NON-NLS-1$
+		}
+
+		InputStream is = JadLoader.class.getResourceAsStream( jadFilePath ); //$NON-NLS-1$
 		if ( is == null )
 		{
-			throw new Error( "Can't obtain jad.exe" ); //$NON-NLS-1$
+			throw new Error( "Can't obtain jad executable file." ); //$NON-NLS-1$
 		}
 
 		FileOutputStream fos = null;
@@ -32,12 +57,10 @@ public final class JadLoader
 		{
 			String property = "java.io.tmpdir"; //$NON-NLS-1$
 			String tempDir = System.getProperty( property );
-			File lib = new File( tempDir, "jad" //$NON-NLS-1$
-					+ System.currentTimeMillis( )
-					+ ".exe" ); //$NON-NLS-1$
-			lib.createNewFile( );
-			lib.deleteOnExit( );
-			fos = new FileOutputStream( lib );
+			File jad = new File( tempDir, jadFileName );
+			jad.createNewFile( );
+			jad.deleteOnExit( );
+			fos = new FileOutputStream( jad );
 			int count;
 			byte[] buf = new byte[1024];
 			while ( ( count = is.read( buf, 0, buf.length ) ) > 0 )
@@ -45,7 +68,7 @@ public final class JadLoader
 				fos.write( buf, 0, count );
 			}
 
-			return "\"" + lib.getAbsolutePath( ) + "\""; //$NON-NLS-1$ //$NON-NLS-2$
+			return "\"" + jad.getAbsolutePath( ) + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		catch ( IOException e )
 		{

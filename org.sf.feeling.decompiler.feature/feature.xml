@@ -62,8 +62,8 @@
          unpack="false"/>
 
    <plugin
-         id="org.sf.feeling.decompiler.win32"
-         os="win32"
+         id="org.sf.feeling.decompiler.jad"
+         os="linux,macosx,win32"
          download-size="0"
          install-size="0"
          version="1.0.6.qualifier"

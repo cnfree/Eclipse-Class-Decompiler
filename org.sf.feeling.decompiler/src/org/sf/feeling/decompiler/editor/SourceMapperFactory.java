@@ -13,7 +13,6 @@ package org.sf.feeling.decompiler.editor;
 
 import org.sf.feeling.decompiler.jad.JadSourceMapper;
 import org.sf.feeling.decompiler.jdcore.JDCoreSourceMapper;
-import org.sf.feeling.decompiler.util.UIUtil;
 
 public class SourceMapperFactory
 {
@@ -25,7 +24,7 @@ public class SourceMapperFactory
 	{
 		if ( DecompilerType.JAD.equals( decompiler ) )
 		{
-			if ( jadSourceMapper == null && UIUtil.isWin32( ) )
+			if ( jadSourceMapper == null )
 			{
 				jadSourceMapper = new JadSourceMapper( );
 			}

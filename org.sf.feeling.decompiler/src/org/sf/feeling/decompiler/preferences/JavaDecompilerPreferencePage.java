@@ -27,7 +27,6 @@ import org.sf.feeling.decompiler.editor.DecompilerType;
 import org.sf.feeling.decompiler.fieldeditors.StringChoiceFieldEditor;
 import org.sf.feeling.decompiler.i18n.Messages;
 import org.sf.feeling.decompiler.jad.JadDecompiler;
-import org.sf.feeling.decompiler.util.UIUtil;
 
 public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage
@@ -82,12 +81,10 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage impl
 				.getPreferenceStore( ) );
 	}
 
-
 	public void createControl( Composite parent )
 	{
 		super.createControl( parent );
 	}
-
 
 	protected void createFieldEditors( )
 	{
@@ -106,10 +103,8 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage impl
 				getControl( ).setLayoutData( gd );
 			}
 		};
-		if ( UIUtil.isWin32( ) )
-		{
-			defaultDecompiler.addItem( DecompilerType.JAD, "Jad" ); //$NON-NLS-1$
-		}
+
+		defaultDecompiler.addItem( DecompilerType.JAD, "Jad" ); //$NON-NLS-1$
 		defaultDecompiler.addItem( DecompilerType.JDCORE, "JD-Core" ); //$NON-NLS-1$
 		addField( defaultDecompiler );
 
@@ -196,11 +191,9 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage impl
 		getFieldEditorParent( ).layout( );
 	}
 
-
 	public void init( IWorkbench arg0 )
 	{
 	}
-
 
 	protected void initialize( )
 	{

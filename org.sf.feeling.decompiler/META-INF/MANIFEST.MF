@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: decompiler_win32.jar,.
+Bundle-ClassPath: decompiler_jad.jar,.
 Bundle-Name: Eclipse Class Decompiler
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

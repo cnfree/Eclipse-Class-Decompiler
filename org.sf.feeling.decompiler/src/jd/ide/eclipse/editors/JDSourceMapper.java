@@ -55,12 +55,12 @@ public abstract class JDSourceMapper extends DecompilerSourceMapper
 			if ( Platform.ARCH_X86_64.equalsIgnoreCase( Platform.getOSArch( ) ) )
 			{
 				pluginUrl = this.getClass( )
-						.getResource( "/native/win32/x86_64/jd-eclipse.dll" ); //$NON-NLS-1$
+						.getResource( "/native/jd-core/win32/x86_64/jd-eclipse.dll" ); //$NON-NLS-1$
 			}
 			else
 			{
 				pluginUrl = this.getClass( )
-						.getResource( "/native/win32/x86/jd-eclipse.dll" ); //$NON-NLS-1$
+						.getResource( "/native/jd-core/win32/x86/jd-eclipse.dll" ); //$NON-NLS-1$
 			}
 		}
 		else if ( Platform.OS_LINUX.equalsIgnoreCase( Platform.getOS( ) ) )
@@ -68,12 +68,12 @@ public abstract class JDSourceMapper extends DecompilerSourceMapper
 			if ( Platform.ARCH_X86_64.equalsIgnoreCase( Platform.getOSArch( ) ) )
 			{
 				pluginUrl = this.getClass( )
-						.getResource( "/native/linux/x86_64/libjd-eclipse.so" ); //$NON-NLS-1$
+						.getResource( "/native/jd-core/linux/x86_64/libjd-eclipse.so" ); //$NON-NLS-1$
 			}
 			else
 			{
 				pluginUrl = this.getClass( )
-						.getResource( "/native/linux/x86/libjd-eclipse.so" ); //$NON-NLS-1$
+						.getResource( "/native/jd-core/linux/x86/libjd-eclipse.so" ); //$NON-NLS-1$
 			}
 		}
 		else if ( Platform.OS_MACOSX.equalsIgnoreCase( Platform.getOS( ) ) )
@@ -81,12 +81,12 @@ public abstract class JDSourceMapper extends DecompilerSourceMapper
 			if ( Platform.ARCH_X86_64.equalsIgnoreCase( Platform.getOSArch( ) ) )
 			{
 				pluginUrl = this.getClass( )
-						.getResource( "/native/macosx/x86_64/libjd-eclipse.jnilib" ); //$NON-NLS-1$
+						.getResource( "/native/jd-core/macosx/x86_64/libjd-eclipse.jnilib" ); //$NON-NLS-1$
 			}
 			else
 			{
 				pluginUrl = this.getClass( )
-						.getResource( "/native/macosx/x86/libjd-eclipse.jnilib" ); //$NON-NLS-1$
+						.getResource( "/native/jd-core/macosx/x86/libjd-eclipse.jnilib" ); //$NON-NLS-1$
 			}
 		}
 		String path = FileLocator.toFileURL( pluginUrl ).getFile( );

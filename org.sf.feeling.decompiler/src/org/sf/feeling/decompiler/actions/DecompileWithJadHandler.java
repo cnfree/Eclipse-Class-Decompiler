@@ -29,24 +29,22 @@ public class DecompileWithJadHandler extends DecompileHandler
 
 	public Object execute( ExecutionEvent event ) throws ExecutionException
 	{
-		if ( UIUtil.isWin32( ) )
+
+		final List classes = UIUtil.getActiveSelection( );
+		if ( classes != null && !classes.isEmpty( ) )
 		{
-			final List classes = UIUtil.getActiveSelection( );
-			if ( classes != null && !classes.isEmpty( ) )
+			IEditorRegistry registry = PlatformUI.getWorkbench( )
+					.getEditorRegistry( );
+			IEditorDescriptor editor = registry.findEditor( JavaDecompilerPlugin.EDITOR_ID );
+			new OpenClassesAction( editor, classes, DecompilerType.JAD ).run( );
+		}
+		else
+		{
+			JavaDecompilerClassFileEditor editor = UIUtil.getActiveEditor( );
+			if ( editor != null )
 			{
-				IEditorRegistry registry = PlatformUI.getWorkbench( )
-						.getEditorRegistry( );
-				IEditorDescriptor editor = registry.findEditor( JavaDecompilerPlugin.EDITOR_ID );
-				new OpenClassesAction( editor, classes, DecompilerType.JAD ).run( );
-			}
-			else
-			{
-				JavaDecompilerClassFileEditor editor = UIUtil.getActiveEditor( );
 				if ( editor != null )
-				{
-					if ( editor != null )
-						editor.doSetInput( DecompilerType.JAD, true );
-				}
+					editor.doSetInput( DecompilerType.JAD, true );
 			}
 		}
 		return null;

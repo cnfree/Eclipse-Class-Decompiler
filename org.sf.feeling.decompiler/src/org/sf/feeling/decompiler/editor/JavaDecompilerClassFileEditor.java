@@ -98,8 +98,7 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 							src = SourceMapperFactory.getSourceMapper( DecompilerType.JDCORE )
 									.findSource( cf.getType( ) );
 						}
-						else if ( DecompilerType.JDCORE.equals( decompilerType )
-								&& UIUtil.isWin32( ) )
+						else if ( DecompilerType.JDCORE.equals( decompilerType ) )
 						{
 							src = SourceMapperFactory.getSourceMapper( DecompilerType.JAD )
 									.findSource( cf.getType( ) );

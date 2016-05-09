@@ -51,11 +51,10 @@ public class SubMenuCreator implements IMenuCreator
 	private void fillMenu( final Menu menu )
 	{
 		final MenuManager menuMgr = new MenuManager( );
-		if ( UIUtil.isWin32( ) )
-		{
-			menuMgr.add( new DecompileWithJadAction( ) );
-		}
+
+		menuMgr.add( new DecompileWithJadAction( ) );
 		menuMgr.add( new DecompileWithJDCoreAction( ) );
+		
 		IContributionItem[] items = menuMgr.getItems( );
 		for ( int i = 0; i < items.length; i++ )
 		{
@@ -103,11 +102,10 @@ public class SubMenuCreator implements IMenuCreator
 		if ( dropDownMenuMgr == null )
 		{
 			dropDownMenuMgr = new MenuManager( );
-			if ( UIUtil.isWin32( ) )
-			{
-				dropDownMenuMgr.add( new DecompileWithJadAction( ) );
-			}
+
+			dropDownMenuMgr.add( new DecompileWithJadAction( ) );
 			dropDownMenuMgr.add( new DecompileWithJDCoreAction( ) );
+
 			dropDownMenuMgr.add( new Separator( ) );
 
 			List list = UIUtil.getExportSelections( );

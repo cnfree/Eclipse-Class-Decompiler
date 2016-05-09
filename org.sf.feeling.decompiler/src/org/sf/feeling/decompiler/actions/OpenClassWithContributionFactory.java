@@ -48,7 +48,6 @@ import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.editor.DecompilerType;
 import org.sf.feeling.decompiler.editor.JavaDecompilerClassFileEditor;
 import org.sf.feeling.decompiler.i18n.Messages;
-import org.sf.feeling.decompiler.util.UIUtil;
 
 public class OpenClassWithContributionFactory extends
 		ExtensionContributionFactory
@@ -71,11 +70,8 @@ public class OpenClassWithContributionFactory extends
 
 		public String getText( )
 		{
-			if ( UIUtil.isWin32( ) )
-			{
-				if ( DecompilerType.JAD.equals( decompilerType ) )
-					return Messages.getString( "JavaDecompilerActionBarContributor.Action.DecompileWithJad" ); //$NON-NLS-1$
-			}
+			if ( DecompilerType.JAD.equals( decompilerType ) )
+				return Messages.getString( "JavaDecompilerActionBarContributor.Action.DecompileWithJad" ); //$NON-NLS-1$
 			if ( DecompilerType.JDCORE.equals( decompilerType ) )
 				return Messages.getString( "JavaDecompilerActionBarContributor.Action.DecompileWithJDCore" ); //$NON-NLS-1$
 			return classEditor.getLabel( );
@@ -177,12 +173,9 @@ public class OpenClassWithContributionFactory extends
 				if ( classes.size( ) == 1 )
 				{
 					IEditorDescriptor editor = registry.findEditor( JavaDecompilerPlugin.EDITOR_ID );
-					if ( UIUtil.isWin32( ) )
-					{
-						list.add( new ActionContributionItem( new OpenClassesAction( editor,
-								classes,
-								DecompilerType.JAD ) ) );
-					}
+					list.add( new ActionContributionItem( new OpenClassesAction( editor,
+							classes,
+							DecompilerType.JAD ) ) );
 					list.add( new ActionContributionItem( new OpenClassesAction( editor,
 							classes,
 							DecompilerType.JDCORE ) ) );
