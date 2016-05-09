@@ -97,7 +97,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 		String jad = JadLoader.loadJad( );
 		if ( jad != null )
 			store.setDefault( CMD, jad );
-		store.setDefault( TEMP_DIR, System.getProperty( "user.home" ) //$NON-NLS-1$
+		store.setDefault( TEMP_DIR, System.getProperty( "java.io.tmpdir" ) //$NON-NLS-1$
 				+ File.separator
 				+ ".net.sf.feeling.decompiler" ); //$NON-NLS-1$
 		store.setDefault( REUSE_BUFFER, true );
