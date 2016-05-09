@@ -67,7 +67,7 @@ public final class JadLoader
 			{
 				fos.write( buf, 0, count );
 			}
-
+			jad.setExecutable( true );
 			return jad.getAbsolutePath( );
 		}
 		catch ( IOException e )
