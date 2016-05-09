@@ -56,6 +56,7 @@
    <plugin
          id="org.sf.feeling.decompiler.source"
          os="linux,macosx,win32"
+         arch="x86,x86_64"
          download-size="0"
          install-size="0"
          version="1.0.7.qualifier"
@@ -64,6 +65,7 @@
    <plugin
          id="org.sf.feeling.decompiler.jad"
          os="linux,macosx,win32"
+         arch="x86,x86_64"
          download-size="0"
          install-size="0"
          version="1.0.7.qualifier"
