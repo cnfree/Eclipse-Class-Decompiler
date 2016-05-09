@@ -165,6 +165,10 @@ public class JadSourceMapper extends DecompilerSourceMapper
 					.displayLineNumber( displayNumber );
 		}
 
+		if ( decompiler.getSource( ) == null
+				|| decompiler.getSource( ).length( ) == 0 )
+			return null;
+
 		String code = JavaDecompilerClassFileEditor.MARK + "\r\n" //$NON-NLS-1$
 				+ decompiler.getSource( );
 
@@ -323,6 +327,10 @@ public class JadSourceMapper extends DecompilerSourceMapper
 			JavaDecompilerPlugin.getDefault( )
 					.displayLineNumber( displayNumber );
 		}
+
+		if ( decompiler.getSource( ) == null
+				|| decompiler.getSource( ).length( ) == 0 )
+			return null;
 
 		String code = JavaDecompilerClassFileEditor.MARK + "\r\n" //$NON-NLS-1$
 				+ decompiler.getSource( );
