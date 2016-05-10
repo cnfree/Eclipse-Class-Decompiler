@@ -23,6 +23,7 @@ import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
+import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.util.UIUtil;
 
 public class SubMenuCreator implements IMenuCreator
@@ -54,8 +55,15 @@ public class SubMenuCreator implements IMenuCreator
 
 		menuMgr.add( new DecompileWithJadAction( ) );
 		menuMgr.add( new DecompileWithJDCoreAction( ) );
-		menuMgr.add( new DecompileWithCfrAction( ) );
-		menuMgr.add( new DecompileWithProcyonAction( ) );
+
+		if ( JavaDecompilerPlugin.getDefault( ).enableCfrDecompiler( ) )
+		{
+			menuMgr.add( new DecompileWithCfrAction( ) );
+		}
+		if ( JavaDecompilerPlugin.getDefault( ).enableProcyonDecompiler( ) )
+		{
+			menuMgr.add( new DecompileWithProcyonAction( ) );
+		}
 
 		IContributionItem[] items = menuMgr.getItems( );
 		for ( int i = 0; i < items.length; i++ )
@@ -64,8 +72,7 @@ public class SubMenuCreator implements IMenuCreator
 			IContributionItem newItem = item;
 			if ( item instanceof ActionContributionItem )
 			{
-				newItem = new ActionContributionItem(
-						( (ActionContributionItem) item ).getAction( ) );
+				newItem = new ActionContributionItem( ( (ActionContributionItem) item ).getAction( ) );
 			}
 			newItem.fill( menu, -1 );
 		}
@@ -108,8 +115,15 @@ public class SubMenuCreator implements IMenuCreator
 
 			dropDownMenuMgr.add( new DecompileWithJadAction( ) );
 			dropDownMenuMgr.add( new DecompileWithJDCoreAction( ) );
-			dropDownMenuMgr.add( new DecompileWithCfrAction( ) );
-			dropDownMenuMgr.add( new DecompileWithProcyonAction( ) );
+
+			if ( JavaDecompilerPlugin.getDefault( ).enableCfrDecompiler( ) )
+			{
+				dropDownMenuMgr.add( new DecompileWithCfrAction( ) );
+			}
+			if ( JavaDecompilerPlugin.getDefault( ).enableProcyonDecompiler( ) )
+			{
+				dropDownMenuMgr.add( new DecompileWithProcyonAction( ) );
+			}
 
 			dropDownMenuMgr.add( new Separator( ) );
 
@@ -124,8 +138,7 @@ public class SubMenuCreator implements IMenuCreator
 			}
 
 			dropDownMenuMgr.add( new Separator( ) );
-			dropDownMenuMgr.add( new PreferenceActionContributionItem(
-					new DecompilerPeferenceAction( ) ) );
+			dropDownMenuMgr.add( new PreferenceActionContributionItem( new DecompilerPeferenceAction( ) ) );
 		}
 	}
 }

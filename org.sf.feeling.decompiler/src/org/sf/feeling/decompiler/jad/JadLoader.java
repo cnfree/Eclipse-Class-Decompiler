@@ -28,17 +28,17 @@ public final class JadLoader
 
 		if ( Platform.OS_WIN32.equalsIgnoreCase( Platform.getOS( ) ) )
 		{
-			jadFileName = "jad"+System.currentTimeMillis( )+".exe";
+			jadFileName = "jad" + System.currentTimeMillis( ) + ".exe";
 			jadFilePath = "/native/jad/win32/jad.exe";
 		}
 		else if ( Platform.OS_LINUX.equalsIgnoreCase( Platform.getOS( ) ) )
 		{
-			jadFileName = "jad"+System.currentTimeMillis( );
+			jadFileName = "jad" + System.currentTimeMillis( );
 			jadFilePath = "/native/jad/linux/jad";
 		}
 		else if ( Platform.OS_MACOSX.equalsIgnoreCase( Platform.getOS( ) ) )
 		{
-			jadFileName = "jad"+System.currentTimeMillis( );
+			jadFileName = "jad" + System.currentTimeMillis( );
 			jadFilePath = "/native/jad/macosx/jad";
 		}
 		else
@@ -67,7 +67,28 @@ public final class JadLoader
 			{
 				fos.write( buf, 0, count );
 			}
-			jad.setExecutable( true );
+			fos.close( );
+			fos = null;
+
+			try
+			{
+				if ( Platform.OS_LINUX.equalsIgnoreCase( Platform.getOS( ) ) )
+				{
+					Runtime.getRuntime( ).exec( "chmod a+x "
+							+ jad.getAbsolutePath( ) ).waitFor( );
+				}
+				else if ( Platform.OS_MACOSX.equalsIgnoreCase( Platform.getOS( ) ) )
+				{
+					Runtime.getRuntime( ).exec( "chmod a+x "
+							+ jad.getAbsolutePath( ) ).waitFor( );
+				}
+			}
+			catch ( InterruptedException e )
+			{
+				e.printStackTrace();
+			}
+
+			// jad.setExecutable( true );
 			return jad.getAbsolutePath( );
 		}
 		catch ( IOException e )
@@ -96,5 +117,4 @@ public final class JadLoader
 			}
 		}
 	}
-
 }

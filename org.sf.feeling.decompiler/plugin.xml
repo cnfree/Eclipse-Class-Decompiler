@@ -136,27 +136,27 @@
    <extension
  		point="org.eclipse.ui.bindings">
  		<key
-      		sequence="Ctrl+Shift+Z"
+      		sequence="Ctrl+Alt+Z"
       		commandId="org.sf.feeling.decompiler.decompile"
       		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
-      		sequence="Ctrl+Shift+D"
+      		sequence="Ctrl+Alt+D"
       		commandId="org.sf.feeling.decompiler.decompile.jdcore"
       		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
-      		sequence="Ctrl+Shift+V"
+      		sequence="Ctrl+Alt+V"
       		commandId="org.sf.feeling.decompiler.decompile.jad"
       		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
-      		sequence="Ctrl+Shift+F"
+      		sequence="Ctrl+Alt+F"
       		commandId="org.sf.feeling.decompiler.decompile.cfr"
       		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
-      		sequence="Ctrl+Shift+P"
+      		sequence="Ctrl+Alt+P"
       		commandId="org.sf.feeling.decompiler.decompile.procyon"
       		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>

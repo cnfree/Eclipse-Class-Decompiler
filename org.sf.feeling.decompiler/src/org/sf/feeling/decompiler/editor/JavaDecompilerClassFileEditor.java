@@ -90,7 +90,8 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 						|| ( origSrc.startsWith( MARK ) && ( !reuseBuf || force ) ) )
 				{
 					DecompilerSourceMapper sourceMapper = SourceMapperFactory.getSourceMapper( decompilerType );
-					char[] src = sourceMapper.findSource( cf.getType( ) );
+					char[] src = sourceMapper == null ? null
+							: sourceMapper.findSource( cf.getType( ) );
 					if ( src == null )
 					{
 						if ( DecompilerType.JAD.equals( decompilerType ) )
@@ -106,6 +107,11 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 						else if ( DecompilerType.CFR.equals( decompilerType ) )
 						{
 							src = SourceMapperFactory.getSourceMapper( DecompilerType.CFR )
+									.findSource( cf.getType( ) );
+						}
+						else if ( DecompilerType.PROCYON.equals( decompilerType ) )
+						{
+							src = SourceMapperFactory.getSourceMapper( DecompilerType.PROCYON )
 									.findSource( cf.getType( ) );
 						}
 					}

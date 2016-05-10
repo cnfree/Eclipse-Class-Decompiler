@@ -11,6 +11,7 @@
 
 package org.sf.feeling.decompiler.editor;
 
+import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.cfr.CfrSourceMapper;
 import org.sf.feeling.decompiler.jad.JadSourceMapper;
 import org.sf.feeling.decompiler.jdcore.JDCoreSourceMapper;
@@ -44,19 +45,25 @@ public class SourceMapperFactory
 		}
 		else if ( DecompilerType.CFR.equals( decompiler ) )
 		{
-			if ( cfrSourceMapper == null )
+			if ( JavaDecompilerPlugin.getDefault( ).enableCfrDecompiler( ) )
 			{
-				cfrSourceMapper = new CfrSourceMapper( );
+				if ( cfrSourceMapper == null )
+				{
+					cfrSourceMapper = new CfrSourceMapper( );
+				}
+				return cfrSourceMapper;
 			}
-			return cfrSourceMapper;
 		}
 		else if ( DecompilerType.PROCYON.equals( decompiler ) )
 		{
-			if ( procyonSourceMapper == null )
+			if ( JavaDecompilerPlugin.getDefault( ).enableProcyonDecompiler( ) )
 			{
-				procyonSourceMapper = new ProcyonSourceMapper( );
+				if ( procyonSourceMapper == null )
+				{
+					procyonSourceMapper = new ProcyonSourceMapper( );
+				}
+				return procyonSourceMapper;
 			}
-			return procyonSourceMapper;
 		}
 		return null;
 	}

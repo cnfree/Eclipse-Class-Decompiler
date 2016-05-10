@@ -28,10 +28,14 @@ public class DecompilerPeferenceAction extends Action
 	{
 		PreferencesUtil.createPreferenceDialogOn( Display.getDefault( )
 				.getActiveShell( ),
-				"net.sf.feeling.decompiler.Main", //$NON-NLS-1$
+				"org.sf.feeling.decompiler.Main", //$NON-NLS-1$
 				new String[]{
-					"net.sf.feeling.decompiler.Main"}, //$NON-NLS-1$
-				null ).open( );
+						"org.sf.feeling.decompiler.Main",
+						"org.sf.feeling.decompiler.ui.preferences.jad.Formatting",
+						"org.sf.feeling.decompiler.ui.preferences.jad.Directives",
+						"org.sf.feeling.decompiler.ui.preferences.jad.Misc"}, //$NON-NLS-1$
+				null )
+				.open( );
 	}
 
 	public boolean isEnabled( )

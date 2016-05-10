@@ -39,6 +39,10 @@ public class DecompileWithProcyonAction extends Action
 
 	public boolean isEnabled( )
 	{
+		if ( !JavaDecompilerPlugin.getDefault( ).enableProcyonDecompiler( ) )
+		{
+			return false;
+		}
 		return UIUtil.getActiveEditor( ) != null
 				|| UIUtil.getActiveSelection( ) != null;
 	}

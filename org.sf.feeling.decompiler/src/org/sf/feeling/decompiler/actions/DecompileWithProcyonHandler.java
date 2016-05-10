@@ -29,6 +29,10 @@ public class DecompileWithProcyonHandler extends DecompileHandler
 
 	public Object execute( ExecutionEvent event ) throws ExecutionException
 	{
+		if ( JavaDecompilerPlugin.getDefault( ).enableProcyonDecompiler( ) )
+		{
+			return null;
+		}
 
 		final List classes = UIUtil.getActiveSelection( );
 		if ( classes != null && !classes.isEmpty( ) )

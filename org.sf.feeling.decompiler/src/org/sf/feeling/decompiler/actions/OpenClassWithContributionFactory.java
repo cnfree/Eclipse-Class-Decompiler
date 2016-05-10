@@ -74,8 +74,16 @@ public class OpenClassWithContributionFactory extends
 				return Messages.getString( "JavaDecompilerActionBarContributor.Action.DecompileWithJad" ); //$NON-NLS-1$
 			if ( DecompilerType.JDCORE.equals( decompilerType ) )
 				return Messages.getString( "JavaDecompilerActionBarContributor.Action.DecompileWithJDCore" ); //$NON-NLS-1$
-			if ( DecompilerType.CFR.equals( decompilerType ) )
-				return Messages.getString( "JavaDecompilerActionBarContributor.Action.DecompileWithCfr" ); //$NON-NLS-1$
+			if ( JavaDecompilerPlugin.getDefault( ).enableCfrDecompiler( ) )
+			{
+				if ( DecompilerType.CFR.equals( decompilerType ) )
+					return Messages.getString( "JavaDecompilerActionBarContributor.Action.DecompileWithCfr" ); //$NON-NLS-1$
+			}
+			if ( JavaDecompilerPlugin.getDefault( ).enableProcyonDecompiler( ) )
+			{
+				if ( DecompilerType.PROCYON.equals( decompilerType ) )
+					return Messages.getString( "JavaDecompilerActionBarContributor.Action.DecompileWithProcyon" ); //$NON-NLS-1$
+			}
 			return classEditor.getLabel( );
 		}
 
@@ -181,9 +189,20 @@ public class OpenClassWithContributionFactory extends
 					list.add( new ActionContributionItem( new OpenClassesAction( editor,
 							classes,
 							DecompilerType.JDCORE ) ) );
-					list.add( new ActionContributionItem( new OpenClassesAction( editor,
-							classes,
-							DecompilerType.CFR ) ) );
+					if ( JavaDecompilerPlugin.getDefault( )
+							.enableCfrDecompiler( ) )
+					{
+						list.add( new ActionContributionItem( new OpenClassesAction( editor,
+								classes,
+								DecompilerType.CFR ) ) );
+					}
+					if ( JavaDecompilerPlugin.getDefault( )
+							.enableProcyonDecompiler( ) )
+					{
+						list.add( new ActionContributionItem( new OpenClassesAction( editor,
+								classes,
+								DecompilerType.PROCYON ) ) );
+					}
 				}
 
 				return (IContributionItem[]) list.toArray( new IContributionItem[list.size( )] );

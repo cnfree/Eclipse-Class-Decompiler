@@ -28,8 +28,8 @@ import org.sf.feeling.decompiler.jad.JadDecompiler;
 import org.sf.feeling.decompiler.jad.JadLoader;
 import org.sf.feeling.decompiler.util.SortMemberUtil;
 
-public class JavaDecompilerPlugin extends AbstractUIPlugin
-		implements IPropertyChangeListener
+public class JavaDecompilerPlugin extends AbstractUIPlugin implements
+		IPropertyChangeListener
 {
 
 	public static final String EDITOR_ID = "net.sf.feeling.decompiler.ClassFileEditor"; //$NON-NLS-1$
@@ -50,6 +50,8 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 
 	private static JavaDecompilerPlugin plugin;
 
+	private IPreferenceStore preferenceStore;
+
 	public static JavaDecompilerPlugin getDefault( )
 	{
 		return plugin;
@@ -57,14 +59,16 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 
 	public static void logError( Throwable t, String message )
 	{
-		JavaDecompilerPlugin.getDefault( ).getLog( ).log(
-				new Status( Status.ERROR, PLUGIN_ID, 0, message, t ) );
+		JavaDecompilerPlugin.getDefault( )
+				.getLog( )
+				.log( new Status( Status.ERROR, PLUGIN_ID, 0, message, t ) );
 	}
 
 	public static void log( int severity, Throwable t, String message )
 	{
-		JavaDecompilerPlugin.getDefault( ).getLog( ).log(
-				new Status( severity, PLUGIN_ID, 0, message, t ) );
+		JavaDecompilerPlugin.getDefault( )
+				.getLog( )
+				.log( new Status( severity, PLUGIN_ID, 0, message, t ) );
 	}
 
 	public static ImageDescriptor getImageDescriptor( String path )
@@ -132,6 +136,32 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 		SortMemberUtil.deleteDecompilerProject( );
 	}
 
+	public IPreferenceStore getPreferenceStore( )
+	{
+		if ( preferenceStore == null )
+		{
+			preferenceStore = super.getPreferenceStore( );
+
+			if ( DecompilerType.PROCYON == getPreferenceStore( ).getString( DECOMPILER_TYPE ) )
+			{
+				if ( !enableCfrDecompiler( ) )
+				{
+					preferenceStore.setValue( DECOMPILER_TYPE,
+							DecompilerType.JDCORE );
+				}
+			}
+			else if ( DecompilerType.CFR == getPreferenceStore( ).getString( DECOMPILER_TYPE ) )
+			{
+				if ( !enableProcyonDecompiler( ) )
+				{
+					preferenceStore.setValue( DECOMPILER_TYPE,
+							DecompilerType.JDCORE );
+				}
+			}
+		}
+		return preferenceStore;
+	}
+
 	public void stop( BundleContext context ) throws Exception
 	{
 		super.stop( context );
@@ -141,13 +171,22 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 
 	public Boolean isDisplayLineNumber( )
 	{
-		return Boolean.valueOf(
-				getPreferenceStore( ).getBoolean( PREF_DISPLAY_LINE_NUMBERS ) );
+		return Boolean.valueOf( getPreferenceStore( ).getBoolean( PREF_DISPLAY_LINE_NUMBERS ) );
 	}
 
 	public void displayLineNumber( Boolean display )
 	{
 		getPreferenceStore( ).setValue( PREF_DISPLAY_LINE_NUMBERS,
 				display.booleanValue( ) );
+	}
+
+	public boolean enableCfrDecompiler( )
+	{
+		return !( System.getProperty( "java.version" ).compareTo( "1.6" ) < 0 );
+	}
+
+	public boolean enableProcyonDecompiler( )
+	{
+		return !( System.getProperty( "java.version" ).compareTo( "1.7" ) < 0 );
 	}
 }

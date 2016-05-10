@@ -28,8 +28,8 @@ import org.sf.feeling.decompiler.fieldeditors.StringChoiceFieldEditor;
 import org.sf.feeling.decompiler.i18n.Messages;
 import org.sf.feeling.decompiler.jad.JadDecompiler;
 
-public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
-		implements IWorkbenchPreferencePage
+public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage implements
+		IWorkbenchPreferencePage
 {
 
 	class CheckFieldEditor extends BooleanFieldEditor
@@ -79,8 +79,8 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 	public JavaDecompilerPreferencePage( )
 	{
 		super( FieldEditorPreferencePage.GRID );
-		setPreferenceStore(
-				JavaDecompilerPlugin.getDefault( ).getPreferenceStore( ) );
+		setPreferenceStore( JavaDecompilerPlugin.getDefault( )
+				.getPreferenceStore( ) );
 	}
 
 	public void createControl( Composite parent )
@@ -91,10 +91,8 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 	protected void createFieldEditors( )
 	{
 
-		defaultDecompiler = new StringChoiceFieldEditor(
-				JavaDecompilerPlugin.DECOMPILER_TYPE,
-				Messages.getString(
-						"JavaDecompilerPreferencePage.Label.DefaultClassDecompiler" ), //$NON-NLS-1$
+		defaultDecompiler = new StringChoiceFieldEditor( JavaDecompilerPlugin.DECOMPILER_TYPE,
+				Messages.getString( "JavaDecompilerPreferencePage.Label.DefaultClassDecompiler" ), //$NON-NLS-1$
 				getFieldEditorParent( ) ) {
 
 			protected void doFillIntoGrid( Composite parent, int numColumns )
@@ -110,36 +108,39 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 
 		defaultDecompiler.addItem( DecompilerType.JAD, "Jad", "Jad" ); //$NON-NLS-1$
 		defaultDecompiler.addItem( DecompilerType.JDCORE, "JD-Core", "JD-Core" ); //$NON-NLS-1$
-		defaultDecompiler.addItem( DecompilerType.CFR, "Class File Reader (Support JDK8)", "Class File Reader" ); //$NON-NLS-1$
-		defaultDecompiler.addItem( DecompilerType.PROCYON, "Procyon (Support JDK8)", "Procyon" ); //$NON-NLS-1$
 		
+		if ( JavaDecompilerPlugin.getDefault( ).enableCfrDecompiler( ) )
+		{
+			defaultDecompiler.addItem( DecompilerType.CFR,
+					"Class File Reader (Support JDK8)", "Class File Reader" ); //$NON-NLS-1$
+		}
+		
+		if ( JavaDecompilerPlugin.getDefault( ).enableProcyonDecompiler( ) )
+		{
+			defaultDecompiler.addItem( DecompilerType.PROCYON,
+					"Procyon (Support JDK8)", "Procyon" ); //$NON-NLS-1$
+		}
+
 		addField( defaultDecompiler );
 
 		basicGroup = new Group( getFieldEditorParent( ), SWT.NONE );
-		basicGroup.setText( Messages.getString(
-				"JavaDecompilerPreferencePage.Label.DecompilerSettings" ) ); //$NON-NLS-1$
+		basicGroup.setText( Messages.getString( "JavaDecompilerPreferencePage.Label.DecompilerSettings" ) ); //$NON-NLS-1$
 		GridData gd = new GridData( GridData.FILL_HORIZONTAL );
 		gd.horizontalSpan = defaultDecompiler.getNumberOfControls( );
 		basicGroup.setLayoutData( gd );
 
-		BooleanFieldEditor reusebuf = new BooleanFieldEditor(
-				JavaDecompilerPlugin.REUSE_BUFFER,
-				Messages.getString(
-						"JavaDecompilerPreferencePage.Label.ReuseCodeBuffer" ), //$NON-NLS-1$
+		BooleanFieldEditor reusebuf = new BooleanFieldEditor( JavaDecompilerPlugin.REUSE_BUFFER,
+				Messages.getString( "JavaDecompilerPreferencePage.Label.ReuseCodeBuffer" ), //$NON-NLS-1$
 				basicGroup );
 		addField( reusebuf );
 
-		BooleanFieldEditor alwaysUse = new BooleanFieldEditor(
-				JavaDecompilerPlugin.IGNORE_EXISTING,
-				Messages.getString(
-						"JavaDecompilerPreferencePage.Label.IgnoreExistSource" ), //$NON-NLS-1$
+		BooleanFieldEditor alwaysUse = new BooleanFieldEditor( JavaDecompilerPlugin.IGNORE_EXISTING,
+				Messages.getString( "JavaDecompilerPreferencePage.Label.IgnoreExistSource" ), //$NON-NLS-1$
 				basicGroup );
 		addField( alwaysUse );
 
-		showReport = new CheckFieldEditor(
-				JavaDecompilerPlugin.PREF_DISPLAY_METADATA,
-				Messages.getString(
-						"JavaDecompilerPreferencePage.Label.ShowDecompilerReport" ), //$NON-NLS-1$
+		showReport = new CheckFieldEditor( JavaDecompilerPlugin.PREF_DISPLAY_METADATA,
+				Messages.getString( "JavaDecompilerPreferencePage.Label.ShowDecompilerReport" ), //$NON-NLS-1$
 				basicGroup );
 		addField( showReport );
 
@@ -148,23 +149,18 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 		basicGroup.layout( );
 
 		formatGroup = new Group( getFieldEditorParent( ), SWT.NONE );
-		formatGroup.setText( Messages.getString(
-				"JavaDecompilerPreferencePage.Label.FormatSettings" ) ); //$NON-NLS-1$
+		formatGroup.setText( Messages.getString( "JavaDecompilerPreferencePage.Label.FormatSettings" ) ); //$NON-NLS-1$
 		gd = new GridData( GridData.FILL_HORIZONTAL );
 		gd.horizontalSpan = defaultDecompiler.getNumberOfControls( );
 		formatGroup.setLayoutData( gd );
 
-		eclipseFormatter = new CheckFieldEditor(
-				JavaDecompilerPlugin.USE_ECLIPSE_FORMATTER,
-				Messages.getString(
-						"JavaDecompilerPreferencePage.Label.UseEclipseFormat" ), //$NON-NLS-1$
+		eclipseFormatter = new CheckFieldEditor( JavaDecompilerPlugin.USE_ECLIPSE_FORMATTER,
+				Messages.getString( "JavaDecompilerPreferencePage.Label.UseEclipseFormat" ), //$NON-NLS-1$
 				formatGroup );
 		addField( eclipseFormatter );
 
-		eclipseSorter = new CheckFieldEditor(
-				JavaDecompilerPlugin.USE_ECLIPSE_SORTER,
-				Messages.getString(
-						"JavaDecompilerPreferencePage.Lable.UseEclipseSorter" ), //$NON-NLS-1$
+		eclipseSorter = new CheckFieldEditor( JavaDecompilerPlugin.USE_ECLIPSE_SORTER,
+				Messages.getString( "JavaDecompilerPreferencePage.Lable.UseEclipseSorter" ), //$NON-NLS-1$
 				formatGroup );
 		addField( eclipseSorter );
 
@@ -173,22 +169,18 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 		formatGroup.layout( );
 
 		debugGroup = new Group( getFieldEditorParent( ), SWT.NONE );
-		debugGroup.setText( Messages.getString(
-				"JavaDecompilerPreferencePage.Label.DebugSettings" ) ); //$NON-NLS-1$
+		debugGroup.setText( Messages.getString( "JavaDecompilerPreferencePage.Label.DebugSettings" ) ); //$NON-NLS-1$
 		gd = new GridData( GridData.FILL_HORIZONTAL );
 		gd.horizontalSpan = defaultDecompiler.getNumberOfControls( );
 		debugGroup.setLayoutData( gd );
 
-		optionLncEditor = new CheckFieldEditor(
-				JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS,
-				Messages.getString(
-						"JavaDecompilerPreferencePage.Label.OutputLineNumber" ), //$NON-NLS-1$
+		optionLncEditor = new CheckFieldEditor( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS,
+				Messages.getString( "JavaDecompilerPreferencePage.Label.OutputLineNumber" ), //$NON-NLS-1$
 				debugGroup );
 		addField( optionLncEditor );
 
 		alignEditor = new CheckFieldEditor( JavaDecompilerPlugin.ALIGN,
-				Messages.getString(
-						"JavaDecompilerPreferencePage.Label.AlignCode" ), //$NON-NLS-1$
+				Messages.getString( "JavaDecompilerPreferencePage.Label.AlignCode" ), //$NON-NLS-1$
 				debugGroup );
 		addField( alignEditor );
 
@@ -197,16 +189,13 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 		debugGroup.layout( );
 
 		Group startupGroup = new Group( getFieldEditorParent( ), SWT.NONE );
-		startupGroup.setText( Messages
-				.getString( "JavaDecompilerPreferencePage.Label.Startup" ) ); //$NON-NLS-1$ );
+		startupGroup.setText( Messages.getString( "JavaDecompilerPreferencePage.Label.Startup" ) ); //$NON-NLS-1$ );
 		gd = new GridData( GridData.FILL_HORIZONTAL );
 		gd.horizontalSpan = defaultDecompiler.getNumberOfControls( );
 		startupGroup.setLayoutData( gd );
 
-		CheckFieldEditor defaultViewerEditor = new CheckFieldEditor(
-				JavaDecompilerPlugin.DEFAULT_EDITOR,
-				Messages.getString(
-						"JavaDecompilerPreferencePage.Label.DefaultEditor" ), //$NON-NLS-1$
+		CheckFieldEditor defaultViewerEditor = new CheckFieldEditor( JavaDecompilerPlugin.DEFAULT_EDITOR,
+				Messages.getString( "JavaDecompilerPreferencePage.Label.DefaultEditor" ), //$NON-NLS-1$
 				startupGroup );
 		addField( defaultViewerEditor );
 
@@ -225,24 +214,20 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 	{
 		super.initialize( );
 
-		String defaultDecompiler = getPreferenceStore( )
-				.getString( JavaDecompilerPlugin.DECOMPILER_TYPE );
+		String defaultDecompiler = getPreferenceStore( ).getString( JavaDecompilerPlugin.DECOMPILER_TYPE );
 
 		boolean isCfr = defaultDecompiler.equals( DecompilerType.CFR );
 
 		if ( isCfr )
 		{
-			( (Button) alignEditor.getChangeControl( debugGroup ) )
-					.setSelection( false );
-			( (Button) optionLncEditor.getChangeControl( debugGroup ) )
-					.setSelection( false );
+			( (Button) alignEditor.getChangeControl( debugGroup ) ).setSelection( false );
+			( (Button) optionLncEditor.getChangeControl( debugGroup ) ).setSelection( false );
 			alignEditor.setEnabled( false, debugGroup );
 			optionLncEditor.setEnabled( false, debugGroup );
 		}
 		else
 		{
-			boolean enabled = getPreferenceStore( )
-					.getBoolean( JadDecompiler.OPTION_LNC );
+			boolean enabled = getPreferenceStore( ).getBoolean( JadDecompiler.OPTION_LNC );
 			alignEditor.setEnabled( enabled, debugGroup );
 		}
 	}
@@ -264,17 +249,14 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 			alignEditor.setEnabled( enabled, debugGroup );
 			if ( enabled )
 			{
-				( (Button) eclipseFormatter.getChangeControl( formatGroup ) )
-						.setSelection( false );
-				( (Button) eclipseSorter.getChangeControl( formatGroup ) )
-						.setSelection( false );
+				( (Button) eclipseFormatter.getChangeControl( formatGroup ) ).setSelection( false );
+				( (Button) eclipseSorter.getChangeControl( formatGroup ) ).setSelection( false );
 				eclipseFormatter.handleSelection( formatGroup );
 				eclipseSorter.handleSelection( formatGroup );
 			}
 			if ( !enabled )
 			{
-				( (Button) alignEditor.getChangeControl( debugGroup ) )
-						.setSelection( false );
+				( (Button) alignEditor.getChangeControl( debugGroup ) ).setSelection( false );
 				alignEditor.handleSelection( debugGroup );
 			}
 		}
@@ -283,10 +265,8 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 			boolean enabled = event.getNewValue( ).equals( Boolean.TRUE );
 			if ( enabled )
 			{
-				( (Button) eclipseFormatter.getChangeControl( formatGroup ) )
-						.setSelection( false );
-				( (Button) eclipseSorter.getChangeControl( formatGroup ) )
-						.setSelection( false );
+				( (Button) eclipseFormatter.getChangeControl( formatGroup ) ).setSelection( false );
+				( (Button) eclipseSorter.getChangeControl( formatGroup ) ).setSelection( false );
 				eclipseFormatter.handleSelection( formatGroup );
 				eclipseSorter.handleSelection( formatGroup );
 			}
@@ -297,10 +277,8 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 			boolean enabled = event.getNewValue( ).equals( Boolean.TRUE );
 			if ( enabled )
 			{
-				( (Button) alignEditor.getChangeControl( debugGroup ) )
-						.setSelection( false );
-				( (Button) optionLncEditor.getChangeControl( debugGroup ) )
-						.setSelection( false );
+				( (Button) alignEditor.getChangeControl( debugGroup ) ).setSelection( false );
+				( (Button) optionLncEditor.getChangeControl( debugGroup ) ).setSelection( false );
 				alignEditor.setEnabled( !enabled, debugGroup );
 				alignEditor.handleSelection( debugGroup );
 				optionLncEditor.handleSelection( debugGroup );
@@ -311,10 +289,8 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 			boolean isCfr = event.getNewValue( ).equals( DecompilerType.CFR );
 			if ( isCfr )
 			{
-				( (Button) alignEditor.getChangeControl( debugGroup ) )
-						.setSelection( false );
-				( (Button) optionLncEditor.getChangeControl( debugGroup ) )
-						.setSelection( false );
+				( (Button) alignEditor.getChangeControl( debugGroup ) ).setSelection( false );
+				( (Button) optionLncEditor.getChangeControl( debugGroup ) ).setSelection( false );
 				alignEditor.setEnabled( false, debugGroup );
 				optionLncEditor.setEnabled( false, debugGroup );
 			}

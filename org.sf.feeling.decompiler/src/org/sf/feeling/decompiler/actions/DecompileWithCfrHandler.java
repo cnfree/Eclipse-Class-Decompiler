@@ -29,6 +29,10 @@ public class DecompileWithCfrHandler extends DecompileHandler
 
 	public Object execute( ExecutionEvent event ) throws ExecutionException
 	{
+		if ( !JavaDecompilerPlugin.getDefault( ).enableCfrDecompiler( ) )
+		{
+			return null;
+		}
 
 		final List classes = UIUtil.getActiveSelection( );
 		if ( classes != null && !classes.isEmpty( ) )

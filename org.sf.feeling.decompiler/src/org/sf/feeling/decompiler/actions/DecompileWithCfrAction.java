@@ -39,6 +39,10 @@ public class DecompileWithCfrAction extends Action
 
 	public boolean isEnabled( )
 	{
+		if ( !JavaDecompilerPlugin.getDefault( ).enableCfrDecompiler( ) )
+		{
+			return false;
+		}
 		return UIUtil.getActiveEditor( ) != null
 				|| UIUtil.getActiveSelection( ) != null;
 	}
