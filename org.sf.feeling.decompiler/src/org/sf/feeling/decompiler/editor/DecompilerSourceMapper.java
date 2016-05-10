@@ -149,7 +149,7 @@ public abstract class DecompilerSourceMapper extends SourceMapper
 			result = source;
 		}
 
-		return result;
+		return result.trim( );
 	}
 
 	protected String getArchivePath( IPackageFragmentRoot root )

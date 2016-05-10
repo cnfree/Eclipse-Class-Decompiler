@@ -55,6 +55,7 @@ public class SubMenuCreator implements IMenuCreator
 		menuMgr.add( new DecompileWithJadAction( ) );
 		menuMgr.add( new DecompileWithJDCoreAction( ) );
 		menuMgr.add( new DecompileWithCfrAction( ) );
+		menuMgr.add( new DecompileWithProcyonAction( ) );
 
 		IContributionItem[] items = menuMgr.getItems( );
 		for ( int i = 0; i < items.length; i++ )
@@ -108,7 +109,8 @@ public class SubMenuCreator implements IMenuCreator
 			dropDownMenuMgr.add( new DecompileWithJadAction( ) );
 			dropDownMenuMgr.add( new DecompileWithJDCoreAction( ) );
 			dropDownMenuMgr.add( new DecompileWithCfrAction( ) );
-			
+			dropDownMenuMgr.add( new DecompileWithProcyonAction( ) );
+
 			dropDownMenuMgr.add( new Separator( ) );
 
 			List list = UIUtil.getExportSelections( );

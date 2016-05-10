@@ -22,10 +22,10 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.Path;
 import org.sf.feeling.decompiler.editor.BaseDecompilerSourceMapper;
 
-public class CfrCoreSourceMapper extends BaseDecompilerSourceMapper
+public class CfrSourceMapper extends BaseDecompilerSourceMapper
 {
 
-	public CfrCoreSourceMapper( )
+	public CfrSourceMapper( )
 	{
 		super( new Path( "." ), "", new HashMap( ) ); //$NON-NLS-1$ //$NON-NLS-2$
 		decompiler = new CfrDecompiler( );

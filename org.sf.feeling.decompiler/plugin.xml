@@ -127,6 +127,11 @@
             categoryId="org.sf.feeling.decompiler"  
             id="org.sf.feeling.decompiler.decompile.cfr">  
       </command>  
+      <command  
+            name="Decompile With Procyon"  
+            categoryId="org.sf.feeling.decompiler"  
+            id="org.sf.feeling.decompiler.decompile.procyon">  
+      </command>  
    </extension> 
    <extension
  		point="org.eclipse.ui.bindings">
@@ -150,6 +155,11 @@
       		commandId="org.sf.feeling.decompiler.decompile.cfr"
       		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
+		<key
+      		sequence="Ctrl+Shift+P"
+      		commandId="org.sf.feeling.decompiler.decompile.procyon"
+      		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+		</key>
  	</extension>
  	<extension  
          point="org.eclipse.ui.handlers">  
@@ -165,9 +175,13 @@
             commandId="org.sf.feeling.decompiler.decompile.jad"  
             class="org.sf.feeling.decompiler.actions.DecompileWithJadHandler">  
       </handler>
-       <handler  
+      <handler  
             commandId="org.sf.feeling.decompiler.decompile.cfr"  
             class="org.sf.feeling.decompiler.actions.DecompileWithCfrHandler">  
+      </handler>
+      <handler  
+            commandId="org.sf.feeling.decompiler.decompile.procyon"  
+            class="org.sf.feeling.decompiler.actions.DecompileWithProcyonHandler">  
       </handler>  
    </extension>  
    <extension

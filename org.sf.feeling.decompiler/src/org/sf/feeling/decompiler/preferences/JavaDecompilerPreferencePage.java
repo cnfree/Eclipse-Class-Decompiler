@@ -108,9 +108,11 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 			}
 		};
 
-		defaultDecompiler.addItem( DecompilerType.JAD, "Jad" ); //$NON-NLS-1$
-		defaultDecompiler.addItem( DecompilerType.JDCORE, "JD-Core" ); //$NON-NLS-1$
-		defaultDecompiler.addItem( DecompilerType.CFR, "Class File Reader" ); //$NON-NLS-1$
+		defaultDecompiler.addItem( DecompilerType.JAD, "Jad", "Jad" ); //$NON-NLS-1$
+		defaultDecompiler.addItem( DecompilerType.JDCORE, "JD-Core", "JD-Core" ); //$NON-NLS-1$
+		defaultDecompiler.addItem( DecompilerType.CFR, "Class File Reader (Support JDK8)", "Class File Reader" ); //$NON-NLS-1$
+		defaultDecompiler.addItem( DecompilerType.PROCYON, "Procyon (Support JDK8)", "Procyon" ); //$NON-NLS-1$
+		
 		addField( defaultDecompiler );
 
 		basicGroup = new Group( getFieldEditorParent( ), SWT.NONE );
@@ -222,9 +224,27 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 	protected void initialize( )
 	{
 		super.initialize( );
-		boolean enabled = getPreferenceStore( )
-				.getBoolean( JadDecompiler.OPTION_LNC );
-		alignEditor.setEnabled( enabled, debugGroup );
+
+		String defaultDecompiler = getPreferenceStore( )
+				.getString( JavaDecompilerPlugin.DECOMPILER_TYPE );
+
+		boolean isCfr = defaultDecompiler.equals( DecompilerType.CFR );
+
+		if ( isCfr )
+		{
+			( (Button) alignEditor.getChangeControl( debugGroup ) )
+					.setSelection( false );
+			( (Button) optionLncEditor.getChangeControl( debugGroup ) )
+					.setSelection( false );
+			alignEditor.setEnabled( false, debugGroup );
+			optionLncEditor.setEnabled( false, debugGroup );
+		}
+		else
+		{
+			boolean enabled = getPreferenceStore( )
+					.getBoolean( JadDecompiler.OPTION_LNC );
+			alignEditor.setEnabled( enabled, debugGroup );
+		}
 	}
 
 	protected void performDefaults( )
@@ -288,8 +308,8 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 		}
 		if ( event.getSource( ) == defaultDecompiler )
 		{
-			boolean isCFR = event.getNewValue( ).equals( DecompilerType.CFR );
-			if ( isCFR )
+			boolean isCfr = event.getNewValue( ).equals( DecompilerType.CFR );
+			if ( isCfr )
 			{
 				( (Button) alignEditor.getChangeControl( debugGroup ) )
 						.setSelection( false );

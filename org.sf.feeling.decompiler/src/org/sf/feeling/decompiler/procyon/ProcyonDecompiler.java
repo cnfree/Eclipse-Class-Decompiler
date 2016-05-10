@@ -1,0 +1,272 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Chen Chao(cnfree2000@hotmail.com).
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *  Chen Chao  - initial API and implementation
+ *******************************************************************************/
+
+package org.sf.feeling.decompiler.procyon;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.sf.feeling.decompiler.JavaDecompilerPlugin;
+import org.sf.feeling.decompiler.jad.IDecompiler;
+import org.sf.feeling.decompiler.jad.JarClassExtractor;
+import org.sf.feeling.decompiler.util.FileUtil;
+
+import com.strobel.assembler.InputTypeLoader;
+import com.strobel.assembler.metadata.DeobfuscationUtilities;
+import com.strobel.assembler.metadata.MetadataSystem;
+import com.strobel.assembler.metadata.TypeDefinition;
+import com.strobel.assembler.metadata.TypeReference;
+import com.strobel.decompiler.CommandLineOptions;
+import com.strobel.decompiler.DecompilationOptions;
+import com.strobel.decompiler.DecompilerSettings;
+import com.strobel.decompiler.LineNumberFormatter;
+import com.strobel.decompiler.PlainTextOutput;
+import com.strobel.decompiler.languages.TypeDecompilationResults;
+import com.strobel.decompiler.languages.java.JavaFormattingOptions;
+
+public class ProcyonDecompiler implements IDecompiler
+{
+
+	private String source = ""; // $NON-NLS-1$
+	private long time, start;
+	private String log = "";
+
+	/**
+	 * Performs a <code>Runtime.exec()</code> on jad executable with selected
+	 * options.
+	 * 
+	 * @see IDecompiler#decompile(String, String, String)
+	 */
+	public void decompile( String root, String packege, String className )
+	{
+		start = System.currentTimeMillis( );
+		File workingDir = new File( root + "/" + packege ); //$NON-NLS-1$
+
+		final String classPathStr = new File( workingDir, className )
+				.getAbsolutePath( );
+
+		CommandLineOptions options = new CommandLineOptions( );
+
+		IPreferenceStore preferences = JavaDecompilerPlugin.getDefault( )
+				.getPreferenceStore( );
+
+		if ( preferences
+				.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS ) )
+		{
+			options.setIncludeLineNumbers( true );
+			options.setStretchLines( true );
+		}
+
+		DecompilerSettings settings = new DecompilerSettings( );
+		settings.setTypeLoader( new InputTypeLoader( ) );
+		settings.setFormattingOptions( JavaFormattingOptions.createDefault( ) );
+
+		DecompilationOptions decompilationOptions = new DecompilationOptions( );
+		decompilationOptions.setSettings( settings );
+		decompilationOptions.setFullDecompilation( true );
+
+		MetadataSystem metadataSystem = new MetadataSystem(
+				settings.getTypeLoader( ) );
+
+		TypeReference type = metadataSystem.lookupType( classPathStr );
+
+		TypeDefinition resolvedType;
+		if ( ( type == null )
+				|| ( ( resolvedType = type.resolve( ) ) == null ) )
+		{
+			System.err.printf( "!!! ERROR: Failed to load class %s.\n",
+					new Object[]{
+							classPathStr
+					} );
+			return;
+		}
+
+		DeobfuscationUtilities.processType( resolvedType );
+
+		String property = "java.io.tmpdir"; //$NON-NLS-1$
+		String tempDir = System.getProperty( property );
+		File classFile = new File( tempDir, className );
+		Writer writer = null;
+		try
+		{
+			writer = new BufferedWriter( new OutputStreamWriter(
+					new FileOutputStream( classFile ) ) );
+
+			PlainTextOutput output = new PlainTextOutput( writer );
+
+			output.setUnicodeOutputEnabled(
+					settings.isUnicodeOutputEnabled( ) );
+
+			TypeDecompilationResults results = settings.getLanguage( )
+					.decompileType( resolvedType,
+							output,
+							decompilationOptions );
+
+			writer.flush( );
+			writer.close( );
+
+			writer = null;
+
+			List lineNumberPositions = results.getLineNumberPositions( );
+
+			if ( options.getIncludeLineNumbers( )
+					|| options.getStretchLines( ) )
+			{
+				EnumSet lineNumberOptions = EnumSet
+						.noneOf( LineNumberFormatter.LineNumberOption.class );
+
+				if ( options.getIncludeLineNumbers( ) )
+				{
+					lineNumberOptions.add(
+							LineNumberFormatter.LineNumberOption.LEADING_COMMENTS );
+				}
+
+				if ( options.getStretchLines( ) )
+				{
+					lineNumberOptions.add(
+							LineNumberFormatter.LineNumberOption.STRETCHED );
+				}
+
+				LineNumberFormatter lineFormatter = new LineNumberFormatter(
+						classFile, lineNumberPositions, lineNumberOptions );
+
+				lineFormatter.reformatFile( );
+			}
+		}
+		catch ( IOException e )
+		{
+			e.printStackTrace( );
+		}
+		finally
+		{
+			if ( writer != null )
+			{
+				try
+				{
+					writer.close( );
+				}
+				catch ( IOException e )
+				{
+					e.printStackTrace( );
+				}
+			}
+		}
+
+		source = FileUtil.getContent( classFile );
+
+		classFile.delete( );
+
+		Pattern wp = Pattern.compile( "/\\*\\s+.+?\\s+\\*/", Pattern.DOTALL );
+		Matcher m = wp.matcher( source );
+		if ( m.find( ) )
+		{
+			log = m.group( );
+			log = log.replace( "/*", "" );
+			log = log.replace( "*/", "" );
+			log = log.replace( "*", "" );
+		}
+		source = m.replaceAll( "" );
+
+		time = System.currentTimeMillis( ) - start;
+	}
+
+	/**
+	 * Jad doesn't support decompilation from archives. This methods extracts
+	 * request class file from the specified archive into temp directory and
+	 * then calls <code>decompile</code>.
+	 * 
+	 * @see IDecompiler#decompileFromArchive(String, String, String)
+	 */
+	public void decompileFromArchive( String archivePath, String packege,
+			String className )
+	{
+		start = System.currentTimeMillis( );
+		File workingDir = new File( JavaDecompilerPlugin.getDefault( )
+				.getPreferenceStore( )
+				.getString( JavaDecompilerPlugin.TEMP_DIR )
+				+ "/" //$NON-NLS-1$
+				+ System.currentTimeMillis( ) );
+
+		try
+		{
+			workingDir.mkdirs( );
+			JarClassExtractor.extract( archivePath,
+					packege,
+					className,
+					true,
+					workingDir.getAbsolutePath( ) );
+			decompile( workingDir.getAbsolutePath( ), "", className ); //$NON-NLS-1$
+		}
+		catch ( Exception e )
+		{
+			JavaDecompilerPlugin.logError( e, e.getMessage( ) );
+			return;
+		}
+		finally
+		{
+			deltree( workingDir );
+		}
+	}
+
+	void deltree( File root )
+	{
+		if ( root.isFile( ) )
+		{
+			root.delete( );
+			return;
+		}
+
+		File[] children = root.listFiles( );
+		for ( int i = 0; i < children.length; i++ )
+		{
+			deltree( children[i] );
+		}
+
+		root.delete( );
+	}
+
+	public long getDecompilationTime( )
+	{
+		return time;
+	}
+
+	public List getExceptions( )
+	{
+		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * @see IDecompiler#getLog()
+	 */
+	public String getLog( )
+	{
+		return log;
+	}
+
+	/**
+	 * @see IDecompiler#getSource()
+	 */
+	public String getSource( )
+	{
+		return source;
+	}
+
+}

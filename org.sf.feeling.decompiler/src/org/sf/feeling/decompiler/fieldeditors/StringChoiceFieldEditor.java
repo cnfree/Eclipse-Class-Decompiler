@@ -46,6 +46,13 @@ public class StringChoiceFieldEditor extends FieldEditor
 		fCombo.add( label );
 	}
 
+	public void addItem( String key, String label, String value )
+	{
+		fKeys.add( key );
+		fLabels.add( value );
+		fCombo.add( label );
+	}
+
 	public Combo getControl( )
 	{
 		return fCombo;
@@ -83,7 +90,7 @@ public class StringChoiceFieldEditor extends FieldEditor
 	protected void doLoad( )
 	{
 		String value = getPreferenceStore( ).getString( getPreferenceName( ) );
-		int index = fCombo.indexOf( value );
+		int index = fLabels.indexOf( value );
 		if ( index >= 0 )
 			fCombo.select( index );
 	}
@@ -92,7 +99,7 @@ public class StringChoiceFieldEditor extends FieldEditor
 	{
 		String value = getPreferenceStore( )
 				.getDefaultString( getPreferenceName( ) );
-		int index = fCombo.indexOf( value );
+		int index = fLabels.indexOf( value );
 		if ( index >= 0 )
 		{
 			fCombo.select( index );
@@ -105,7 +112,7 @@ public class StringChoiceFieldEditor extends FieldEditor
 		String value = ""; //$NON-NLS-1$
 		if ( fCombo.getSelectionIndex( ) >= 0 )
 		{
-			value = fCombo.getItem( fCombo.getSelectionIndex( ) );
+			value = (String) fLabels.get( fCombo.getSelectionIndex( ) );
 		}
 		getPreferenceStore( ).setValue( getPreferenceName( ), value );
 	}
@@ -146,9 +153,8 @@ public class StringChoiceFieldEditor extends FieldEditor
 		if ( index >= 0 )
 		{
 			fKeys.remove( index );
-			String label = (String) fLabels.get( index );
 			fLabels.remove( index );
-			fCombo.remove( label );
+			fCombo.remove( index );
 		}
 	}
 

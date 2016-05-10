@@ -11,9 +11,10 @@
 
 package org.sf.feeling.decompiler.editor;
 
-import org.sf.feeling.decompiler.cfr.CfrCoreSourceMapper;
+import org.sf.feeling.decompiler.cfr.CfrSourceMapper;
 import org.sf.feeling.decompiler.jad.JadSourceMapper;
 import org.sf.feeling.decompiler.jdcore.JDCoreSourceMapper;
+import org.sf.feeling.decompiler.procyon.ProcyonSourceMapper;
 
 public class SourceMapperFactory
 {
@@ -21,6 +22,7 @@ public class SourceMapperFactory
 	private static DecompilerSourceMapper jadSourceMapper;
 	private static DecompilerSourceMapper jdCoreSourceMapper;
 	private static DecompilerSourceMapper cfrSourceMapper;
+	private static DecompilerSourceMapper procyonSourceMapper;
 
 	public static DecompilerSourceMapper getSourceMapper( String decompiler )
 	{
@@ -44,9 +46,17 @@ public class SourceMapperFactory
 		{
 			if ( cfrSourceMapper == null )
 			{
-				cfrSourceMapper = new CfrCoreSourceMapper( );
+				cfrSourceMapper = new CfrSourceMapper( );
 			}
 			return cfrSourceMapper;
+		}
+		else if ( DecompilerType.PROCYON.equals( decompiler ) )
+		{
+			if ( procyonSourceMapper == null )
+			{
+				procyonSourceMapper = new ProcyonSourceMapper( );
+			}
+			return procyonSourceMapper;
 		}
 		return null;
 	}

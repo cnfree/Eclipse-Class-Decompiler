@@ -1,7 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
- lib/cfr_0_115.jar
+ lib/cfr_0_115.jar,
+ lib/procyon-decompiler-0.5.30.jar
 Bundle-Name: Eclipse Class Decompiler
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
