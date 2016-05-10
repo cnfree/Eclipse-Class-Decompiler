@@ -107,12 +107,14 @@ public abstract class DecompilerSourceMapper extends SourceMapper
 
 		IPreferenceStore prefs = JavaDecompilerPlugin.getDefault( )
 				.getPreferenceStore( );
-		boolean useFormatter = prefs.getBoolean( JavaDecompilerPlugin.USE_ECLIPSE_FORMATTER );
+		boolean useFormatter = prefs
+				.getBoolean( JavaDecompilerPlugin.USE_ECLIPSE_FORMATTER );
 
 		if ( source != null && useFormatter )
 		{
 			CodeFormatter formatter = ToolFactory.createCodeFormatter( null );
-			TextEdit textEdit = formatter.format( CodeFormatter.K_COMPILATION_UNIT,
+			TextEdit textEdit = formatter.format(
+					CodeFormatter.K_COMPILATION_UNIT,
 					source,
 					0,
 					source.length( ),
@@ -210,5 +212,5 @@ public abstract class DecompilerSourceMapper extends SourceMapper
 		return elt;
 	}
 
-	public abstract String decompile( File file );
+	public abstract String decompile( String decompilerType, File file );
 }

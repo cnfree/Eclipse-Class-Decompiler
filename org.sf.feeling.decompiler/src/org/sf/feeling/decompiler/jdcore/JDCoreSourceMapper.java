@@ -291,6 +291,7 @@ public class JDCoreSourceMapper extends JDSourceMapper
 					report = report.replace( "/* ", "\t" );
 					report = report.replace( " */", "" );
 					report = report.replace( " * ", "\t" );
+					code = m.replaceAll( "" );
 				}
 
 				code = SortMemberUtil.sortMember(
@@ -330,7 +331,7 @@ public class JDCoreSourceMapper extends JDSourceMapper
 		return source.toString( ).toCharArray( );
 	}
 
-	public String decompile( File file )
+	public String decompile( String decompilerType, File file )
 	{
 		long startTime = System.currentTimeMillis( );
 		IPreferenceStore prefs = JavaDecompilerPlugin.getDefault( )
@@ -372,7 +373,7 @@ public class JDCoreSourceMapper extends JDSourceMapper
 				if ( showLineNumber && align )
 				{
 					DecompilerOutputUtil decompilerOutputUtil = new DecompilerOutputUtil(
-							DecompilerType.JDCORE, code );
+							decompilerType, code );
 					code = decompilerOutputUtil.realign( );
 				}
 

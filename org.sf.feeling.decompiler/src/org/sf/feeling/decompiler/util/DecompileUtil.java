@@ -35,21 +35,26 @@ public class DecompileUtil
 		// in debug align mode
 		if ( origSrc == null
 				|| always
-				&& !origSrc.startsWith( JavaDecompilerClassFileEditor.MARK )
-				|| ( origSrc.startsWith( JavaDecompilerClassFileEditor.MARK ) && ( !reuseBuf || force ) ) )
+						&& !origSrc.startsWith(
+								JavaDecompilerClassFileEditor.MARK )
+				|| ( origSrc.startsWith( JavaDecompilerClassFileEditor.MARK )
+						&& ( !reuseBuf || force ) ) )
 		{
-			DecompilerSourceMapper sourceMapper = SourceMapperFactory.getSourceMapper( decompilerType );
+			DecompilerSourceMapper sourceMapper = SourceMapperFactory
+					.getSourceMapper( decompilerType );
 			char[] src = sourceMapper.findSource( cf.getType( ) );
 			if ( src == null )
 			{
 				if ( DecompilerType.JAD.equals( decompilerType ) )
 				{
-					src = SourceMapperFactory.getSourceMapper( DecompilerType.JDCORE )
+					src = SourceMapperFactory
+							.getSourceMapper( DecompilerType.JDCORE )
 							.findSource( cf.getType( ) );
 				}
 				else if ( DecompilerType.JDCORE.equals( decompilerType ) )
 				{
-					src = SourceMapperFactory.getSourceMapper( DecompilerType.JAD )
+					src = SourceMapperFactory
+							.getSourceMapper( DecompilerType.JAD )
 							.findSource( cf.getType( ) );
 				}
 			}
@@ -67,9 +72,10 @@ public class DecompileUtil
 	public static String decompiler( FileStoreEditorInput input,
 			String decompilerType )
 	{
-		DecompilerSourceMapper sourceMapper = SourceMapperFactory.getSourceMapper( decompilerType );
+		DecompilerSourceMapper sourceMapper = SourceMapperFactory
+				.getSourceMapper( decompilerType );
 		File file = new File( ( (FileStoreEditorInput) input ).getURI( ) );
-		return sourceMapper.decompile( file );
+		return sourceMapper.decompile( decompilerType, file );
 
 	}
 
@@ -80,7 +86,8 @@ public class DecompileUtil
 		Matcher m = p.matcher( source );
 		if ( m.find( ) )
 		{
-			return m.group( ).replace( "package", "" ) //$NON-NLS-1$ //$NON-NLS-2$
+			return m.group( )
+					.replace( "package", "" ) //$NON-NLS-1$ //$NON-NLS-2$
 					.replace( ";", "" ) //$NON-NLS-1$ //$NON-NLS-2$
 					.trim( );
 		}
