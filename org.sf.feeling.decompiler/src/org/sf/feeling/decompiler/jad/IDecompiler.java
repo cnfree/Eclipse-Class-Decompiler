@@ -21,7 +21,7 @@ import java.util.List;
  * a <code>IDecompiler</code> instance: root = /bar packege = com/acme className
  * = Foo.class
  */
-public interface IJadDecompiler
+public interface IDecompiler
 {
 
 	/**

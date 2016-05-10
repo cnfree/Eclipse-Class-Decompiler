@@ -14,6 +14,8 @@ package org.sf.feeling.decompiler.jdcore;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -125,8 +127,8 @@ public class JDCoreSourceMapper extends JDSourceMapper
 
 				try
 				{
-					String zipEntryPath = javaClassPath.replace( File.separatorChar,
-							'/' );
+					String zipEntryPath = javaClassPath
+							.replace( File.separatorChar, '/' );
 					zipFile = new ZipFile( baseFile );
 					ZipEntry zipEntry = zipFile.getEntry( zipEntryPath );
 					return ( zipEntry != null ) && ( !zipEntry.isDirectory( ) );
@@ -172,17 +174,19 @@ public class JDCoreSourceMapper extends JDSourceMapper
 
 	public char[] findSource( IType type, IBinaryType info )
 	{
+		long startTime = System.currentTimeMillis( );
 		IPreferenceStore prefs = JavaDecompilerPlugin.getDefault( )
 				.getPreferenceStore( );
-		boolean always = prefs.getBoolean( JavaDecompilerPlugin.IGNORE_EXISTING );
+		boolean always = prefs
+				.getBoolean( JavaDecompilerPlugin.IGNORE_EXISTING );
 
 		IPackageFragment pkgFrag = type.getPackageFragment( );
 		IPackageFragmentRoot root = (IPackageFragmentRoot) pkgFrag.getParent( );
 
 		if ( originalSourceMapper.containsKey( root ) && !always )
 		{
-			char[] attachedSource = ( (SourceMapper) originalSourceMapper.get( root ) ).findSource( type,
-					info );
+			char[] attachedSource = ( (SourceMapper) originalSourceMapper
+					.get( root ) ).findSource( type, info );
 			if ( attachedSource != null )
 			{
 				isAttachedSource = true;
@@ -207,7 +211,8 @@ public class JDCoreSourceMapper extends JDSourceMapper
 						&& !always
 						&& !( sourceMapper instanceof DecompilerSourceMapper ) )
 				{
-					char[] attachedSource = sourceMapper.findSource( type, info );
+					char[] attachedSource = sourceMapper.findSource( type,
+							info );
 					if ( attachedSource != null )
 					{
 						isAttachedSource = true;
@@ -249,15 +254,20 @@ public class JDCoreSourceMapper extends JDSourceMapper
 		char[] returnSource = findSource( classePath, className );
 		if ( returnSource == null )
 			return null;
-		String code = JavaDecompilerClassFileEditor.MARK + "\r\n" //$NON-NLS-1$
+		String code = JavaDecompilerClassFileEditor.MARK
+				+ "\r\n" //$NON-NLS-1$
 				+ new String( returnSource );
 
-		boolean showLineNumber = prefs.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS );
+		boolean showReport = prefs
+				.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_METADATA );
+
+		boolean showLineNumber = prefs
+				.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS );
 		boolean align = prefs.getBoolean( JavaDecompilerPlugin.ALIGN );
 		if ( ( showLineNumber && align ) || UIUtil.isDebugPerspective( ) )
 		{
-			DecompilerOutputUtil decompilerOutputUtil = new DecompilerOutputUtil( DecompilerType.JDCORE,
-					code );
+			DecompilerOutputUtil decompilerOutputUtil = new DecompilerOutputUtil(
+					DecompilerType.JDCORE, code );
 			code = decompilerOutputUtil.realign( );
 		}
 
@@ -265,14 +275,46 @@ public class JDCoreSourceMapper extends JDSourceMapper
 
 		if ( !UIUtil.isDebugPerspective( ) )
 		{
-			boolean useSorter = prefs.getBoolean( JavaDecompilerPlugin.USE_ECLIPSE_SORTER );
+			boolean useSorter = prefs
+					.getBoolean( JavaDecompilerPlugin.USE_ECLIPSE_SORTER );
+
+			String report = null;
+
 			if ( useSorter )
 			{
-				code = SortMemberUtil.sortMember( type.getPackageFragment( )
-						.getElementName( ), className, code );
+				Pattern wp = Pattern.compile( "/\\*\\s+.+?\\s+\\*/",
+						Pattern.DOTALL );
+				Matcher m = wp.matcher( code );
+				if ( m.find( ) )
+				{
+					report = m.group( );
+					report = report.replace( "/* ", "\t" );
+					report = report.replace( " */", "" );
+					report = report.replace( " * ", "\t" );
+				}
+
+				code = SortMemberUtil.sortMember(
+						type.getPackageFragment( ).getElementName( ),
+						className,
+						code );
 			}
 
 			source.append( formatSource( code ) );
+
+			if ( showReport )
+			{
+				source.append( "\n\n/*" ); //$NON-NLS-1$
+				source.append( "\n\tDECOMPILATION REPORT\n\n" ); //$NON-NLS-1$
+				source.append( "\tTotal time: " ) //$NON-NLS-1$
+						.append( ""
+								+ ( System.currentTimeMillis( ) - startTime ) )
+						.append( " ms\n" ); //$NON-NLS-1$
+				if ( report != null )
+				{
+					source.append( report );
+				}
+				source.append( "*/" ); //$NON-NLS-1$
+			}
 		}
 		else
 		{
@@ -290,6 +332,7 @@ public class JDCoreSourceMapper extends JDSourceMapper
 
 	public String decompile( File file )
 	{
+		long startTime = System.currentTimeMillis( );
 		IPreferenceStore prefs = JavaDecompilerPlugin.getDefault( )
 				.getPreferenceStore( );
 		String returnSource = ""; //$NON-NLS-1$
@@ -317,21 +360,58 @@ public class JDCoreSourceMapper extends JDSourceMapper
 						.displayLineNumber( displayNumber );
 			}
 
-			String code = JavaDecompilerClassFileEditor.MARK + "\r\n" //$NON-NLS-1$
+			String code = JavaDecompilerClassFileEditor.MARK
+					+ "\r\n" //$NON-NLS-1$
 					+ new String( returnSource );
 
 			if ( !UIUtil.isDebugPerspective( ) )
 			{
-				boolean showLineNumber = prefs.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS );
+				boolean showLineNumber = prefs.getBoolean(
+						JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS );
 				boolean align = prefs.getBoolean( JavaDecompilerPlugin.ALIGN );
 				if ( showLineNumber && align )
 				{
-					DecompilerOutputUtil decompilerOutputUtil = new DecompilerOutputUtil( DecompilerType.JDCORE,
-							code );
+					DecompilerOutputUtil decompilerOutputUtil = new DecompilerOutputUtil(
+							DecompilerType.JDCORE, code );
 					code = decompilerOutputUtil.realign( );
 				}
+
+				String report = null;
+
+				Pattern wp = Pattern.compile( "/\\*\\s+.+?\\s+\\*/",
+						Pattern.DOTALL );
+				Matcher m = wp.matcher( code );
+				if ( m.find( ) )
+				{
+					report = m.group( );
+					report = report.replace( "/* ", "\t" );
+					report = report.replace( " */", "" );
+					report = report.replace( " * ", "\t" );
+
+					code = m.replaceAll( "" );
+				}
+
 				StringBuffer source = new StringBuffer( );
 				source.append( formatSource( code ) );
+
+				boolean showReport = prefs.getBoolean(
+						JavaDecompilerPlugin.PREF_DISPLAY_METADATA );
+				if ( showReport )
+				{
+					source.append( "\n\n/*" ); //$NON-NLS-1$
+					source.append( "\n\tDECOMPILATION REPORT\n\n" ); //$NON-NLS-1$
+					source.append( "\tTotal time: " ) //$NON-NLS-1$
+							.append( ""
+									+ ( System.currentTimeMillis( )
+											- startTime ) )
+							.append( " ms\n" ); //$NON-NLS-1$
+					if ( report != null )
+					{
+						source.append( report );
+					}
+					source.append( "*/" ); //$NON-NLS-1$
+				}
+
 				return source.toString( );
 			}
 			else

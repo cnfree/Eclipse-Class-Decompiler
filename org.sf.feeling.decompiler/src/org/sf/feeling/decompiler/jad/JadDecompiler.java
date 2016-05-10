@@ -25,7 +25,7 @@ import org.sf.feeling.decompiler.JavaDecompilerPlugin;
  * This implementation of <code>IDecompiler</code> uses Jad as the underlying
  * decompler.
  */
-public class JadDecompiler implements IJadDecompiler
+public class JadDecompiler implements IDecompiler
 {
 
 	public static final String OPTION_ANNOTATE = "-a"; // format //$NON-NLS-1$
@@ -215,7 +215,7 @@ public class JadDecompiler implements IJadDecompiler
 	 * Performs a <code>Runtime.exec()</code> on jad executable with selected
 	 * options.
 	 * 
-	 * @see IJadDecompiler#decompile(String, String, String)
+	 * @see IDecompiler#decompile(String, String, String)
 	 */
 	public void decompile( String root, String packege, String className )
 	{
@@ -292,7 +292,7 @@ public class JadDecompiler implements IJadDecompiler
 	 * request class file from the specified archive into temp directory and
 	 * then calls <code>decompile</code>.
 	 * 
-	 * @see IJadDecompiler#decompileFromArchive(String, String, String)
+	 * @see IDecompiler#decompileFromArchive(String, String, String)
 	 */
 	public void decompileFromArchive( String archivePath, String packege,
 			String className )
@@ -354,7 +354,7 @@ public class JadDecompiler implements IJadDecompiler
 	}
 
 	/**
-	 * @see IJadDecompiler#getLog()
+	 * @see IDecompiler#getLog()
 	 */
 	public String getLog( )
 	{
@@ -381,7 +381,7 @@ public class JadDecompiler implements IJadDecompiler
 	// }
 
 	/**
-	 * @see IJadDecompiler#getSource()
+	 * @see IDecompiler#getSource()
 	 */
 	public String getSource( )
 	{

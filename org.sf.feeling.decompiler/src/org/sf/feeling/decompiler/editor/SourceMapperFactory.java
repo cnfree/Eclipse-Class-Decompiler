@@ -11,6 +11,7 @@
 
 package org.sf.feeling.decompiler.editor;
 
+import org.sf.feeling.decompiler.cfr.CfrCoreSourceMapper;
 import org.sf.feeling.decompiler.jad.JadSourceMapper;
 import org.sf.feeling.decompiler.jdcore.JDCoreSourceMapper;
 
@@ -43,7 +44,7 @@ public class SourceMapperFactory
 		{
 			if ( cfrSourceMapper == null )
 			{
-				cfrSourceMapper = new JDCoreSourceMapper( );
+				cfrSourceMapper = new CfrCoreSourceMapper( );
 			}
 			return cfrSourceMapper;
 		}

@@ -9,7 +9,7 @@
  *  Chen Chao  - initial API and implementation
  *******************************************************************************/
 
-package org.sf.feeling.decompiler.jad;
+package org.sf.feeling.decompiler.cfr;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -34,20 +34,21 @@ import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.editor.DecompilerSourceMapper;
 import org.sf.feeling.decompiler.editor.DecompilerType;
 import org.sf.feeling.decompiler.editor.JavaDecompilerClassFileEditor;
+import org.sf.feeling.decompiler.jad.IDecompiler;
 import org.sf.feeling.decompiler.util.DecompilerOutputUtil;
 import org.sf.feeling.decompiler.util.SortMemberUtil;
 import org.sf.feeling.decompiler.util.UIUtil;
 
-public class JadSourceMapper extends DecompilerSourceMapper
+public class CfrCoreSourceMapper extends DecompilerSourceMapper
 {
 
 	private IDecompiler decompiler;
 
-	public JadSourceMapper( )
+	public CfrCoreSourceMapper( )
 	{
 		super( new Path( "." ), "", new HashMap( ) ); // per //$NON-NLS-1$ //$NON-NLS-2$
 														// Rene's e-mail
-		decompiler = new JadDecompiler( );
+		decompiler = new CfrDecompiler( );
 	}
 
 	public char[] findSource( IType type, IBinaryType info )
@@ -233,7 +234,7 @@ public class JadSourceMapper extends DecompilerSourceMapper
 				source.append( "\t"
 						+ decompiler.getLog( )
 								.replaceAll( "\t", "" )
-								.replaceAll( "\n", "\n\t" ) );
+								.replaceAll( "\n\\s*", "\n\t" ) );
 				exceptions.addAll( decompiler.getExceptions( ) );
 				logExceptions( exceptions, source );
 				source.append( "\n*/" ); //$NON-NLS-1$
@@ -255,57 +256,9 @@ public class JadSourceMapper extends DecompilerSourceMapper
 
 	private String removeComment( String code )
 	{
-		String[] spilts = code.replaceAll( "\r\n", "\n" ).split( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		StringBuffer buffer = new StringBuffer( );
-		for ( int i = 0; i < spilts.length; i++ )
-		{
-			if ( i > 0 && i < 5 )
-				continue;
-			String string = spilts[i];
-			Pattern pattern = Pattern.compile( "\\s*/\\*\\s*\\S*\\*/", //$NON-NLS-1$
-					Pattern.CASE_INSENSITIVE );
-			Matcher matcher = pattern.matcher( string );
-			if ( matcher.find( ) )
-			{
-				if ( matcher.start( ) == 0 )
-				{
-					buffer.append( string ).append( "\r\n" ); //$NON-NLS-1$
-					continue;
-				}
-			}
-
-			boolean refer = false;
-
-			pattern = Pattern.compile( "\\s*// Referenced", //$NON-NLS-1$
-					Pattern.CASE_INSENSITIVE );
-			matcher = pattern.matcher( string );
-			if ( matcher.find( ) )
-			{
-				refer = true;
-
-				while ( true )
-				{
-					i++;
-					if ( spilts[i].trim( ).startsWith( "//" ) ) //$NON-NLS-1$
-					{
-						continue;
-					}
-					else if ( i >= spilts.length )
-					{
-						break;
-					}
-					else
-					{
-						i--;
-						break;
-					}
-				}
-			}
-
-			if ( !refer )
-				buffer.append( string + "\r\n" ); //$NON-NLS-1$
-		}
-		return buffer.toString( );
+		Pattern wp = Pattern.compile( "/\\*\\s+.+?\\s+\\*/", Pattern.DOTALL );
+		Matcher m = wp.matcher( code );
+		return m.replaceAll( "" );
 	}
 
 	private void logExceptions( Collection exceptions, StringBuffer buffer )
@@ -388,11 +341,12 @@ public class JadSourceMapper extends DecompilerSourceMapper
 		if ( !UIUtil.isDebugPerspective( ) )
 		{
 			source.append( formatSource( code ) );
-			
+
 			if ( showReport )
 			{
 				String location = "\tDecompiled from: " //$NON-NLS-1$
 						+ file.getAbsolutePath( );
+
 				source.append( "\n\n/*" ); //$NON-NLS-1$
 				source.append( "\n\tDECOMPILATION REPORT\n\n" ); //$NON-NLS-1$
 				source.append( location ).append( "\n" ); //$NON-NLS-1$
@@ -402,7 +356,7 @@ public class JadSourceMapper extends DecompilerSourceMapper
 				source.append( "\t"
 						+ decompiler.getLog( )
 								.replaceAll( "\t", "" )
-								.replaceAll( "\n", "\n\t" ) );
+								.replaceAll( "\n\\s*", "\n\t" ) );
 				Collection exceptions = new LinkedList( );
 				exceptions.addAll( decompiler.getExceptions( ) );
 				logExceptions( exceptions, source );

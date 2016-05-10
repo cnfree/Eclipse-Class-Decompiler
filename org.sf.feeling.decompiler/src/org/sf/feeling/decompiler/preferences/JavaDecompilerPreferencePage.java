@@ -74,6 +74,7 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 	private Group formatGroup;
 	private Group debugGroup;
 	private StringChoiceFieldEditor defaultDecompiler;
+	private CheckFieldEditor showReport;
 
 	public JavaDecompilerPreferencePage( )
 	{
@@ -133,7 +134,7 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 				basicGroup );
 		addField( alwaysUse );
 
-		BooleanFieldEditor showReport = new BooleanFieldEditor(
+		showReport = new CheckFieldEditor(
 				JavaDecompilerPlugin.PREF_DISPLAY_METADATA,
 				Messages.getString(
 						"JavaDecompilerPreferencePage.Label.ShowDecompilerReport" ), //$NON-NLS-1$

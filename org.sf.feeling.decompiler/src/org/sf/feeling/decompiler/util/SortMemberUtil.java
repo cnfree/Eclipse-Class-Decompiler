@@ -55,12 +55,17 @@ public class SortMemberUtil
 		try
 		{
 			if ( !sourceRootFragment.getJavaProject( ).isOpen( ) )
+			{
 				sourceRootFragment.getJavaProject( ).open( null );
+			}
+
 			if ( !sourceRootFragment.getPackageFragment( packageName )
 					.exists( ) )
+			{
 				sourceRootFragment.createPackageFragment( packageName,
 						false,
 						null );
+			}
 
 			IPackageFragment packageFragment = sourceRootFragment
 					.getPackageFragment( packageName );
@@ -68,12 +73,14 @@ public class SortMemberUtil
 					.getProject( );
 			IFolder sourceFolder = project.getFolder( "src" ); //$NON-NLS-1$
 
+			long time = System.currentTimeMillis( );
+
 			File locationFile = new File( sourceFolder
 					.getFolder( packageName.replace( '.', '/' ) )
 					.getFile( className )
 					.getLocation( )
 					.toString( )
-					.replaceAll( "(?i)\\.class", ".java" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+					.replaceAll( "(?i)\\.class", time + ".java" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
 			if ( !locationFile.getParentFile( ).exists( ) )
 				locationFile.getParentFile( ).mkdirs( );
@@ -85,8 +92,9 @@ public class SortMemberUtil
 			project.refreshLocal( IResource.DEPTH_INFINITE, null );
 
 			ICompilationUnit iCompilationUnit = packageFragment
-					.getCompilationUnit(
-							className.replaceAll( "(?i)\\.class", ".java" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+					.getCompilationUnit( className.replaceAll( "(?i)\\.class", //$NON-NLS-1$
+							time + ".java" ) ); //$NON-NLS-1$
+			iCompilationUnit.makeConsistent( null );
 			iCompilationUnit.getResource( )
 					.setLocalTimeStamp( new Date( ).getTime( ) );
 			iCompilationUnit.becomeWorkingCopy( null );
@@ -201,7 +209,7 @@ public class SortMemberUtil
 		catch ( CoreException e )
 		{
 			JavaDecompilerPlugin.logError( e, "" ); //$NON-NLS-1$
-			return null;
 		}
+		return null;
 	}
 }
