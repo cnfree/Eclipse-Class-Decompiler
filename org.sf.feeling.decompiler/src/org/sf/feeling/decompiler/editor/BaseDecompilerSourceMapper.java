@@ -185,7 +185,7 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 		{
 			if ( showReport )
 				code = ClassUtil.removeComment( currentDecompiler, code );
-			DecompilerOutputUtil decompilerOutputUtil = new DecompilerOutputUtil( DecompilerType.JAD,
+			DecompilerOutputUtil decompilerOutputUtil = new DecompilerOutputUtil( currentDecompiler.getDecompilerType( ),
 					code );
 			code = decompilerOutputUtil.realign( );
 		}

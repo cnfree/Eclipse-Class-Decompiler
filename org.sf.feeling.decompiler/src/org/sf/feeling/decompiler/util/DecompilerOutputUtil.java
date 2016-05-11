@@ -55,7 +55,6 @@ public class DecompilerOutputUtil
 
 	private final String line_separator = System.getProperty( "line.separator", //$NON-NLS-1$
 			"\r\n" ); //$NON-NLS-1$
-	private final int line_separator_len = line_separator.length( );
 
 	private String decompilerType;
 
@@ -179,8 +178,7 @@ public class DecompilerOutputUtil
 				{
 					numLine = ( (Integer) javaSrcLine.inputLines.get( j ) ).intValue( );
 					line = ( (InputLine) inputLines.get( numLine ) ).line;
-					line = line.substring( 0, line.length( )
-							- line_separator_len );
+					line = line.replace( "\r", "\n" ).replace( "\n","" );
 					realignOutput.append( line );
 				}
 			}
