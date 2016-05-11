@@ -30,18 +30,15 @@ import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.jad.JarClassExtractor;
 import org.sf.feeling.decompiler.util.FileUtil;
 
-import com.strobel.assembler.InputTypeLoader;
 import com.strobel.assembler.metadata.DeobfuscationUtilities;
 import com.strobel.assembler.metadata.MetadataSystem;
 import com.strobel.assembler.metadata.TypeDefinition;
 import com.strobel.assembler.metadata.TypeReference;
-import com.strobel.decompiler.CommandLineOptions;
 import com.strobel.decompiler.DecompilationOptions;
 import com.strobel.decompiler.DecompilerSettings;
 import com.strobel.decompiler.LineNumberFormatter;
 import com.strobel.decompiler.PlainTextOutput;
 import com.strobel.decompiler.languages.TypeDecompilationResults;
-import com.strobel.decompiler.languages.java.JavaFormattingOptions;
 
 public class ProcyonDecompiler implements IDecompiler
 {
@@ -63,37 +60,41 @@ public class ProcyonDecompiler implements IDecompiler
 		source = ""; //$NON-NLS-1$
 		File workingDir = new File( root + "/" + packege ); //$NON-NLS-1$
 
-		final String classPathStr = new File( workingDir, className ).getAbsolutePath( );
-
-		CommandLineOptions options = new CommandLineOptions( );
+		final String classPathStr = new File( workingDir, className )
+				.getAbsolutePath( );
 
 		IPreferenceStore preferences = JavaDecompilerPlugin.getDefault( )
 				.getPreferenceStore( );
 
-		if ( preferences.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS ) )
+		boolean includeLineNumbers = false;
+		boolean stretchLines = false;
+		if ( preferences
+				.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS ) )
 		{
-			options.setIncludeLineNumbers( true );
-			options.setStretchLines( true );
+			includeLineNumbers = true;
+			stretchLines = true;
 		}
 
-		DecompilerSettings settings = new DecompilerSettings( );
-		settings.setTypeLoader( new InputTypeLoader( ) );
-		settings.setFormattingOptions( JavaFormattingOptions.createDefault( ) );
-
 		DecompilationOptions decompilationOptions = new DecompilationOptions( );
+
+		DecompilerSettings settings = DecompilerSettings.javaDefaults( );
+		settings.setTypeLoader( new com.strobel.assembler.InputTypeLoader( ) );
+
 		decompilationOptions.setSettings( settings );
 		decompilationOptions.setFullDecompilation( true );
 
-		MetadataSystem metadataSystem = new MetadataSystem( settings.getTypeLoader( ) );
+		MetadataSystem metadataSystem = new MetadataSystem(
+				decompilationOptions.getSettings( ).getTypeLoader( ) );
 
 		TypeReference type = metadataSystem.lookupType( classPathStr );
 
 		TypeDefinition resolvedType;
-		if ( ( type == null ) || ( ( resolvedType = type.resolve( ) ) == null ) )
+		if ( ( type == null )
+				|| ( ( resolvedType = type.resolve( ) ) == null ) )
 		{
 			System.err.printf( "!!! ERROR: Failed to load class %s.\n", //$NON-NLS-1$
 					new Object[]{
-						classPathStr
+							classPathStr
 					} );
 			return;
 		}
@@ -106,14 +107,18 @@ public class ProcyonDecompiler implements IDecompiler
 		Writer writer = null;
 		try
 		{
-			writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( classFile ) ) );
+			writer = new BufferedWriter( new OutputStreamWriter(
+					new FileOutputStream( classFile ) ) );
 
 			PlainTextOutput output = new PlainTextOutput( writer );
 
-			output.setUnicodeOutputEnabled( settings.isUnicodeOutputEnabled( ) );
+			output.setUnicodeOutputEnabled( decompilationOptions.getSettings( )
+					.isUnicodeOutputEnabled( ) );
 
-			TypeDecompilationResults results = settings.getLanguage( )
-					.decompileType( resolvedType, output, decompilationOptions );
+			TypeDecompilationResults results = decompilationOptions
+					.getSettings( ).getLanguage( ).decompileType( resolvedType,
+							output,
+							decompilationOptions );
 
 			writer.flush( );
 			writer.close( );
@@ -122,23 +127,25 @@ public class ProcyonDecompiler implements IDecompiler
 
 			List lineNumberPositions = results.getLineNumberPositions( );
 
-			if ( options.getIncludeLineNumbers( ) || options.getStretchLines( ) )
+			if ( includeLineNumbers || stretchLines )
 			{
-				EnumSet lineNumberOptions = EnumSet.noneOf( LineNumberFormatter.LineNumberOption.class );
+				EnumSet lineNumberOptions = EnumSet
+						.noneOf( LineNumberFormatter.LineNumberOption.class );
 
-				if ( options.getIncludeLineNumbers( ) )
+				if ( includeLineNumbers )
 				{
-					lineNumberOptions.add( LineNumberFormatter.LineNumberOption.LEADING_COMMENTS );
+					lineNumberOptions.add(
+							LineNumberFormatter.LineNumberOption.LEADING_COMMENTS );
 				}
 
-				if ( options.getStretchLines( ) )
+				if ( stretchLines )
 				{
-					lineNumberOptions.add( LineNumberFormatter.LineNumberOption.STRETCHED );
+					lineNumberOptions.add(
+							LineNumberFormatter.LineNumberOption.STRETCHED );
 				}
 
-				LineNumberFormatter lineFormatter = new LineNumberFormatter( classFile,
-						lineNumberPositions,
-						lineNumberOptions );
+				LineNumberFormatter lineFormatter = new LineNumberFormatter(
+						classFile, lineNumberPositions, lineNumberOptions );
 
 				lineFormatter.reformatFile( );
 			}
