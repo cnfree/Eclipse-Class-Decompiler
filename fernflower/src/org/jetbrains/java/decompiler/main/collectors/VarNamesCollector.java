@@ -13,34 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.jetbrains.java.decompiler.main.collectors;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class VarNamesCollector {
+public class VarNamesCollector
+{
 
-  private final Set<String> usedNames = new HashSet<String>();
+	private final Set<String> usedNames = new HashSet<String>( );
 
-  public VarNamesCollector() { }
+	public VarNamesCollector( )
+	{
+	}
 
-  public VarNamesCollector(Set<String> setNames) {
-    usedNames.addAll(setNames);
-  }
+	public VarNamesCollector( Set<String> setNames )
+	{
+		usedNames.addAll( setNames );
+	}
 
-  public void addName(String value) {
-    usedNames.add(value);
-  }
+	public void addName( String value )
+	{
+		usedNames.add( value );
+	}
 
-  public String getFreeName(int index) {
-    return getFreeName("var" + index);
-  }
+	public String getFreeName( int index )
+	{
+		return getFreeName( "arg" + ( index - 1 ) );
+	}
 
-  public String getFreeName(String proposition) {
-    while (usedNames.contains(proposition)) {
-      proposition += "x";
-    }
-    usedNames.add(proposition);
-    return proposition;
-  }
+	public String getFreeName( String proposition )
+	{
+		while ( usedNames.contains( proposition ) )
+		{
+			proposition += "x";
+		}
+		usedNames.add( proposition );
+		return proposition;
+	}
 }

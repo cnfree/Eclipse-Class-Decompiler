@@ -185,7 +185,7 @@ public class FernFlowerDecompiler implements IDecompiler
 
 	public String getDecompilerType( )
 	{
-		return DecompilerType.PROCYON;
+		return DecompilerType.FernFlower;
 	}
 
 }

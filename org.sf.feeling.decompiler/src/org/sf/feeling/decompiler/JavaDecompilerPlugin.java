@@ -109,7 +109,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 		store.setDefault( USE_ECLIPSE_FORMATTER, true );
 		store.setDefault( USE_ECLIPSE_SORTER, false );
 		store.setDefault( PREF_DISPLAY_METADATA, false );
-		store.setDefault( DECOMPILER_TYPE, DecompilerType.JDCORE );
+		store.setDefault( DECOMPILER_TYPE, DecompilerType.FernFlower );
 		store.setDefault( DEFAULT_EDITOR, true );
 
 		store.setDefault( JadDecompiler.OPTION_INDENT_SPACE, 4 );

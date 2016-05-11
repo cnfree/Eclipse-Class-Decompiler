@@ -123,7 +123,8 @@ public class DecompilerOutputUtil
 		{
 			if ( !( types.get( i ) instanceof AbstractTypeDeclaration ) )
 				continue;
-			AbstractTypeDeclaration type = (AbstractTypeDeclaration) types.get( i );
+			AbstractTypeDeclaration type = (AbstractTypeDeclaration) types
+					.get( i );
 
 			// Recursively process the types within this type
 			processTypes( type );
@@ -132,9 +133,8 @@ public class DecompilerOutputUtil
 			int numLine = unit.getLineNumber( type.getStartPosition( ) );
 			if ( numLine < firstTypeLine )
 				firstTypeLine = numLine;
-			numLine = unit.getLineNumber( type.getStartPosition( )
-					+ type.getLength( )
-					- 1 );
+			numLine = unit.getLineNumber(
+					type.getStartPosition( ) + type.getLength( ) - 1 );
 			if ( numLine > lastTypeLine )
 				lastTypeLine = numLine;
 		}
@@ -143,9 +143,12 @@ public class DecompilerOutputUtil
 		if ( javaSrcLines.size( ) == 1 )
 		{
 			String warning = "\r\n// Warning: No line numbers available in class file\r\n"; //$NON-NLS-1$
-			return ( JavaDecompilerClassFileEditor.MARK + "\r\n" + warning + replace( input, //$NON-NLS-1$
-					JavaDecompilerClassFileEditor.MARK,
-					"" ) ); //$NON-NLS-1$
+			return ( JavaDecompilerClassFileEditor.MARK
+					+ "\r\n" //$NON-NLS-1$
+					+ warning
+					+ replace( input,
+							JavaDecompilerClassFileEditor.MARK,
+							"" ) ); //$NON-NLS-1$
 		}
 
 		// Add all the source lines above the first type
@@ -176,9 +179,10 @@ public class DecompilerOutputUtil
 			{
 				for ( int j = 0; j < javaSrcLine.inputLines.size( ); j++ )
 				{
-					numLine = ( (Integer) javaSrcLine.inputLines.get( j ) ).intValue( );
+					numLine = ( (Integer) javaSrcLine.inputLines.get( j ) )
+							.intValue( );
 					line = ( (InputLine) inputLines.get( numLine ) ).line;
-					line = line.replace( "\r", "\n" ).replace( "\n","" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					line = line.replace( "\r", "\n" ).replace( "\n", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 					realignOutput.append( line );
 				}
 			}
@@ -186,8 +190,8 @@ public class DecompilerOutputUtil
 			{
 				StringBuffer buffer = new StringBuffer( );
 				buffer.append( "/*" ); //$NON-NLS-1$
-				for ( int j = 0; j < new Integer( javaSrcLines.size( ) ).toString( )
-						.length( ) + 2; j++ )
+				for ( int j = 0; j < new Integer( javaSrcLines.size( ) )
+						.toString( ).length( ) + 2; j++ )
 					buffer.append( " " ); //$NON-NLS-1$
 				buffer.append( "*/" ); //$NON-NLS-1$
 				realignOutput.append( buffer.toString( ) );
@@ -224,17 +228,17 @@ public class DecompilerOutputUtil
 
 	private int parseJavaLineNumber( String line )
 	{
-		Pattern pattern = Pattern.compile( "/\\*\\s*\\d+\\s*\\*/", //$NON-NLS-1$
-				Pattern.CASE_INSENSITIVE );
+		String regex = "/\\*\\s*\\d+\\s*\\*/"; //$NON-NLS-1$
+		if ( DecompilerType.FernFlower.equals( decompilerType ) )
+		{
+			regex = "//\\s+\\d+"; //$NON-NLS-1$
+		}
+		Pattern pattern = Pattern.compile( regex, Pattern.CASE_INSENSITIVE );
 		Matcher matcher = pattern.matcher( line.trim( ) );
 		if ( matcher.find( ) )
 		{
-			if ( matcher.start( ) == 0 )
-			{
-				return Integer.parseInt( matcher.group( )
-						.substring( 2, matcher.group( ).length( ) - 2 )
-						.trim( ) );
-			}
+			return Integer
+					.parseInt( matcher.group( ).replaceAll( "[^0-9]", "" ) );
 		}
 		return -1;
 	}
@@ -259,7 +263,8 @@ public class DecompilerOutputUtil
 		}
 
 		// Create an output entry at the outputLineNum index
-		JavaSrcLine javaSrcLine = (JavaSrcLine) javaSrcLines.get( outputLineNum );
+		JavaSrcLine javaSrcLine = (JavaSrcLine) javaSrcLines
+				.get( outputLineNum );
 		if ( javaSrcLine == null )
 		{
 			javaSrcLine = new JavaSrcLine( );
@@ -331,15 +336,18 @@ public class DecompilerOutputUtil
 
 					// Get the JavaSrcLine for the output line after the current
 					// one
-					JavaSrcLine javaSrcLineNext = initJavaSrcListItem( offsetOutputLineNext );
+					JavaSrcLine javaSrcLineNext = initJavaSrcListItem(
+							offsetOutputLineNext );
 
 					// Iterate backwards through the input lines towards
 					// inputBeginLineNo from the output offset
-					for ( int innerOffset = offset; ( inputLineNo - innerOffset ) >= inputBeginLineNo; innerOffset++ )
+					for ( int innerOffset = offset; ( inputLineNo
+							- innerOffset ) >= inputBeginLineNo; innerOffset++ )
 					{
 
 						int innerOffsetInputLine = inputLineNo - innerOffset;
-						inputLine = (InputLine) inputLines.get( innerOffsetInputLine );
+						inputLine = (InputLine) inputLines
+								.get( innerOffsetInputLine );
 						if ( inputLine.outputLineNum == -1 )
 						{
 							// Found an input line without a source line number
@@ -377,7 +385,8 @@ public class DecompilerOutputUtil
 		}
 	}
 
-	private void addBelow( int inputEndLineNo, int inputLineNo, int outputLineNo )
+	private void addBelow( int inputEndLineNo, int inputLineNo,
+			int outputLineNo )
 	{
 
 		int offset = 1;
@@ -387,13 +396,15 @@ public class DecompilerOutputUtil
 		{
 
 			int offsetInputLine = inputLineNo + offset;
-			InputLine outputLine = (InputLine) inputLines.get( offsetInputLine );
+			InputLine outputLine = (InputLine) inputLines
+					.get( offsetInputLine );
 
 			if ( outputLine.outputLineNum == -1 )
 			{
 				// Got an InputLine without a corresponding Java source line
 				int offsetOutputLine = outputLineNo + offset;
-				JavaSrcLine javaSrcLine = initJavaSrcListItem( offsetOutputLine );
+				JavaSrcLine javaSrcLine = initJavaSrcListItem(
+						offsetOutputLine );
 
 				if ( javaSrcLine.inputLines.size( ) > 0 )
 				{
@@ -402,20 +413,24 @@ public class DecompilerOutputUtil
 
 					// Get the JavaSrcLine for the output line after the current
 					// one
-					JavaSrcLine javaSrcLinePrev = initJavaSrcListItem( offsetOutputLinePrev );
+					JavaSrcLine javaSrcLinePrev = initJavaSrcListItem(
+							offsetOutputLinePrev );
 
 					// Iterate forwards through the input lines towards
 					// inputEndLineNo from the output offset
-					for ( int innerOffset = offset; ( inputLineNo + innerOffset ) <= inputEndLineNo; innerOffset++ )
+					for ( int innerOffset = offset; ( inputLineNo
+							+ innerOffset ) <= inputEndLineNo; innerOffset++ )
 					{
 
 						int innerOffsetInputLine = inputLineNo + innerOffset;
-						outputLine = (InputLine) inputLines.get( innerOffsetInputLine );
+						outputLine = (InputLine) inputLines
+								.get( innerOffsetInputLine );
 						if ( outputLine.outputLineNum == -1 )
 						{
 							// Found an input line without a source line number
 							// - add it to javaSrcLineNext
-							javaSrcLinePrev.inputLines.add( new Integer( innerOffsetInputLine ) );
+							javaSrcLinePrev.inputLines
+									.add( new Integer( innerOffsetInputLine ) );
 							outputLine.calculatedNumLineJavaSrc = offsetOutputLinePrev;
 						}
 						else
@@ -463,10 +478,10 @@ public class DecompilerOutputUtil
 		int firstMethodLine = Integer.MAX_VALUE;
 		int lastMethodLine = Integer.MIN_VALUE;
 
-		int beginTypeInputLineNo = unit.getLineNumber( rootType.getStartPosition( ) );
-		int endTypeInputLineNo = unit.getLineNumber( rootType.getStartPosition( )
-				+ rootType.getLength( )
-				- 1 );
+		int beginTypeInputLineNo = unit
+				.getLineNumber( rootType.getStartPosition( ) );
+		int endTypeInputLineNo = unit.getLineNumber(
+				rootType.getStartPosition( ) + rootType.getLength( ) - 1 );
 
 		// Iterate forward through the input line numbers of the type
 		for ( int inputLineNo = beginTypeInputLineNo; inputLineNo <= endTypeInputLineNo; inputLineNo++ )
@@ -545,9 +560,8 @@ public class DecompilerOutputUtil
 				ASTNode element = (ASTNode) bodyDeclaration;
 				int p = element.getStartPosition( );
 				int inputBeginLine = unit.getLineNumber( p );
-				int inputEndLine = unit.getLineNumber( p
-						+ element.getLength( )
-						- 1 );
+				int inputEndLine = unit
+						.getLineNumber( p + element.getLength( ) - 1 );
 				processMember( inputBeginLine, inputEndLine );
 			}
 		}
@@ -574,9 +588,12 @@ public class DecompilerOutputUtil
 				lastInputLine = inputNumLine;
 
 				// Add the input line to the output JavaSrcLine
-				JavaSrcLine javaSrcLine = initJavaSrcListItem( inputLine.outputLineNum );
+				JavaSrcLine javaSrcLine = initJavaSrcListItem(
+						inputLine.outputLineNum );
 				javaSrcLine.inputLines.add( new Integer( inputNumLine ) );
-				addAbove( inputBeginLine, inputNumLine, inputLine.outputLineNum );
+				addAbove( inputBeginLine,
+						inputNumLine,
+						inputLine.outputLineNum );
 			}
 		}
 
