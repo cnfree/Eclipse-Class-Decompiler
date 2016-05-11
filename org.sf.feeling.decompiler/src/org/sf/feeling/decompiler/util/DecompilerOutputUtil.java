@@ -178,7 +178,7 @@ public class DecompilerOutputUtil
 				{
 					numLine = ( (Integer) javaSrcLine.inputLines.get( j ) ).intValue( );
 					line = ( (InputLine) inputLines.get( numLine ) ).line;
-					line = line.replace( "\r", "\n" ).replace( "\n","" );
+					line = line.replace( "\r", "\n" ).replace( "\n","" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 					realignOutput.append( line );
 				}
 			}

@@ -35,9 +35,9 @@ import org.sf.feeling.decompiler.jad.JarClassExtractor;
 public class CfrDecompiler implements IDecompiler
 {
 
-	private String source = ""; // $NON-NLS-1$
+	private String source = ""; //$NON-NLS-1$
 	private long time, start;
-	private String log = "";// $NON-NLS-1$
+	private String log = ""; //$NON-NLS-1$
 
 	/**
 	 * Performs a <code>Runtime.exec()</code> on jad executable with selected
