@@ -40,7 +40,10 @@ public class VarNamesCollector
 
 	public String getFreeName( int index )
 	{
-		return getFreeName( "arg" + ( index - 1 ) );
+		if ( index > 0 )
+			return getFreeName( "arg" + ( index - 1 ) );
+		else
+			return getFreeName( "arg" );
 	}
 
 	public String getFreeName( String proposition )
