@@ -35,9 +35,9 @@ import org.sf.feeling.decompiler.jad.JarClassExtractor;
 public class CfrDecompiler implements IDecompiler
 {
 
-	private String source = Messages.CfrDecompiler_0; // $NON-NLS-1$
+	private String source = ""; // $NON-NLS-1$
 	private long time, start;
-	private String log = Messages.CfrDecompiler_1;
+	private String log = "";// $NON-NLS-1$
 
 	/**
 	 * Performs a <code>Runtime.exec()</code> on jad executable with selected
@@ -52,22 +52,26 @@ public class CfrDecompiler implements IDecompiler
 		source = ""; //$NON-NLS-1$
 		File workingDir = new File( root + "/" + packege ); //$NON-NLS-1$
 
-		String classPathStr = new File( workingDir, className ).getAbsolutePath( );
+		String classPathStr = new File( workingDir, className )
+				.getAbsolutePath( );
 
 		GetOptParser getOptParser = new GetOptParser( );
 
 		try
 		{
 			Options options = (Options) getOptParser.parse( new String[]{
-				classPathStr
+					classPathStr
 			}, OptionsImpl.getFactory( ) );
-			ClassFileSource classFileSource = new ClassFileSourceImpl( options );
+			ClassFileSource classFileSource = new ClassFileSourceImpl(
+					options );
 			DCCommonState dcCommonState = new DCCommonState( options,
 					classFileSource );
 
-			IllegalIdentifierDump illegalIdentifierDump = IllegalIdentifierDump.Factory.get( options );
+			IllegalIdentifierDump illegalIdentifierDump = IllegalIdentifierDump.Factory
+					.get( options );
 
-			ClassFile c = dcCommonState.getClassFileMaybePath( (String) options.getOption( OptionsImpl.FILENAME ) );
+			ClassFile c = dcCommonState.getClassFileMaybePath(
+					(String) options.getOption( OptionsImpl.FILENAME ) );
 			dcCommonState.configureWith( c );
 			try
 			{
@@ -76,7 +80,9 @@ public class CfrDecompiler implements IDecompiler
 			catch ( CannotLoadClassException e )
 			{
 			}
-			if ( ( (Boolean) options.getOption( OptionsImpl.DECOMPILE_INNER_CLASSES ) ).booleanValue( ) )
+			if ( ( (Boolean) options
+					.getOption( OptionsImpl.DECOMPILE_INNER_CLASSES ) )
+							.booleanValue( ) )
 			{
 				c.loadInnerClasses( dcCommonState );
 			}
@@ -86,7 +92,8 @@ public class CfrDecompiler implements IDecompiler
 			TypeUsageCollector collectingDumper = new TypeUsageCollector( c );
 			c.collectTypeUsages( collectingDumper );
 
-			StringDumper dumper = new StringDumper( collectingDumper.getTypeUsageInformation( ),
+			StringDumper dumper = new StringDumper(
+					collectingDumper.getTypeUsageInformation( ),
 					options,
 					illegalIdentifierDump );
 			c.dump( dumper );
