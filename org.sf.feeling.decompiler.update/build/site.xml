@@ -3,12 +3,12 @@
    <description name="Chen Chao&apos;s Projects Update" url="http://cnfree.github.io/Eclipse-Class-Decompiler/update">
       Chen Chao&apos;s projects update site.
    </description>
-   <feature url="features/org.sf.feeling.decompiler_1.0.7.qualifier.jar" id="org.sf.feeling.decompiler" version="1.0.7.qualifier" os="linux,macosx,win32" arch="x86,x86_64">
+   <feature url="features/org.sf.feeling.decompiler_2.0.0.qualifier.jar" id="org.sf.feeling.decompiler" version="2.0.0.qualifier" os="linux,macosx,win32" arch="x86,x86_64">
       <category name="Eclipse Class Decompiler"/>
    </feature>
    <category-def name="Eclipse Class Decompiler" label="Eclipse Class Decompiler">
       <description>
-         Eclipse Class Decompiler is a plug-in that seamlessly integrates Jad and JD-Core with Eclipse.
+         Eclipse Class Decompiler is a plug-in that seamlessly integrates multiple decompilers with Eclipse. It allows the Java developer to debug class files without source code in the Class Decompiler Viewer directly.
       </description>
    </category-def>
 </site>
