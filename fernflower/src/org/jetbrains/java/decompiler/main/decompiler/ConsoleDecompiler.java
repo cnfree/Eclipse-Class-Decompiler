@@ -131,7 +131,7 @@ public class ConsoleDecompiler implements IBytecodeProvider, IResultSaver {
     this(destination, options, new PrintStreamLogger(System.out));
   }
 
-  protected ConsoleDecompiler(File destination, Map<String, Object> options, IFernflowerLogger logger) {
+  public ConsoleDecompiler(File destination, Map<String, Object> options, IFernflowerLogger logger) {
     root = destination;
     fernflower = new Fernflower(this, this, options, logger);
   }

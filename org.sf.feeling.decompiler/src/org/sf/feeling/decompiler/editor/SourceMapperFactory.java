@@ -13,6 +13,7 @@ package org.sf.feeling.decompiler.editor;
 
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.cfr.CfrSourceMapper;
+import org.sf.feeling.decompiler.fernflower.FernFlowerSourceMapper;
 import org.sf.feeling.decompiler.jad.JadSourceMapper;
 import org.sf.feeling.decompiler.jdcore.JDCoreSourceMapper;
 import org.sf.feeling.decompiler.procyon.ProcyonSourceMapper;
@@ -24,6 +25,7 @@ public class SourceMapperFactory
 	private static DecompilerSourceMapper jdCoreSourceMapper;
 	private static DecompilerSourceMapper cfrSourceMapper;
 	private static DecompilerSourceMapper procyonSourceMapper;
+	private static DecompilerSourceMapper fernFlowerSourceMapper;
 
 	public static DecompilerSourceMapper getSourceMapper( String decompiler )
 	{
@@ -42,6 +44,14 @@ public class SourceMapperFactory
 				jdCoreSourceMapper = new JDCoreSourceMapper( );
 			}
 			return jdCoreSourceMapper;
+		}
+		else if ( DecompilerType.FernFlower.equals( decompiler ) )
+		{
+			if ( fernFlowerSourceMapper == null )
+			{
+				fernFlowerSourceMapper = new FernFlowerSourceMapper( );
+			}
+			return fernFlowerSourceMapper;
 		}
 		else if ( DecompilerType.CFR.equals( decompiler ) )
 		{

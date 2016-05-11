@@ -9,14 +9,17 @@
  *  Chen Chao  - initial API and implementation
  *******************************************************************************/
 
-package org.sf.feeling.decompiler.editor;
+package org.sf.feeling.decompiler.actions;
 
-public interface DecompilerType
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.sf.feeling.decompiler.editor.DecompilerType;
+
+public class DecompileWithFernFlowerHandler extends BaseDecompilerHandler
 {
 
-	String JAD = "Jad"; //$NON-NLS-1$
-	String JDCORE = "JD-Core"; //$NON-NLS-1$
-	String CFR = "Class File Reader"; //$NON-NLS-1$
-	String PROCYON = "Procyon";//$NON-NLS-1$
-	String FernFlower = "FernFlower";//$NON-NLS-1$
+	public Object execute( ExecutionEvent event ) throws ExecutionException
+	{
+		return handleDecompile( DecompilerType.FernFlower );
+	}
 }

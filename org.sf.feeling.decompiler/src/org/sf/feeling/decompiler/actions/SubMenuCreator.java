@@ -55,6 +55,7 @@ public class SubMenuCreator implements IMenuCreator
 
 		menuMgr.add( new DecompileWithJadAction( ) );
 		menuMgr.add( new DecompileWithJDCoreAction( ) );
+		menuMgr.add( new DecompileWithFernFlowerAction( ) );
 
 		if ( JavaDecompilerPlugin.getDefault( ).enableCfrDecompiler( ) )
 		{
@@ -115,6 +116,7 @@ public class SubMenuCreator implements IMenuCreator
 
 			dropDownMenuMgr.add( new DecompileWithJadAction( ) );
 			dropDownMenuMgr.add( new DecompileWithJDCoreAction( ) );
+			dropDownMenuMgr.add( new DecompileWithFernFlowerAction( ) );
 
 			if ( JavaDecompilerPlugin.getDefault( ).enableCfrDecompiler( ) )
 			{

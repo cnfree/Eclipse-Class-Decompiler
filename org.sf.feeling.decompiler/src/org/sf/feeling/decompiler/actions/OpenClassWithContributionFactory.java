@@ -74,6 +74,8 @@ public class OpenClassWithContributionFactory extends
 				return Messages.getString( "JavaDecompilerActionBarContributor.Action.DecompileWithJad" ); //$NON-NLS-1$
 			if ( DecompilerType.JDCORE.equals( decompilerType ) )
 				return Messages.getString( "JavaDecompilerActionBarContributor.Action.DecompileWithJDCore" ); //$NON-NLS-1$
+			if ( DecompilerType.FernFlower.equals( decompilerType ) )
+				return Messages.getString( "JavaDecompilerActionBarContributor.Action.DecompileWithFernFlower" ); //$NON-NLS-1$
 			if ( JavaDecompilerPlugin.getDefault( ).enableCfrDecompiler( ) )
 			{
 				if ( DecompilerType.CFR.equals( decompilerType ) )
@@ -189,6 +191,9 @@ public class OpenClassWithContributionFactory extends
 					list.add( new ActionContributionItem( new OpenClassesAction( editor,
 							classes,
 							DecompilerType.JDCORE ) ) );
+					list.add( new ActionContributionItem( new OpenClassesAction( editor,
+							classes,
+							DecompilerType.FernFlower ) ) );
 					if ( JavaDecompilerPlugin.getDefault( )
 							.enableCfrDecompiler( ) )
 					{

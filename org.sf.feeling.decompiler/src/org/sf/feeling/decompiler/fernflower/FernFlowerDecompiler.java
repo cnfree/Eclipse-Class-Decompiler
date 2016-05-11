@@ -9,21 +9,20 @@
  *  Chen Chao  - initial API and implementation
  *******************************************************************************/
 
-package org.sf.feeling.decompiler.procyon;
+package org.sf.feeling.decompiler.fernflower;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.Collections;
-import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler;
+import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
+import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.editor.DecompilerType;
 import org.sf.feeling.decompiler.editor.IDecompiler;
@@ -31,17 +30,7 @@ import org.sf.feeling.decompiler.jad.JarClassExtractor;
 import org.sf.feeling.decompiler.util.FileUtil;
 import org.sf.feeling.decompiler.util.UIUtil;
 
-import com.strobel.assembler.metadata.DeobfuscationUtilities;
-import com.strobel.assembler.metadata.MetadataSystem;
-import com.strobel.assembler.metadata.TypeDefinition;
-import com.strobel.assembler.metadata.TypeReference;
-import com.strobel.decompiler.DecompilationOptions;
-import com.strobel.decompiler.DecompilerSettings;
-import com.strobel.decompiler.LineNumberFormatter;
-import com.strobel.decompiler.PlainTextOutput;
-import com.strobel.decompiler.languages.TypeDecompilationResults;
-
-public class ProcyonDecompiler implements IDecompiler
+public class FernFlowerDecompiler implements IDecompiler
 {
 
 	private String source = ""; // $NON-NLS-1$ //$NON-NLS-1$
@@ -63,113 +52,31 @@ public class ProcyonDecompiler implements IDecompiler
 
 		final String classPathStr = new File( workingDir, className )
 				.getAbsolutePath( );
+		Map<String, Object> mapOptions = new HashMap<String, Object>( );
+
+		mapOptions.put( IFernflowerPreferences.REMOVE_SYNTHETIC, "1" );
+		mapOptions.put( IFernflowerPreferences.DECOMPILE_GENERIC_SIGNATURES,
+				"1" );
+		mapOptions.put( IFernflowerPreferences.REMOVE_SYNTHETIC, "1" );
+		mapOptions.put( IFernflowerPreferences.LOG_LEVEL, IFernflowerLogger.Severity.ERROR.name( ) );
 
 		IPreferenceStore preferences = JavaDecompilerPlugin.getDefault( )
 				.getPreferenceStore( );
-
-		boolean includeLineNumbers = false;
-		boolean stretchLines = false;
 		if ( UIUtil.isDebugPerspective( )
 				|| preferences.getBoolean(
 						JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS ) )
 		{
-			includeLineNumbers = true;
-			stretchLines = true;
+			mapOptions.put( IFernflowerPreferences.DUMP_ORIGINAL_LINES, "1" );
+			mapOptions.put( IFernflowerPreferences.BYTECODE_SOURCE_MAPPING,
+					"1" );
 		}
+		ConsoleDecompiler decompiler = new ConsoleDecompiler( workingDir,
+				mapOptions );
+		decompiler.addSpace( new File( classPathStr ), true );
+		decompiler.decompileContext( );
 
-		DecompilationOptions decompilationOptions = new DecompilationOptions( );
-
-		DecompilerSettings settings = DecompilerSettings.javaDefaults( );
-		settings.setTypeLoader( new com.strobel.assembler.InputTypeLoader( ) );
-
-		decompilationOptions.setSettings( settings );
-		decompilationOptions.setFullDecompilation( true );
-
-		MetadataSystem metadataSystem = new MetadataSystem(
-				decompilationOptions.getSettings( ).getTypeLoader( ) );
-
-		TypeReference type = metadataSystem.lookupType( classPathStr );
-
-		TypeDefinition resolvedType;
-		if ( ( type == null )
-				|| ( ( resolvedType = type.resolve( ) ) == null ) )
-		{
-			System.err.printf( "!!! ERROR: Failed to load class %s.\n", //$NON-NLS-1$
-					new Object[]{
-							classPathStr
-					} );
-			return;
-		}
-
-		DeobfuscationUtilities.processType( resolvedType );
-
-		String property = "java.io.tmpdir"; //$NON-NLS-1$
-		String tempDir = System.getProperty( property );
-		File classFile = new File( tempDir, className );
-		Writer writer = null;
-		try
-		{
-			writer = new BufferedWriter( new OutputStreamWriter(
-					new FileOutputStream( classFile ) ) );
-
-			PlainTextOutput output = new PlainTextOutput( writer );
-
-			output.setUnicodeOutputEnabled( decompilationOptions.getSettings( )
-					.isUnicodeOutputEnabled( ) );
-
-			TypeDecompilationResults results = decompilationOptions
-					.getSettings( ).getLanguage( ).decompileType( resolvedType,
-							output,
-							decompilationOptions );
-
-			writer.flush( );
-			writer.close( );
-
-			writer = null;
-
-			List lineNumberPositions = results.getLineNumberPositions( );
-
-			if ( includeLineNumbers || stretchLines )
-			{
-				EnumSet lineNumberOptions = EnumSet
-						.noneOf( LineNumberFormatter.LineNumberOption.class );
-
-				if ( includeLineNumbers )
-				{
-					lineNumberOptions.add(
-							LineNumberFormatter.LineNumberOption.LEADING_COMMENTS );
-				}
-
-				if ( stretchLines )
-				{
-					lineNumberOptions.add(
-							LineNumberFormatter.LineNumberOption.STRETCHED );
-				}
-
-				LineNumberFormatter lineFormatter = new LineNumberFormatter(
-						classFile, lineNumberPositions, lineNumberOptions );
-
-				lineFormatter.reformatFile( );
-			}
-		}
-		catch ( IOException e )
-		{
-			e.printStackTrace( );
-		}
-		finally
-		{
-			if ( writer != null )
-			{
-				try
-				{
-					writer.close( );
-				}
-				catch ( IOException e )
-				{
-					e.printStackTrace( );
-				}
-			}
-		}
+		File classFile = new File( workingDir,
+				className.replaceAll( "(?i)\\.class", ".java" ) );
 
 		source = FileUtil.getContent( classFile );
 

@@ -105,6 +105,11 @@
             id="org.sf.feeling.decompiler.decompile.jad">  
       </command>  
       <command  
+            name="Decompile With FernFlower"  
+            categoryId="org.sf.feeling.decompiler"  
+            id="org.sf.feeling.decompiler.decompile.fernflower">  
+      </command>  
+      <command  
             name="Decompile With Class File Reader"  
             categoryId="org.sf.feeling.decompiler"  
             id="org.sf.feeling.decompiler.decompile.cfr">  
@@ -133,6 +138,11 @@
       		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
+      		sequence="Ctrl+Alt+R"
+      		commandId="org.sf.feeling.decompiler.decompile.fernflower"
+      		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+		</key>
+		<key
       		sequence="Ctrl+Alt+F"
       		commandId="org.sf.feeling.decompiler.decompile.cfr"
       		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
@@ -156,6 +166,10 @@
       <handler  
             commandId="org.sf.feeling.decompiler.decompile.jad"  
             class="org.sf.feeling.decompiler.actions.DecompileWithJadHandler">  
+      </handler>
+      <handler  
+            commandId="org.sf.feeling.decompiler.decompile.fernflower"  
+            class="org.sf.feeling.decompiler.actions.DecompileWithFernFlowerHandler">  
       </handler>
       <handler  
             commandId="org.sf.feeling.decompiler.decompile.cfr"  

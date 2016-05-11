@@ -109,23 +109,31 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 		};
 
 		defaultDecompiler.addItem( DecompilerType.JAD,
-				Messages.getString("JavaDecompilerPreferencePage.Decompiler.Jad"), //$NON-NLS-1$
+				Messages.getString(
+						"JavaDecompilerPreferencePage.Decompiler.Jad" ), //$NON-NLS-1$
 				DecompilerType.JAD );
 		defaultDecompiler.addItem( DecompilerType.JDCORE,
-				Messages.getString("JavaDecompilerPreferencePage.Decompiler.JD-Core"), //$NON-NLS-1$
+				Messages.getString(
+						"JavaDecompilerPreferencePage.Decompiler.JD-Core" ), //$NON-NLS-1$
 				DecompilerType.JDCORE );
+		defaultDecompiler.addItem( DecompilerType.FernFlower,
+				Messages.getString(
+						"JavaDecompilerPreferencePage.Decompiler.FernFlower" ), //$NON-NLS-1$
+				DecompilerType.FernFlower );
 
 		if ( JavaDecompilerPlugin.getDefault( ).enableCfrDecompiler( ) )
 		{
 			defaultDecompiler.addItem( DecompilerType.CFR,
-					Messages.getString("JavaDecompilerPreferencePage.Decompiler.Cfr"), //$NON-NLS-1$
+					Messages.getString(
+							"JavaDecompilerPreferencePage.Decompiler.Cfr" ), //$NON-NLS-1$
 					DecompilerType.CFR );
 		}
 
 		if ( JavaDecompilerPlugin.getDefault( ).enableProcyonDecompiler( ) )
 		{
 			defaultDecompiler.addItem( DecompilerType.PROCYON,
-					Messages.getString("JavaDecompilerPreferencePage.Decompiler.Procyon"), //$NON-NLS-1$
+					Messages.getString(
+							"JavaDecompilerPreferencePage.Decompiler.Procyon" ), //$NON-NLS-1$
 					DecompilerType.PROCYON );
 		}
 
@@ -241,28 +249,10 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 	{
 		super.initialize( );
 
-		String defaultDecompiler = getPreferenceStore( )
-				.getString( JavaDecompilerPlugin.DECOMPILER_TYPE );
+		boolean enabled = getPreferenceStore( )
+				.getBoolean( JadDecompiler.OPTION_LNC );
+		alignEditor.setEnabled( enabled, debugGroup );
 
-		boolean isCfr = defaultDecompiler.equals( DecompilerType.CFR );
-
-		if ( isCfr
-				&& !JavaDecompilerPlugin.getDefault( )
-						.enableProcyonDecompiler( ) )
-		{
-			( (Button) alignEditor.getChangeControl( debugGroup ) )
-					.setSelection( false );
-			( (Button) optionLncEditor.getChangeControl( debugGroup ) )
-					.setSelection( false );
-			alignEditor.setEnabled( false, debugGroup );
-			optionLncEditor.setEnabled( false, debugGroup );
-		}
-		else
-		{
-			boolean enabled = getPreferenceStore( )
-					.getBoolean( JadDecompiler.OPTION_LNC );
-			alignEditor.setEnabled( enabled, debugGroup );
-		}
 	}
 
 	protected void performDefaults( )
@@ -322,27 +312,6 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 				alignEditor.setEnabled( !enabled, debugGroup );
 				alignEditor.handleSelection( debugGroup );
 				optionLncEditor.handleSelection( debugGroup );
-			}
-		}
-		if ( event.getSource( ) == defaultDecompiler )
-		{
-			boolean isCfr = event.getNewValue( ).equals( DecompilerType.CFR );
-			if ( isCfr
-					&& !JavaDecompilerPlugin.getDefault( )
-							.enableProcyonDecompiler( ) )
-			{
-				( (Button) alignEditor.getChangeControl( debugGroup ) )
-						.setSelection( false );
-				( (Button) optionLncEditor.getChangeControl( debugGroup ) )
-						.setSelection( false );
-				alignEditor.setEnabled( false, debugGroup );
-				optionLncEditor.setEnabled( false, debugGroup );
-			}
-			else
-			{
-				if ( !optionLncEditor.getChangeControl( debugGroup )
-						.isEnabled( ) )
-					optionLncEditor.setEnabled( true, debugGroup );
 			}
 		}
 		super.propertyChange( event );

@@ -12,13 +12,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
-import org.sf.feeling.decompiler.cfr.CfrDecompiler;
 import org.sf.feeling.decompiler.editor.DecompilerType;
 import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.editor.SourceMapperFactory;
+import org.sf.feeling.decompiler.fernflower.FernFlowerDecompiler;
 import org.sf.feeling.decompiler.jdcore.JDCoreDecompiler;
 import org.sf.feeling.decompiler.jdcore.JDCoreSourceMapper;
-import org.sf.feeling.decompiler.procyon.ProcyonDecompiler;
 
 public class ClassUtil
 {
@@ -120,37 +119,20 @@ public class ClassUtil
 	public static IDecompiler checkAvailableDecompiler( IDecompiler decompiler,
 			InputStream is )
 	{
-		if ( greatLevel7( is ) )
+		if ( greatLevel6( is ) )
 		{
 			if ( JavaDecompilerPlugin.getDefault( ).isDisplayLineNumber( )
 					|| UIUtil.isDebugPerspective( ) )
 			{
-				if ( !supportGreatLevel7AndDebug( decompiler.getDecompilerType( ) ) )
+				if ( !supportGreatLevel6AndDebug(
+						decompiler.getDecompilerType( ) ) )
 				{
-					if ( JavaDecompilerPlugin.getDefault( )
-							.enableProcyonDecompiler( ) )
-					{
-						if ( DecompilerType.PROCYON.equals( decompiler.getDecompilerType( ) ) )
-							return decompiler;
-						return new ProcyonDecompiler( );
-					}
-					else if ( JavaDecompilerPlugin.getDefault( )
-							.enableCfrDecompiler( ) )
-					{
-						if ( DecompilerType.CFR.equals( decompiler.getDecompilerType( ) ) )
-							return decompiler;
-						return new CfrDecompiler( );
-					}
+					return new FernFlowerDecompiler( );
 				}
 			}
-			else if ( !supportGreatLevel7( decompiler.getDecompilerType( ) ) )
+			else if ( !supportGreatLevel6( decompiler.getDecompilerType( ) ) )
 			{
-				if ( JavaDecompilerPlugin.getDefault( ).enableCfrDecompiler( ) )
-				{
-					if ( DecompilerType.CFR.equals( decompiler.getDecompilerType( ) ) )
-						return decompiler;
-					return new CfrDecompiler( );
-				}
+				return new FernFlowerDecompiler( );
 			}
 		}
 		else
@@ -158,32 +140,39 @@ public class ClassUtil
 			if ( JavaDecompilerPlugin.getDefault( ).isDisplayLineNumber( )
 					|| UIUtil.isDebugPerspective( ) )
 			{
-				if ( DecompilerType.CFR.equals( decompiler.getDecompilerType( ) ) )
+				if ( DecompilerType.CFR
+						.equals( decompiler.getDecompilerType( ) ) )
 				{
-					return new JDCoreDecompiler( (JDCoreSourceMapper) SourceMapperFactory.getSourceMapper( DecompilerType.JDCORE ) );
+					return new JDCoreDecompiler(
+							(JDCoreSourceMapper) SourceMapperFactory
+									.getSourceMapper( DecompilerType.JDCORE ) );
 				}
 			}
 		}
 		return decompiler;
 	}
 
-	private static boolean supportGreatLevel7( String decompilerType )
+	private static boolean supportGreatLevel6( String decompilerType )
 	{
 		if ( DecompilerType.CFR.endsWith( decompilerType ) )
 			return true;
 		if ( DecompilerType.PROCYON.endsWith( decompilerType ) )
 			return true;
-		return false;
-	}
-
-	private static boolean supportGreatLevel7AndDebug( String decompilerType )
-	{
-		if ( DecompilerType.PROCYON.endsWith( decompilerType ) )
+		if ( DecompilerType.FernFlower.endsWith( decompilerType ) )
 			return true;
 		return false;
 	}
 
-	public static boolean greatLevel7( File file )
+	private static boolean supportGreatLevel6AndDebug( String decompilerType )
+	{
+		if ( DecompilerType.PROCYON.endsWith( decompilerType ) )
+			return true;
+		if ( DecompilerType.FernFlower.endsWith( decompilerType ) )
+			return true;
+		return false;
+	}
+
+	public static boolean greatLevel6( File file )
 	{
 		DataInputStream data = null;
 		try
@@ -197,7 +186,7 @@ public class ClassUtil
 			int major = data.readUnsignedShort( );
 			data.close( );
 			data = null;
-			return major > 51;
+			return major >= 51;
 		}
 		catch ( IOException e )
 		{
@@ -220,7 +209,7 @@ public class ClassUtil
 		return false;
 	}
 
-	public static boolean greatLevel7( InputStream is )
+	public static boolean greatLevel6( InputStream is )
 	{
 		DataInputStream data = null;
 		try
@@ -232,7 +221,7 @@ public class ClassUtil
 			}
 			data.readUnsignedShort( );
 			int major = data.readUnsignedShort( );
-			return major > 51;
+			return major >= 51;
 		}
 		catch ( IOException e )
 		{
