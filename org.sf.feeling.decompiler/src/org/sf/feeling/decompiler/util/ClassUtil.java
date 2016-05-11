@@ -14,10 +14,7 @@ import java.util.regex.Pattern;
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.editor.DecompilerType;
 import org.sf.feeling.decompiler.editor.IDecompiler;
-import org.sf.feeling.decompiler.editor.SourceMapperFactory;
 import org.sf.feeling.decompiler.fernflower.FernFlowerDecompiler;
-import org.sf.feeling.decompiler.jdcore.JDCoreDecompiler;
-import org.sf.feeling.decompiler.jdcore.JDCoreSourceMapper;
 
 public class ClassUtil
 {
@@ -143,9 +140,7 @@ public class ClassUtil
 				if ( DecompilerType.CFR
 						.equals( decompiler.getDecompilerType( ) ) )
 				{
-					return new JDCoreDecompiler(
-							(JDCoreSourceMapper) SourceMapperFactory
-									.getSourceMapper( DecompilerType.JDCORE ) );
+					return new FernFlowerDecompiler( );
 				}
 			}
 		}

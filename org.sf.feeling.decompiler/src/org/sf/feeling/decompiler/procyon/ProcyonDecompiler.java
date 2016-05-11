@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.editor.DecompilerType;
 import org.sf.feeling.decompiler.editor.IDecompiler;
@@ -64,14 +63,10 @@ public class ProcyonDecompiler implements IDecompiler
 		final String classPathStr = new File( workingDir, className )
 				.getAbsolutePath( );
 
-		IPreferenceStore preferences = JavaDecompilerPlugin.getDefault( )
-				.getPreferenceStore( );
-
 		boolean includeLineNumbers = false;
 		boolean stretchLines = false;
 		if ( UIUtil.isDebugPerspective( )
-				|| preferences.getBoolean(
-						JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS ) )
+				|| JavaDecompilerPlugin.getDefault( ).isDisplayLineNumber( ) )
 		{
 			includeLineNumbers = true;
 			stretchLines = true;

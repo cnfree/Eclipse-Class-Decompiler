@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
@@ -58,13 +57,11 @@ public class FernFlowerDecompiler implements IDecompiler
 		mapOptions.put( IFernflowerPreferences.DECOMPILE_GENERIC_SIGNATURES,
 				"1" );
 		mapOptions.put( IFernflowerPreferences.REMOVE_SYNTHETIC, "1" );
-		mapOptions.put( IFernflowerPreferences.LOG_LEVEL, IFernflowerLogger.Severity.ERROR.name( ) );
+		mapOptions.put( IFernflowerPreferences.LOG_LEVEL,
+				IFernflowerLogger.Severity.ERROR.name( ) );
 
-		IPreferenceStore preferences = JavaDecompilerPlugin.getDefault( )
-				.getPreferenceStore( );
 		if ( UIUtil.isDebugPerspective( )
-				|| preferences.getBoolean(
-						JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS ) )
+				|| JavaDecompilerPlugin.getDefault( ).isDisplayLineNumber( ) )
 		{
 			mapOptions.put( IFernflowerPreferences.DUMP_ORIGINAL_LINES, "1" );
 			mapOptions.put( IFernflowerPreferences.BYTECODE_SOURCE_MAPPING,
