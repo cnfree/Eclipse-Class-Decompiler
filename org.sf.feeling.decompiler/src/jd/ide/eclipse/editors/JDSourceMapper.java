@@ -18,10 +18,10 @@ import java.util.Map;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
-import org.sf.feeling.decompiler.editor.DecompilerSourceMapper;
+import org.sf.feeling.decompiler.editor.BaseDecompilerSourceMapper;
 import org.sf.feeling.decompiler.util.UIUtil;
 
-public abstract class JDSourceMapper extends DecompilerSourceMapper
+public abstract class JDSourceMapper extends BaseDecompilerSourceMapper
 {
 
 	protected final static String JAR_SUFFIX = ".jar"; //$NON-NLS-1$
@@ -36,7 +36,7 @@ public abstract class JDSourceMapper extends DecompilerSourceMapper
 		super( sourcePath, rootPath, options );
 	}
 
-	protected native String decompile( String baseName, String qualifiedName );
+	public native String decompile( String baseName, String qualifiedName );
 
 	protected void loadLibrary( ) throws IOException
 	{

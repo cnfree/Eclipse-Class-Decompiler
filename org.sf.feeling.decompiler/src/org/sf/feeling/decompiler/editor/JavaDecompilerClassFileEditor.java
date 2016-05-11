@@ -12,6 +12,8 @@
 package org.sf.feeling.decompiler.editor;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.runtime.CoreException;
@@ -20,6 +22,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.IClassFile;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.BufferManager;
 import org.eclipse.jdt.internal.core.ClassFile;
 import org.eclipse.jdt.internal.ui.javaeditor.ClassFileEditor;
@@ -34,6 +37,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
+import org.sf.feeling.decompiler.util.ClassUtil;
 import org.sf.feeling.decompiler.util.DecompileUtil;
 import org.sf.feeling.decompiler.util.FileUtil;
 import org.sf.feeling.decompiler.util.ReflectionUtils;
@@ -51,6 +55,7 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 	}
 
 	private boolean doOpenBuffer( IEditorInput input, boolean force )
+			throws JavaModelException
 	{
 		IPreferenceStore prefs = JavaDecompilerPlugin.getDefault( )
 				.getPreferenceStore( );
@@ -59,6 +64,7 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 	}
 
 	private boolean doOpenBuffer( IEditorInput input, String type, boolean force )
+			throws JavaModelException
 	{
 		IPreferenceStore prefs = JavaDecompilerPlugin.getDefault( )
 				.getPreferenceStore( );
@@ -69,75 +75,68 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 
 	private boolean doOpenBuffer( IEditorInput input, String type,
 			boolean force, boolean reuseBuf, boolean always )
+			throws JavaModelException
 	{
 		if ( UIUtil.isDebugPerspective( ) )
 			reuseBuf = false;
 
 		if ( input instanceof IClassFileEditorInput )
 		{
-			try
-			{
-				boolean opened = false;
-				IClassFile cf = ( (IClassFileEditorInput) input ).getClassFile( );
 
-				String decompilerType = type;
-				String origSrc = cf.getSource( );
-				// have to check our mark since all line comments are stripped
-				// in debug align mode
-				if ( origSrc == null
-						|| always
-						&& !origSrc.startsWith( MARK )
-						|| ( origSrc.startsWith( MARK ) && ( !reuseBuf || force ) ) )
+			boolean opened = false;
+			IClassFile cf = ( (IClassFileEditorInput) input ).getClassFile( );
+
+			String decompilerType = type;
+			String origSrc = cf.getSource( );
+			if ( origSrc == null
+					|| always
+					&& !origSrc.startsWith( MARK )
+					|| ( origSrc.startsWith( MARK ) && ( !reuseBuf || force ) ) )
+			{
+				DecompilerSourceMapper sourceMapper = SourceMapperFactory.getSourceMapper( decompilerType );
+				char[] src = sourceMapper == null ? null
+						: sourceMapper.findSource( cf.getType( ) );
+				if ( src == null )
 				{
-					DecompilerSourceMapper sourceMapper = SourceMapperFactory.getSourceMapper( decompilerType );
-					char[] src = sourceMapper == null ? null
-							: sourceMapper.findSource( cf.getType( ) );
-					if ( src == null )
+					if ( DecompilerType.JAD.equals( decompilerType ) )
 					{
-						if ( DecompilerType.JAD.equals( decompilerType ) )
-						{
-							src = SourceMapperFactory.getSourceMapper( DecompilerType.JDCORE )
-									.findSource( cf.getType( ) );
-						}
-						else if ( DecompilerType.JDCORE.equals( decompilerType ) )
-						{
-							src = SourceMapperFactory.getSourceMapper( DecompilerType.JAD )
-									.findSource( cf.getType( ) );
-						}
-						else if ( DecompilerType.CFR.equals( decompilerType ) )
-						{
-							src = SourceMapperFactory.getSourceMapper( DecompilerType.CFR )
-									.findSource( cf.getType( ) );
-						}
-						else if ( DecompilerType.PROCYON.equals( decompilerType ) )
-						{
-							src = SourceMapperFactory.getSourceMapper( DecompilerType.PROCYON )
-									.findSource( cf.getType( ) );
-						}
+						src = SourceMapperFactory.getSourceMapper( DecompilerType.JDCORE )
+								.findSource( cf.getType( ) );
 					}
-					if ( src == null )
+					else if ( DecompilerType.JDCORE.equals( decompilerType ) )
 					{
-						return false;
+						src = SourceMapperFactory.getSourceMapper( DecompilerType.JAD )
+								.findSource( cf.getType( ) );
 					}
-					char[] markedSrc = src;
-					IBuffer buffer = BufferManager.createBuffer( cf );
-					buffer.setContents( markedSrc );
-					getBufferManager( ).addBuffer( buffer );
-					// buffer.addBufferChangedListener((IBufferChangedListener)cf);
-					sourceMapper.mapSource( cf.getType( ), markedSrc, true );
-
-					ClassFileSourceMap.updateSource( getBufferManager( ),
-							(ClassFile) cf,
-							markedSrc );
-
-					opened = true;
+					else if ( DecompilerType.CFR.equals( decompilerType ) )
+					{
+						src = SourceMapperFactory.getSourceMapper( DecompilerType.CFR )
+								.findSource( cf.getType( ) );
+					}
+					else if ( DecompilerType.PROCYON.equals( decompilerType ) )
+					{
+						src = SourceMapperFactory.getSourceMapper( DecompilerType.PROCYON )
+								.findSource( cf.getType( ) );
+					}
 				}
-				return opened;
+				if ( src == null )
+				{
+					return false;
+				}
+				char[] markedSrc = src;
+				IBuffer buffer = BufferManager.createBuffer( cf );
+				buffer.setContents( markedSrc );
+				getBufferManager( ).addBuffer( buffer );
+				sourceMapper.mapSource( cf.getType( ), markedSrc, true );
+
+				ClassFileSourceMap.updateSource( getBufferManager( ),
+						(ClassFile) cf,
+						markedSrc );
+
+				opened = true;
 			}
-			catch ( Exception e )
-			{
-				JavaDecompilerPlugin.logError( e, "" ); //$NON-NLS-1$
-			}
+			return opened;
+
 		}
 		return false;
 	}
@@ -151,32 +150,32 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 	public void doSetInput( boolean force )
 	{
 		IEditorInput input = getEditorInput( );
-		if ( doOpenBuffer( input, force ) )
+		try
 		{
-			try
+			if ( doOpenBuffer( input, force ) )
 			{
 				super.doSetInput( input );
 			}
-			catch ( Exception e )
-			{
-				JavaDecompilerPlugin.logError( e, "" ); //$NON-NLS-1$
-			}
+		}
+		catch ( Exception e )
+		{
+			JavaDecompilerPlugin.logError( e, "" ); //$NON-NLS-1$
 		}
 	}
 
 	public void doSetInput( String type, boolean force )
 	{
 		IEditorInput input = getEditorInput( );
-		if ( doOpenBuffer( input, type, force ) )
+		try
 		{
-			try
+			if ( doOpenBuffer( input, type, force ) )
 			{
 				super.doSetInput( input );
 			}
-			catch ( Exception e )
-			{
-				JavaDecompilerPlugin.logError( e, "" ); //$NON-NLS-1$
-			}
+		}
+		catch ( Exception e )
+		{
+			JavaDecompilerPlugin.logError( e, "" ); //$NON-NLS-1$
 		}
 	}
 
@@ -303,7 +302,46 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 					return;
 				}
 			}
-			doOpenBuffer( input, false );
+			try
+			{
+				doOpenBuffer( input, false );
+			}
+			catch ( JavaModelException e )
+			{
+				IClassFileEditorInput classFileEditorInput = (IClassFileEditorInput) input;
+				IClassFile file = classFileEditorInput.getClassFile( );
+
+				if ( file.getSourceRange( ) == null && file.getBytes( ) != null )
+				{
+					if ( ClassUtil.isClassFile( file.getBytes( ) ) )
+					{
+						File classFile = new File( JavaDecompilerPlugin.getDefault( )
+								.getPreferenceStore( )
+								.getString( JavaDecompilerPlugin.TEMP_DIR ),
+								file.getElementName( ) );
+						try
+						{
+							FileOutputStream fos = new FileOutputStream( classFile );
+							fos.write( file.getBytes( ) );
+							fos.close( );
+
+							doSetInput( new DecompilerClassEditorInput( EFS.getLocalFileSystem( )
+									.getStore( new Path( classFile.getAbsolutePath( ) ) ) ) );
+							classFile.delete( );
+							return;
+						}
+						catch ( IOException e1 )
+						{
+							JavaDecompilerPlugin.logError( e, "" ); //$NON-NLS-1$
+						}
+						finally
+						{
+							if ( classFile != null && classFile.exists( ) )
+								classFile.delete( );
+						}
+					}
+				}
+			}
 			super.doSetInput( input );
 		}
 	}

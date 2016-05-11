@@ -9,7 +9,7 @@
  *  Chen Chao  - initial API and implementation
  *******************************************************************************/
 
-package org.sf.feeling.decompiler.cfr;
+package org.sf.feeling.decompiler.jdcore;
 
 import java.io.File;
 import java.util.Collections;
@@ -17,27 +17,28 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.benf.cfr.reader.api.ClassFileSource;
-import org.benf.cfr.reader.entities.ClassFile;
-import org.benf.cfr.reader.state.ClassFileSourceImpl;
-import org.benf.cfr.reader.state.DCCommonState;
-import org.benf.cfr.reader.state.TypeUsageCollector;
-import org.benf.cfr.reader.util.CannotLoadClassException;
-import org.benf.cfr.reader.util.getopt.GetOptParser;
-import org.benf.cfr.reader.util.getopt.Options;
-import org.benf.cfr.reader.util.getopt.OptionsImpl;
-import org.benf.cfr.reader.util.output.IllegalIdentifierDump;
+import jd.ide.eclipse.editors.JDSourceMapper;
+
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.editor.DecompilerType;
 import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.jad.JarClassExtractor;
+import org.sf.feeling.decompiler.util.FileUtil;
+import org.sf.feeling.decompiler.util.UIUtil;
 
-public class CfrDecompiler implements IDecompiler
+public class JDCoreDecompiler implements IDecompiler
 {
 
 	private String source = ""; // $NON-NLS-1$
 	private long time, start;
 	private String log = "";
+
+	private JDSourceMapper mapper;
+
+	public JDCoreDecompiler( JDSourceMapper mapper )
+	{
+		this.mapper = mapper;
+	}
 
 	/**
 	 * Performs a <code>Runtime.exec()</code> on jad executable with selected
@@ -50,70 +51,60 @@ public class CfrDecompiler implements IDecompiler
 		start = System.currentTimeMillis( );
 		log = "";
 		source = "";
+		Boolean displayNumber = null;
+
 		File workingDir = new File( root + "/" + packege ); //$NON-NLS-1$
+		File file = new File( workingDir, className );
 
-		String classPathStr = new File( workingDir, className ).getAbsolutePath( );
-
-		GetOptParser getOptParser = new GetOptParser( );
+		File zipFile = new File( System.getProperty( "java.io.tmpdir" ), //$NON-NLS-1$
+				className.replaceAll( "(?i)\\.class", ".jar" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+		String zipFileName = zipFile.getAbsolutePath( );
 
 		try
 		{
-			Options options = (Options) getOptParser.parse( new String[]{
-				classPathStr
-			}, OptionsImpl.getFactory( ) );
-			ClassFileSource classFileSource = new ClassFileSourceImpl( options );
-			DCCommonState dcCommonState = new DCCommonState( options,
-					classFileSource );
+			FileUtil.zipFile( file, zipFileName );
 
-			IllegalIdentifierDump illegalIdentifierDump = IllegalIdentifierDump.Factory.get( options );
-
-			ClassFile c = dcCommonState.getClassFileMaybePath( (String) options.getOption( OptionsImpl.FILENAME ) );
-			dcCommonState.configureWith( c );
-			try
+			if ( UIUtil.isDebugPerspective( ) )
 			{
-				c = dcCommonState.getClassFile( c.getClassType( ) );
-			}
-			catch ( CannotLoadClassException e )
-			{
-			}
-			if ( ( (Boolean) options.getOption( OptionsImpl.DECOMPILE_INNER_CLASSES ) ).booleanValue( ) )
-			{
-				c.loadInnerClasses( dcCommonState );
+				displayNumber = JavaDecompilerPlugin.getDefault( )
+						.isDisplayLineNumber( );
+				JavaDecompilerPlugin.getDefault( )
+						.displayLineNumber( Boolean.TRUE );
 			}
 
-			c.analyseTop( dcCommonState );
+			source = mapper.decompile( zipFileName, file.getName( ) );
 
-			TypeUsageCollector collectingDumper = new TypeUsageCollector( c );
-			c.collectTypeUsages( collectingDumper );
-
-			StringDumper dumper = new StringDumper( collectingDumper.getTypeUsageInformation( ),
-					options,
-					illegalIdentifierDump );
-			c.dump( dumper );
-
-			source = dumper.toString( );
-
-			Pattern wp = Pattern.compile( "/\\*.+?\\*/", Pattern.DOTALL );
-			Matcher m = wp.matcher( source );
-			while ( m.find( ) )
-			{
-				if ( m.group( ).matches( "/\\*\\s+\\d*\\s+\\*/" ) )
-					continue;
-				String group = m.group( );
-				group = group.replace( "/*", "" );
-				group = group.replace( "*/", "" );
-				group = group.replace( "*", "" );
-				if ( log.length( ) > 0 )
-					log += "\n";
-				log += group;
-
-				source = source.replace( m.group( ), "" );
-			}
-			dumper.close( );
+			zipFile.delete( );
 		}
 		catch ( Exception e )
 		{
 			JavaDecompilerPlugin.logError( e, e.getMessage( ) );
+		}
+
+		if ( displayNumber != null )
+		{
+			JavaDecompilerPlugin.getDefault( )
+					.displayLineNumber( displayNumber );
+		}
+
+		Pattern wp = Pattern.compile( "/\\*.+?\\*/", Pattern.DOTALL );
+		Matcher m = wp.matcher( source );
+		while ( m.find( ) )
+		{
+			if ( m.group( ).matches( "/\\*\\s+\\d*\\s+\\*/" ) )
+				continue;
+
+			String group = m.group( );
+			group = group.replace( "/* ", "\t" );
+			group = group.replace( " */", "" );
+			group = group.replace( " * ", "\t" );
+
+			if ( log.length( ) > 0 )
+				log += "\n";
+			log += group;
+
+			source = source.replace( m.group( ), "" );
+
 		}
 
 		time = System.currentTimeMillis( ) - start;
@@ -202,6 +193,7 @@ public class CfrDecompiler implements IDecompiler
 
 	public String getDecompilerType( )
 	{
-		return DecompilerType.CFR;
+		return DecompilerType.JDCORE;
 	}
+
 }

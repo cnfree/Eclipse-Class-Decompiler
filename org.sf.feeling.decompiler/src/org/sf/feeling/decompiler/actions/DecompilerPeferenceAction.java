@@ -30,10 +30,7 @@ public class DecompilerPeferenceAction extends Action
 				.getActiveShell( ),
 				"org.sf.feeling.decompiler.Main", //$NON-NLS-1$
 				new String[]{
-						"org.sf.feeling.decompiler.Main",
-						"org.sf.feeling.decompiler.ui.preferences.jad.Formatting",
-						"org.sf.feeling.decompiler.ui.preferences.jad.Directives",
-						"org.sf.feeling.decompiler.ui.preferences.jad.Misc"}, //$NON-NLS-1$
+						"org.sf.feeling.decompiler.Main"}, //$NON-NLS-1$
 				null )
 				.open( );
 	}

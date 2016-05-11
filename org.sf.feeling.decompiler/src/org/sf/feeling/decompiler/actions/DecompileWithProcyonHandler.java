@@ -29,7 +29,7 @@ public class DecompileWithProcyonHandler extends DecompileHandler
 
 	public Object execute( ExecutionEvent event ) throws ExecutionException
 	{
-		if ( JavaDecompilerPlugin.getDefault( ).enableProcyonDecompiler( ) )
+		if ( !JavaDecompilerPlugin.getDefault( ).enableProcyonDecompiler( ) )
 		{
 			return null;
 		}

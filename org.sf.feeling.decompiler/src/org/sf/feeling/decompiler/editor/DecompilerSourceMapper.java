@@ -49,7 +49,7 @@ public abstract class DecompilerSourceMapper extends SourceMapper
 		super( sourcePath, rootPath, options );
 	}
 
-	public char[] findSource( IType type )
+	public char[] findSource( IType type ) throws JavaModelException
 	{
 		if ( !type.isBinary( ) )
 		{
@@ -63,14 +63,9 @@ public abstract class DecompilerSourceMapper extends SourceMapper
 			parent = (BinaryType) declType.getDeclaringType( );
 		}
 		IBinaryType info = null;
-		try
-		{
-			info = (IBinaryType) declType.getElementInfo( );
-		}
-		catch ( JavaModelException e )
-		{
-			return null;
-		}
+
+		info = (IBinaryType) declType.getElementInfo( );
+
 		if ( info == null )
 		{
 			return null;
@@ -107,14 +102,12 @@ public abstract class DecompilerSourceMapper extends SourceMapper
 
 		IPreferenceStore prefs = JavaDecompilerPlugin.getDefault( )
 				.getPreferenceStore( );
-		boolean useFormatter = prefs
-				.getBoolean( JavaDecompilerPlugin.USE_ECLIPSE_FORMATTER );
+		boolean useFormatter = prefs.getBoolean( JavaDecompilerPlugin.USE_ECLIPSE_FORMATTER );
 
 		if ( source != null && useFormatter )
 		{
 			CodeFormatter formatter = ToolFactory.createCodeFormatter( null );
-			TextEdit textEdit = formatter.format(
-					CodeFormatter.K_COMPILATION_UNIT,
+			TextEdit textEdit = formatter.format( CodeFormatter.K_COMPILATION_UNIT,
 					source,
 					0,
 					source.length( ),
@@ -175,10 +168,9 @@ public abstract class DecompilerSourceMapper extends SourceMapper
 	}
 
 	/**
-	 * Finds the deepest <code>IJavaElement</code> in the hierarchy of
-	 * <code>elt</elt>'s children (including <code>elt</code> itself) which has
-	 * a source range that encloses <code>position</code> according to
-	 * <code>mapper</code>.
+	 * Finds the deepest <code>IJavaElement</code> in the hierarchy of <code>elt</elt>'s children (including <code>elt</code>
+	 * itself) which has a source range that encloses <code>position</code>
+	 * according to <code>mapper</code>.
 	 * 
 	 * Code mostly taken from 'org.eclipse.jdt.internal.core.ClassFile'
 	 */

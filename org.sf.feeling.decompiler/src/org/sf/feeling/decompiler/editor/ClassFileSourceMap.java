@@ -16,6 +16,7 @@ import java.util.Arrays;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.compiler.env.IBinaryType;
 import org.eclipse.jdt.internal.core.BufferManager;
 import org.eclipse.jdt.internal.core.ClassFile;
@@ -83,7 +84,7 @@ public class ClassFileSourceMap
 	}
 
 	public static void updateSource( JavaDecompilerBufferManager bufferManager,
-			ClassFile cf, char[] markedSrc ) throws Exception
+			ClassFile cf, char[] markedSrc ) throws JavaModelException
 	{
 		IType type = cf.getType( );
 		if ( !type.isBinary( ) )

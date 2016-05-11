@@ -1,6 +1,7 @@
 
 package org.sf.feeling.decompiler.editor;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -16,7 +17,7 @@ import org.eclipse.jdt.internal.core.PackageFragmentRoot;
 import org.eclipse.jdt.internal.core.SourceMapper;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
-import org.sf.feeling.decompiler.jad.IDecompiler;
+import org.sf.feeling.decompiler.util.ClassUtil;
 import org.sf.feeling.decompiler.util.DecompilerOutputUtil;
 import org.sf.feeling.decompiler.util.SortMemberUtil;
 import org.sf.feeling.decompiler.util.UIUtil;
@@ -36,8 +37,7 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 	{
 		IPreferenceStore prefs = JavaDecompilerPlugin.getDefault( )
 				.getPreferenceStore( );
-		boolean always = prefs
-				.getBoolean( JavaDecompilerPlugin.IGNORE_EXISTING );
+		boolean always = prefs.getBoolean( JavaDecompilerPlugin.IGNORE_EXISTING );
 
 		Collection exceptions = new LinkedList( );
 		IPackageFragment pkgFrag = type.getPackageFragment( );
@@ -45,8 +45,8 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 
 		if ( originalSourceMapper.containsKey( root ) && !always )
 		{
-			char[] attachedSource = ( (SourceMapper) originalSourceMapper
-					.get( root ) ).findSource( type, info );
+			char[] attachedSource = ( (SourceMapper) originalSourceMapper.get( root ) ).findSource( type,
+					info );
 			if ( attachedSource != null )
 			{
 				isAttachedSource = true;
@@ -70,8 +70,7 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 						&& !always
 						&& !( sourceMapper instanceof DecompilerSourceMapper ) )
 				{
-					char[] attachedSource = sourceMapper.findSource( type,
-							info );
+					char[] attachedSource = sourceMapper.findSource( type, info );
 					if ( attachedSource != null )
 					{
 						isAttachedSource = true;
@@ -113,15 +112,28 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 		{
 			displayNumber = JavaDecompilerPlugin.getDefault( )
 					.isDisplayLineNumber( );
-			JavaDecompilerPlugin.getDefault( )
-					.displayLineNumber( Boolean.TRUE );
+			JavaDecompilerPlugin.getDefault( ).displayLineNumber( Boolean.TRUE );
 		}
+
+		IDecompiler currentDecompiler = decompiler;
 
 		if ( root.isArchive( ) )
 		{
 			String archivePath = getArchivePath( root );
 			location += archivePath;
-			decompiler.decompileFromArchive( archivePath, pkg, className );
+
+			try
+			{
+				currentDecompiler = ClassUtil.checkAvailableDecompiler( decompiler,
+						new ByteArrayInputStream( type.getClassFile( )
+								.getBytes( ) ) );
+			}
+			catch ( JavaModelException e )
+			{
+				currentDecompiler = decompiler;
+			}
+
+			currentDecompiler.decompileFromArchive( archivePath, pkg, className );
 		}
 		else
 		{
@@ -134,7 +146,11 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 						+ pkg
 						+ "/" //$NON-NLS-1$
 						+ className;
-				decompiler.decompile( root.getUnderlyingResource( )
+
+				currentDecompiler = ClassUtil.checkAvailableDecompiler( decompiler,
+						new File( location ) );
+
+				currentDecompiler.decompile( root.getUnderlyingResource( )
 						.getLocation( )
 						.toOSString( ), pkg, className );
 			}
@@ -150,30 +166,27 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 					.displayLineNumber( displayNumber );
 		}
 
-		if ( decompiler.getSource( ) == null
-				|| decompiler.getSource( ).length( ) == 0 )
+		if ( currentDecompiler.getSource( ) == null
+				|| currentDecompiler.getSource( ).length( ) == 0 )
 			return null;
 
-		String code = JavaDecompilerClassFileEditor.MARK
-				+ "\r\n" //$NON-NLS-1$
-				+ decompiler.getSource( );
+		String code = JavaDecompilerClassFileEditor.MARK + "\r\n" //$NON-NLS-1$
+				+ currentDecompiler.getSource( );
 
-		boolean showReport = prefs
-				.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_METADATA );
+		boolean showReport = prefs.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_METADATA );
 		if ( !showReport )
 		{
-			code = removeComment( code );
+			code = ClassUtil.removeComment( currentDecompiler, code );
 		}
 
-		boolean showLineNumber = prefs
-				.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS );
+		boolean showLineNumber = prefs.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS );
 		boolean align = prefs.getBoolean( JavaDecompilerPlugin.ALIGN );
 		if ( ( showLineNumber && align ) || UIUtil.isDebugPerspective( ) )
 		{
 			if ( showReport )
-				code = removeComment( code );
-			DecompilerOutputUtil decompilerOutputUtil = new DecompilerOutputUtil(
-					DecompilerType.JAD, code );
+				code = ClassUtil.removeComment( currentDecompiler, code );
+			DecompilerOutputUtil decompilerOutputUtil = new DecompilerOutputUtil( DecompilerType.JAD,
+					code );
 			code = decompilerOutputUtil.realign( );
 		}
 
@@ -181,32 +194,31 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 
 		if ( !UIUtil.isDebugPerspective( ) )
 		{
-			boolean useSorter = prefs
-					.getBoolean( JavaDecompilerPlugin.USE_ECLIPSE_SORTER );
+			boolean useSorter = prefs.getBoolean( JavaDecompilerPlugin.USE_ECLIPSE_SORTER );
 			if ( useSorter )
 			{
 				className = new String( info.getName( ) );
 				fullName = new String( info.getFileName( ) );
 				if ( fullName.lastIndexOf( className ) != -1 )
 				{
-					className = fullName
-							.substring( fullName.lastIndexOf( className ) );
+					className = fullName.substring( fullName.lastIndexOf( className ) );
 				}
 				else
 				{
 
 				}
-				code = SortMemberUtil.sortMember(
-						type.getPackageFragment( ).getElementName( ),
-						className,
-						code );
+				code = SortMemberUtil.sortMember( type.getPackageFragment( )
+						.getElementName( ), className, code );
 			}
 
 			source.append( formatSource( code ) );
 
 			if ( showReport )
 			{
-				printDecompileReport( source, location, exceptions );
+				printDecompileReport( source,
+						location,
+						exceptions,
+						currentDecompiler.getDecompilationTime( ) );
 			}
 		}
 		else
@@ -233,11 +245,13 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 		{
 			displayNumber = JavaDecompilerPlugin.getDefault( )
 					.isDisplayLineNumber( );
-			JavaDecompilerPlugin.getDefault( )
-					.displayLineNumber( Boolean.TRUE );
+			JavaDecompilerPlugin.getDefault( ).displayLineNumber( Boolean.TRUE );
 		}
 
-		decompiler.decompile( file.getParentFile( ).getAbsolutePath( ),
+		IDecompiler currentDecompiler = ClassUtil.checkAvailableDecompiler( decompiler,
+				file );
+
+		currentDecompiler.decompile( file.getParentFile( ).getAbsolutePath( ),
 				"", //$NON-NLS-1$
 				file.getName( ) );
 
@@ -247,30 +261,27 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 					.displayLineNumber( displayNumber );
 		}
 
-		if ( decompiler.getSource( ) == null
-				|| decompiler.getSource( ).length( ) == 0 )
+		if ( currentDecompiler.getSource( ) == null
+				|| currentDecompiler.getSource( ).length( ) == 0 )
 			return null;
 
-		String code = JavaDecompilerClassFileEditor.MARK
-				+ "\r\n" //$NON-NLS-1$
-				+ decompiler.getSource( );
+		String code = JavaDecompilerClassFileEditor.MARK + "\r\n" //$NON-NLS-1$
+				+ currentDecompiler.getSource( );
 
-		boolean showReport = prefs
-				.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_METADATA );
+		boolean showReport = prefs.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_METADATA );
 		if ( !showReport )
 		{
-			code = removeComment( code );
+			code = ClassUtil.removeComment( currentDecompiler, code );
 		}
 
-		boolean showLineNumber = prefs
-				.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS );
+		boolean showLineNumber = prefs.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS );
 		boolean align = prefs.getBoolean( JavaDecompilerPlugin.ALIGN );
 		if ( ( showLineNumber && align ) || UIUtil.isDebugPerspective( ) )
 		{
 			if ( showReport )
-				code = removeComment( code );
-			DecompilerOutputUtil decompilerOutputUtil = new DecompilerOutputUtil(
-					decompilerType, code );
+				code = ClassUtil.removeComment( currentDecompiler, code );
+			DecompilerOutputUtil decompilerOutputUtil = new DecompilerOutputUtil( decompilerType,
+					code );
 			code = decompilerOutputUtil.realign( );
 		}
 
@@ -283,10 +294,11 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 			if ( showReport )
 			{
 				Collection exceptions = new LinkedList( );
-				exceptions.addAll( decompiler.getExceptions( ) );
+				exceptions.addAll( currentDecompiler.getExceptions( ) );
 				printDecompileReport( source,
 						file.getAbsolutePath( ),
-						exceptions );
+						exceptions,
+						currentDecompiler.getDecompilationTime( ) );
 			}
 		}
 		else
@@ -298,7 +310,5 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 	}
 
 	protected abstract void printDecompileReport( StringBuffer source,
-			String location, Collection exceptions );
-
-	protected abstract String removeComment( String code );
+			String location, Collection exceptions, long decompilationTime );
 }

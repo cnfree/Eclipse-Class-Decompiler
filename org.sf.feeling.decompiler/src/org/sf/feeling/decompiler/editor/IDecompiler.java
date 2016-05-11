@@ -9,7 +9,7 @@
  *  Chen Chao  - initial API and implementation
  *******************************************************************************/
 
-package org.sf.feeling.decompiler.jad;
+package org.sf.feeling.decompiler.editor;
 
 import java.util.List;
 
@@ -73,4 +73,6 @@ public interface IDecompiler
 	 * @return Class file source which is the result of decompilation.
 	 */
 	public String getSource( );
+
+	public String getDecompilerType( );
 }

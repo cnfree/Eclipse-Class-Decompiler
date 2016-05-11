@@ -25,7 +25,8 @@ import java.util.regex.Pattern;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
-import org.sf.feeling.decompiler.jad.IDecompiler;
+import org.sf.feeling.decompiler.editor.DecompilerType;
+import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.jad.JarClassExtractor;
 import org.sf.feeling.decompiler.util.FileUtil;
 
@@ -58,18 +59,18 @@ public class ProcyonDecompiler implements IDecompiler
 	public void decompile( String root, String packege, String className )
 	{
 		start = System.currentTimeMillis( );
+		log = "";
+		source = "";
 		File workingDir = new File( root + "/" + packege ); //$NON-NLS-1$
 
-		final String classPathStr = new File( workingDir, className )
-				.getAbsolutePath( );
+		final String classPathStr = new File( workingDir, className ).getAbsolutePath( );
 
 		CommandLineOptions options = new CommandLineOptions( );
 
 		IPreferenceStore preferences = JavaDecompilerPlugin.getDefault( )
 				.getPreferenceStore( );
 
-		if ( preferences
-				.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS ) )
+		if ( preferences.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS ) )
 		{
 			options.setIncludeLineNumbers( true );
 			options.setStretchLines( true );
@@ -83,18 +84,16 @@ public class ProcyonDecompiler implements IDecompiler
 		decompilationOptions.setSettings( settings );
 		decompilationOptions.setFullDecompilation( true );
 
-		MetadataSystem metadataSystem = new MetadataSystem(
-				settings.getTypeLoader( ) );
+		MetadataSystem metadataSystem = new MetadataSystem( settings.getTypeLoader( ) );
 
 		TypeReference type = metadataSystem.lookupType( classPathStr );
 
 		TypeDefinition resolvedType;
-		if ( ( type == null )
-				|| ( ( resolvedType = type.resolve( ) ) == null ) )
+		if ( ( type == null ) || ( ( resolvedType = type.resolve( ) ) == null ) )
 		{
 			System.err.printf( "!!! ERROR: Failed to load class %s.\n",
 					new Object[]{
-							classPathStr
+						classPathStr
 					} );
 			return;
 		}
@@ -107,18 +106,14 @@ public class ProcyonDecompiler implements IDecompiler
 		Writer writer = null;
 		try
 		{
-			writer = new BufferedWriter( new OutputStreamWriter(
-					new FileOutputStream( classFile ) ) );
+			writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( classFile ) ) );
 
 			PlainTextOutput output = new PlainTextOutput( writer );
 
-			output.setUnicodeOutputEnabled(
-					settings.isUnicodeOutputEnabled( ) );
+			output.setUnicodeOutputEnabled( settings.isUnicodeOutputEnabled( ) );
 
 			TypeDecompilationResults results = settings.getLanguage( )
-					.decompileType( resolvedType,
-							output,
-							decompilationOptions );
+					.decompileType( resolvedType, output, decompilationOptions );
 
 			writer.flush( );
 			writer.close( );
@@ -127,26 +122,23 @@ public class ProcyonDecompiler implements IDecompiler
 
 			List lineNumberPositions = results.getLineNumberPositions( );
 
-			if ( options.getIncludeLineNumbers( )
-					|| options.getStretchLines( ) )
+			if ( options.getIncludeLineNumbers( ) || options.getStretchLines( ) )
 			{
-				EnumSet lineNumberOptions = EnumSet
-						.noneOf( LineNumberFormatter.LineNumberOption.class );
+				EnumSet lineNumberOptions = EnumSet.noneOf( LineNumberFormatter.LineNumberOption.class );
 
 				if ( options.getIncludeLineNumbers( ) )
 				{
-					lineNumberOptions.add(
-							LineNumberFormatter.LineNumberOption.LEADING_COMMENTS );
+					lineNumberOptions.add( LineNumberFormatter.LineNumberOption.LEADING_COMMENTS );
 				}
 
 				if ( options.getStretchLines( ) )
 				{
-					lineNumberOptions.add(
-							LineNumberFormatter.LineNumberOption.STRETCHED );
+					lineNumberOptions.add( LineNumberFormatter.LineNumberOption.STRETCHED );
 				}
 
-				LineNumberFormatter lineFormatter = new LineNumberFormatter(
-						classFile, lineNumberPositions, lineNumberOptions );
+				LineNumberFormatter lineFormatter = new LineNumberFormatter( classFile,
+						lineNumberPositions,
+						lineNumberOptions );
 
 				lineFormatter.reformatFile( );
 			}
@@ -174,16 +166,22 @@ public class ProcyonDecompiler implements IDecompiler
 
 		classFile.delete( );
 
-		Pattern wp = Pattern.compile( "/\\*\\s+.+?\\s+\\*/", Pattern.DOTALL );
+		Pattern wp = Pattern.compile( "/\\*.+?\\*/", Pattern.DOTALL );
 		Matcher m = wp.matcher( source );
-		if ( m.find( ) )
+		while ( m.find( ) )
 		{
-			log = m.group( );
-			log = log.replace( "/*", "" );
-			log = log.replace( "*/", "" );
-			log = log.replace( "*", "" );
+			if ( m.group( ).matches( "/\\*\\s*\\d*\\s*\\*/" ) )
+				continue;
+			String group = m.group( );
+			group = group.replace( "/*", "" );
+			group = group.replace( "*/", "" );
+			group = group.replace( "*", "" );
+			if ( log.length( ) > 0 )
+				log += "\n";
+			log += group;
+
+			source = source.replace( m.group( ), "" );
 		}
-		source = m.replaceAll( "" );
 
 		time = System.currentTimeMillis( ) - start;
 	}
@@ -267,6 +265,11 @@ public class ProcyonDecompiler implements IDecompiler
 	public String getSource( )
 	{
 		return source;
+	}
+
+	public String getDecompilerType( )
+	{
+		return DecompilerType.PROCYON;
 	}
 
 }

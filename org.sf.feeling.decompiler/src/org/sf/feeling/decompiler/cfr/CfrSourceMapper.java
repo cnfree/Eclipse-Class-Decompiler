@@ -16,8 +16,6 @@ import java.io.StringWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Path;
 import org.sf.feeling.decompiler.editor.BaseDecompilerSourceMapper;
@@ -32,7 +30,7 @@ public class CfrSourceMapper extends BaseDecompilerSourceMapper
 	}
 
 	protected void printDecompileReport( StringBuffer source,
-			String fileLocation, Collection exceptions )
+			String fileLocation, Collection exceptions, long decompilationTime )
 	{
 		String location = "\tDecompiled from: " //$NON-NLS-1$
 				+ fileLocation;
@@ -40,21 +38,15 @@ public class CfrSourceMapper extends BaseDecompilerSourceMapper
 		source.append( "\n\tDECOMPILATION REPORT\n\n" ); //$NON-NLS-1$
 		source.append( location ).append( "\n" ); //$NON-NLS-1$
 		source.append( "\tTotal time: " ) //$NON-NLS-1$
-				.append( decompiler.getDecompilationTime( ) )
+				.append( decompilationTime )
 				.append( " ms\n" ); //$NON-NLS-1$
 		source.append( "\t"
-				+ decompiler.getLog( ).replaceAll( "\t", "" ).replaceAll(
-						"\n\\s*", "\n\t" ) );
+				+ decompiler.getLog( )
+						.replaceAll( "\t", "" )
+						.replaceAll( "\n\\s*", "\n\t" ) );
 		exceptions.addAll( decompiler.getExceptions( ) );
 		logExceptions( exceptions, source );
 		source.append( "\n*/" ); //$NON-NLS-1$
-	}
-
-	protected String removeComment( String code )
-	{
-		Pattern wp = Pattern.compile( "/\\*\\s+.+?\\s+\\*/", Pattern.DOTALL );
-		Matcher m = wp.matcher( code );
-		return m.replaceAll( "" );
 	}
 
 	protected void logExceptions( Collection exceptions, StringBuffer buffer )

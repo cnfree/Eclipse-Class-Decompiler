@@ -66,9 +66,11 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 
 	public static void log( int severity, Throwable t, String message )
 	{
-		JavaDecompilerPlugin.getDefault( )
-				.getLog( )
-				.log( new Status( severity, PLUGIN_ID, 0, message, t ) );
+		JavaDecompilerPlugin.getDefault( ).getLog( ).log( new Status( severity,
+				PLUGIN_ID,
+				0,
+				message,
+				t ) );
 	}
 
 	public static ImageDescriptor getImageDescriptor( String path )
@@ -142,17 +144,17 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 		{
 			preferenceStore = super.getPreferenceStore( );
 
-			if ( DecompilerType.PROCYON == getPreferenceStore( ).getString( DECOMPILER_TYPE ) )
+			if ( DecompilerType.PROCYON.equals( getPreferenceStore( ).getString( DECOMPILER_TYPE ) ) )
 			{
-				if ( !enableCfrDecompiler( ) )
+				if ( !enableProcyonDecompiler( ) )
 				{
 					preferenceStore.setValue( DECOMPILER_TYPE,
 							DecompilerType.JDCORE );
 				}
 			}
-			else if ( DecompilerType.CFR == getPreferenceStore( ).getString( DECOMPILER_TYPE ) )
+			else if ( DecompilerType.CFR.equals( getPreferenceStore( ).getString( DECOMPILER_TYPE ) ) )
 			{
-				if ( !enableProcyonDecompiler( ) )
+				if ( !enableCfrDecompiler( ) )
 				{
 					preferenceStore.setValue( DECOMPILER_TYPE,
 							DecompilerType.JDCORE );

@@ -16,8 +16,6 @@ import java.io.StringWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Path;
 import org.sf.feeling.decompiler.editor.BaseDecompilerSourceMapper;
@@ -29,61 +27,6 @@ public class JadSourceMapper extends BaseDecompilerSourceMapper
 	{
 		super( new Path( "." ), "", new HashMap( ) ); //$NON-NLS-1$ //$NON-NLS-2$
 		decompiler = new JadDecompiler( );
-	}
-
-	protected String removeComment( String code )
-	{
-		String[] spilts = code.replaceAll( "\r\n", "\n" ).split( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		StringBuffer buffer = new StringBuffer( );
-		for ( int i = 0; i < spilts.length; i++ )
-		{
-			if ( i > 0 && i < 5 )
-				continue;
-			String string = spilts[i];
-			Pattern pattern = Pattern.compile( "\\s*/\\*\\s*\\S*\\*/", //$NON-NLS-1$
-					Pattern.CASE_INSENSITIVE );
-			Matcher matcher = pattern.matcher( string );
-			if ( matcher.find( ) )
-			{
-				if ( matcher.start( ) == 0 )
-				{
-					buffer.append( string ).append( "\r\n" ); //$NON-NLS-1$
-					continue;
-				}
-			}
-
-			boolean refer = false;
-
-			pattern = Pattern.compile( "\\s*// Referenced", //$NON-NLS-1$
-					Pattern.CASE_INSENSITIVE );
-			matcher = pattern.matcher( string );
-			if ( matcher.find( ) )
-			{
-				refer = true;
-
-				while ( true )
-				{
-					i++;
-					if ( spilts[i].trim( ).startsWith( "//" ) ) //$NON-NLS-1$
-					{
-						continue;
-					}
-					else if ( i >= spilts.length )
-					{
-						break;
-					}
-					else
-					{
-						i--;
-						break;
-					}
-				}
-			}
-
-			if ( !refer )
-				buffer.append( string + "\r\n" ); //$NON-NLS-1$
-		}
-		return buffer.toString( );
 	}
 
 	protected void logExceptions( Collection exceptions, StringBuffer buffer )
@@ -111,7 +54,7 @@ public class JadSourceMapper extends BaseDecompilerSourceMapper
 	}
 
 	protected void printDecompileReport( StringBuffer source,
-			String fileLocation, Collection exceptions )
+			String fileLocation, Collection exceptions, long decompilationTime )
 	{
 		String location = "\tDecompiled from: " //$NON-NLS-1$
 				+ fileLocation;
@@ -119,7 +62,7 @@ public class JadSourceMapper extends BaseDecompilerSourceMapper
 		source.append( "\n\tDECOMPILATION REPORT\n\n" ); //$NON-NLS-1$
 		source.append( location ).append( "\n" ); //$NON-NLS-1$
 		source.append( "\tTotal time: " ) //$NON-NLS-1$
-				.append( decompiler.getDecompilationTime( ) )
+				.append( decompilationTime )
 				.append( " ms\n" ); //$NON-NLS-1$
 		source.append( "\t"
 				+ decompiler.getLog( ).replaceAll( "\t", "" ).replaceAll( "\n",

@@ -47,24 +47,6 @@
             class="org.sf.feeling.decompiler.preferences.JavaDecompilerPreferencePage"
             id="org.sf.feeling.decompiler.Main">
       </page>
-      <page
-            name="%Formatting"
-            category="org.sf.feeling.decompiler.Main"
-            class="org.sf.feeling.decompiler.preferences.JadPreferencePageFormat"
-            id="org.sf.feeling.decompiler.ui.preferences.jad.Formatting">
-      </page>
-      <page
-            name="%Directives"
-            category="org.sf.feeling.decompiler.Main"
-            class="org.sf.feeling.decompiler.preferences.JadPreferencePageDirect"
-            id="org.sf.feeling.decompiler.ui.preferences.jad.Directives">
-      </page>
-      <page
-            name="%Misc"
-            category="org.sf.feeling.decompiler.Main"
-            class="org.sf.feeling.decompiler.preferences.JadPreferencePageMisc"
-            id="org.sf.feeling.decompiler.ui.preferences.jad.Misc">
-      </page>
    </extension>
    <extension
          point="org.eclipse.jdt.ui.javaElementFilters">

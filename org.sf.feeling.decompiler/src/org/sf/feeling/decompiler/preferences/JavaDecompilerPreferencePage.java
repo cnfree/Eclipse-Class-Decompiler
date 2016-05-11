@@ -108,13 +108,13 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage impl
 
 		defaultDecompiler.addItem( DecompilerType.JAD, "Jad", "Jad" ); //$NON-NLS-1$
 		defaultDecompiler.addItem( DecompilerType.JDCORE, "JD-Core", "JD-Core" ); //$NON-NLS-1$
-		
+
 		if ( JavaDecompilerPlugin.getDefault( ).enableCfrDecompiler( ) )
 		{
 			defaultDecompiler.addItem( DecompilerType.CFR,
 					"Class File Reader (Support JDK8)", "Class File Reader" ); //$NON-NLS-1$
 		}
-		
+
 		if ( JavaDecompilerPlugin.getDefault( ).enableProcyonDecompiler( ) )
 		{
 			defaultDecompiler.addItem( DecompilerType.PROCYON,
@@ -218,7 +218,9 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage impl
 
 		boolean isCfr = defaultDecompiler.equals( DecompilerType.CFR );
 
-		if ( isCfr )
+		if ( isCfr
+				&& !JavaDecompilerPlugin.getDefault( )
+						.enableProcyonDecompiler( ) )
 		{
 			( (Button) alignEditor.getChangeControl( debugGroup ) ).setSelection( false );
 			( (Button) optionLncEditor.getChangeControl( debugGroup ) ).setSelection( false );
@@ -287,7 +289,9 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage impl
 		if ( event.getSource( ) == defaultDecompiler )
 		{
 			boolean isCfr = event.getNewValue( ).equals( DecompilerType.CFR );
-			if ( isCfr )
+			if ( isCfr
+					&& !JavaDecompilerPlugin.getDefault( )
+							.enableProcyonDecompiler( ) )
 			{
 				( (Button) alignEditor.getChangeControl( debugGroup ) ).setSelection( false );
 				( (Button) optionLncEditor.getChangeControl( debugGroup ) ).setSelection( false );

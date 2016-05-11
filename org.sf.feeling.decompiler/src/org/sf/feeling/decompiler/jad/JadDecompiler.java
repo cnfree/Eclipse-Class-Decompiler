@@ -20,6 +20,8 @@ import java.util.List;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
+import org.sf.feeling.decompiler.editor.DecompilerType;
+import org.sf.feeling.decompiler.editor.IDecompiler;
 
 /**
  * This implementation of <code>IDecompiler</code> uses Jad as the underlying
@@ -40,8 +42,8 @@ public class JadDecompiler implements IDecompiler
 	public static final String OPTION_DEFINITS = "-i"; // format //$NON-NLS-1$
 	public static final String OPTION_SPLITSTR_MAX = "-l"; // format //$NON-NLS-1$
 	public static final String OPTION_LNC = JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS;// "-lnc";
-																							// //
-																							// debug
+	// //
+	// debug
 	public static final String OPTION_LRADIX = "-lradix"; // format //$NON-NLS-1$
 	public static final String OPTION_SPLITSTR_NL = "-nl"; // format //$NON-NLS-1$
 	public static final String OPTION_NOCONV = "-noconv"; // directives //$NON-NLS-1$
@@ -219,6 +221,8 @@ public class JadDecompiler implements IDecompiler
 	 */
 	public void decompile( String root, String packege, String className )
 	{
+		log = new StringBuffer( );
+		source = "";
 		File workingDir = new File( root + "/" + packege ); //$NON-NLS-1$
 		StringWriter output = new StringWriter( );
 		Writer decor = (Writer) output;
@@ -230,13 +234,6 @@ public class JadDecompiler implements IDecompiler
 		try
 		{
 			start = System.currentTimeMillis( );
-			// errorsP.println("\tDECOMPILED FROM: "
-			// + ((root.isArchive())
-			// ? ("archive " + root.getPath().toOSString())
-			// : ("class file "
-			// +
-			// classFile.getCorrespondingResource().getLocation().toOSString()))
-			// + "\n\n");
 			errorsP.println( "\tJad reported messages/errors:" ); //$NON-NLS-1$
 			Process p = Runtime.getRuntime( ).exec( buildCmdLine( className ),
 					new String[]{},
@@ -251,9 +248,9 @@ public class JadDecompiler implements IDecompiler
 			errRedirect.start( );
 			status = p.waitFor( ); // wait for jad to finish
 			outRedirect.join( ); // wait until output stream content is fully
-									// copied
+			// copied
 			errRedirect.join( ); // wait until error stream content is fully
-									// copied
+			// copied
 			if ( outRedirect.getException( ) != null )
 				excList.add( outRedirect.getException( ) );
 			if ( errRedirect.getException( ) != null )
@@ -386,6 +383,11 @@ public class JadDecompiler implements IDecompiler
 	public String getSource( )
 	{
 		return source;
+	}
+
+	public String getDecompilerType( )
+	{
+		return DecompilerType.JAD;
 	}
 
 }
