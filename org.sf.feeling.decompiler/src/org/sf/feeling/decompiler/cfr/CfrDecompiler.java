@@ -35,9 +35,9 @@ import org.sf.feeling.decompiler.jad.JarClassExtractor;
 public class CfrDecompiler implements IDecompiler
 {
 
-	private String source = ""; // $NON-NLS-1$
+	private String source = Messages.CfrDecompiler_0; // $NON-NLS-1$
 	private long time, start;
-	private String log = "";
+	private String log = Messages.CfrDecompiler_1;
 
 	/**
 	 * Performs a <code>Runtime.exec()</code> on jad executable with selected
@@ -48,8 +48,8 @@ public class CfrDecompiler implements IDecompiler
 	public void decompile( String root, String packege, String className )
 	{
 		start = System.currentTimeMillis( );
-		log = "";
-		source = "";
+		log = ""; //$NON-NLS-1$
+		source = ""; //$NON-NLS-1$
 		File workingDir = new File( root + "/" + packege ); //$NON-NLS-1$
 
 		String classPathStr = new File( workingDir, className ).getAbsolutePath( );
@@ -93,21 +93,21 @@ public class CfrDecompiler implements IDecompiler
 
 			source = dumper.toString( );
 
-			Pattern wp = Pattern.compile( "/\\*.+?\\*/", Pattern.DOTALL );
+			Pattern wp = Pattern.compile( "/\\*.+?\\*/", Pattern.DOTALL ); //$NON-NLS-1$
 			Matcher m = wp.matcher( source );
 			while ( m.find( ) )
 			{
-				if ( m.group( ).matches( "/\\*\\s+\\d*\\s+\\*/" ) )
+				if ( m.group( ).matches( "/\\*\\s+\\d*\\s+\\*/" ) ) //$NON-NLS-1$
 					continue;
 				String group = m.group( );
-				group = group.replace( "/*", "" );
-				group = group.replace( "*/", "" );
-				group = group.replace( "*", "" );
+				group = group.replace( "/*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+				group = group.replace( "*/", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+				group = group.replace( "*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 				if ( log.length( ) > 0 )
-					log += "\n";
+					log += "\n"; //$NON-NLS-1$
 				log += group;
 
-				source = source.replace( m.group( ), "" );
+				source = source.replace( m.group( ), "" ); //$NON-NLS-1$
 			}
 			dumper.close( );
 		}

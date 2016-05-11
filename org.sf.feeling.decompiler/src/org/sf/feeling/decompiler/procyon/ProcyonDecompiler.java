@@ -46,9 +46,9 @@ import com.strobel.decompiler.languages.java.JavaFormattingOptions;
 public class ProcyonDecompiler implements IDecompiler
 {
 
-	private String source = ""; // $NON-NLS-1$
+	private String source = ""; // $NON-NLS-1$ //$NON-NLS-1$
 	private long time, start;
-	private String log = "";
+	private String log = ""; //$NON-NLS-1$
 
 	/**
 	 * Performs a <code>Runtime.exec()</code> on jad executable with selected
@@ -59,8 +59,8 @@ public class ProcyonDecompiler implements IDecompiler
 	public void decompile( String root, String packege, String className )
 	{
 		start = System.currentTimeMillis( );
-		log = "";
-		source = "";
+		log = ""; //$NON-NLS-1$
+		source = ""; //$NON-NLS-1$
 		File workingDir = new File( root + "/" + packege ); //$NON-NLS-1$
 
 		final String classPathStr = new File( workingDir, className ).getAbsolutePath( );
@@ -91,7 +91,7 @@ public class ProcyonDecompiler implements IDecompiler
 		TypeDefinition resolvedType;
 		if ( ( type == null ) || ( ( resolvedType = type.resolve( ) ) == null ) )
 		{
-			System.err.printf( "!!! ERROR: Failed to load class %s.\n",
+			System.err.printf( "!!! ERROR: Failed to load class %s.\n", //$NON-NLS-1$
 					new Object[]{
 						classPathStr
 					} );
@@ -166,21 +166,21 @@ public class ProcyonDecompiler implements IDecompiler
 
 		classFile.delete( );
 
-		Pattern wp = Pattern.compile( "/\\*.+?\\*/", Pattern.DOTALL );
+		Pattern wp = Pattern.compile( "/\\*.+?\\*/", Pattern.DOTALL ); //$NON-NLS-1$
 		Matcher m = wp.matcher( source );
 		while ( m.find( ) )
 		{
-			if ( m.group( ).matches( "/\\*\\s*\\d*\\s*\\*/" ) )
+			if ( m.group( ).matches( "/\\*\\s*\\d*\\s*\\*/" ) ) //$NON-NLS-1$
 				continue;
 			String group = m.group( );
-			group = group.replace( "/*", "" );
-			group = group.replace( "*/", "" );
-			group = group.replace( "*", "" );
+			group = group.replace( "/*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+			group = group.replace( "*/", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+			group = group.replace( "*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 			if ( log.length( ) > 0 )
-				log += "\n";
+				log += "\n"; //$NON-NLS-1$
 			log += group;
 
-			source = source.replace( m.group( ), "" );
+			source = source.replace( m.group( ), "" ); //$NON-NLS-1$
 		}
 
 		time = System.currentTimeMillis( ) - start;

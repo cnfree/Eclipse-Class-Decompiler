@@ -28,18 +28,18 @@ public final class JadLoader
 
 		if ( Platform.OS_WIN32.equalsIgnoreCase( Platform.getOS( ) ) )
 		{
-			jadFileName = "jad" + System.currentTimeMillis( ) + ".exe";
-			jadFilePath = "/native/jad/win32/jad.exe";
+			jadFileName = "jad" + System.currentTimeMillis( ) + ".exe"; //$NON-NLS-1$ //$NON-NLS-2$
+			jadFilePath = "/native/jad/win32/jad.exe"; //$NON-NLS-1$
 		}
 		else if ( Platform.OS_LINUX.equalsIgnoreCase( Platform.getOS( ) ) )
 		{
-			jadFileName = "jad" + System.currentTimeMillis( );
-			jadFilePath = "/native/jad/linux/jad";
+			jadFileName = "jad" + System.currentTimeMillis( ); //$NON-NLS-1$
+			jadFilePath = "/native/jad/linux/jad"; //$NON-NLS-1$
 		}
 		else if ( Platform.OS_MACOSX.equalsIgnoreCase( Platform.getOS( ) ) )
 		{
-			jadFileName = "jad" + System.currentTimeMillis( );
-			jadFilePath = "/native/jad/macosx/jad";
+			jadFileName = "jad" + System.currentTimeMillis( ); //$NON-NLS-1$
+			jadFilePath = "/native/jad/macosx/jad"; //$NON-NLS-1$
 		}
 		else
 		{
@@ -74,12 +74,12 @@ public final class JadLoader
 			{
 				if ( Platform.OS_LINUX.equalsIgnoreCase( Platform.getOS( ) ) )
 				{
-					Runtime.getRuntime( ).exec( "chmod a+x "
+					Runtime.getRuntime( ).exec( "chmod a+x " //$NON-NLS-1$
 							+ jad.getAbsolutePath( ) ).waitFor( );
 				}
 				else if ( Platform.OS_MACOSX.equalsIgnoreCase( Platform.getOS( ) ) )
 				{
-					Runtime.getRuntime( ).exec( "chmod a+x "
+					Runtime.getRuntime( ).exec( "chmod a+x " //$NON-NLS-1$
 							+ jad.getAbsolutePath( ) ).waitFor( );
 				}
 			}

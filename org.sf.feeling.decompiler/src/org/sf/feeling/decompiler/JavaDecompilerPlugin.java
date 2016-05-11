@@ -184,11 +184,11 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 
 	public boolean enableCfrDecompiler( )
 	{
-		return !( System.getProperty( "java.version" ).compareTo( "1.6" ) < 0 );
+		return !( System.getProperty( "java.version" ).compareTo( "1.6" ) < 0 ); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public boolean enableProcyonDecompiler( )
 	{
-		return !( System.getProperty( "java.version" ).compareTo( "1.7" ) < 0 );
+		return !( System.getProperty( "java.version" ).compareTo( "1.7" ) < 0 ); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

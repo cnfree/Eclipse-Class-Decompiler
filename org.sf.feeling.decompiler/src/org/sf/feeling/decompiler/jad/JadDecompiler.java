@@ -222,7 +222,7 @@ public class JadDecompiler implements IDecompiler
 	public void decompile( String root, String packege, String className )
 	{
 		log = new StringBuffer( );
-		source = "";
+		source = ""; //$NON-NLS-1$
 		File workingDir = new File( root + "/" + packege ); //$NON-NLS-1$
 		StringWriter output = new StringWriter( );
 		Writer decor = (Writer) output;

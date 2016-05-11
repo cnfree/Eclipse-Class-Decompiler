@@ -42,15 +42,15 @@ public class ProcyonSourceMapper extends BaseDecompilerSourceMapper
 		source.append( "\tTotal time: " ) //$NON-NLS-1$
 				.append( decompilationTime )
 				.append( " ms\n" ); //$NON-NLS-1$
-		source.append( "\t"
+		source.append( "\t" //$NON-NLS-1$
 				+ decompiler.getLog( )
-						.replaceAll( "\t", "" )
-						.replaceAll( "\n\\s*", "\n\t" ) );
+						.replaceAll( "\t", "" ) //$NON-NLS-1$ //$NON-NLS-2$
+						.replaceAll( "\n\\s*", "\n\t" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 		exceptions.addAll( decompiler.getExceptions( ) );
 		logExceptions( exceptions, source );
-		source.append( "\n\tDecompiled with Procyon "
+		source.append( "\n\tDecompiled with Procyon " //$NON-NLS-1$
 				+ Procyon.version( )
-				+ "." );
+				+ "." ); //$NON-NLS-1$
 		source.append( "\n*/" ); //$NON-NLS-1$
 	}
 
