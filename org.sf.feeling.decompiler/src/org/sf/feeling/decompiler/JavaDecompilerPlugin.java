@@ -32,21 +32,19 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 		IPropertyChangeListener
 {
 
-	public static final String EDITOR_ID = "net.sf.feeling.decompiler.ClassFileEditor"; //$NON-NLS-1$
-
-	public static final String PLUGIN_ID = "net.sf.feeling.decompiler"; //$NON-NLS-1$
-
-	public static final String TEMP_DIR = "net.sf.feeling.decompiler.tempd"; //$NON-NLS-1$
-	public static final String CMD = "net.sf.feeling.decompiler.cmd"; //$NON-NLS-1$
-	public static final String REUSE_BUFFER = "net.sf.feeling.decompiler.reusebuff"; //$NON-NLS-1$
-	public static final String IGNORE_EXISTING = "net.sf.feeling.decompiler.alwaysuse"; //$NON-NLS-1$
-	public static final String USE_ECLIPSE_FORMATTER = "net.sf.feeling.decompiler.use_eclipse_formatter"; //$NON-NLS-1$
-	public static final String USE_ECLIPSE_SORTER = "net.sf.feeling.decompiler.use_eclipse_sorter"; //$NON-NLS-1$
-	public static final String DECOMPILER_TYPE = "net.sf.feeling.decompiler.type"; //$NON-NLS-1$
+	public static final String EDITOR_ID = "org.sf.feeling.decompiler.ClassFileEditor"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.sf.feeling.decompiler"; //$NON-NLS-1$
+	public static final String TEMP_DIR = "org.sf.feeling.decompiler.tempd"; //$NON-NLS-1$
+	public static final String CMD = "org.sf.feeling.decompiler.cmd"; //$NON-NLS-1$
+	public static final String REUSE_BUFFER = "org.sf.feeling.decompiler.reusebuff"; //$NON-NLS-1$
+	public static final String IGNORE_EXISTING = "org.sf.feeling.decompiler.alwaysuse"; //$NON-NLS-1$
+	public static final String USE_ECLIPSE_FORMATTER = "org.sf.feeling.decompiler.use_eclipse_formatter"; //$NON-NLS-1$
+	public static final String USE_ECLIPSE_SORTER = "org.sf.feeling.decompiler.use_eclipse_sorter"; //$NON-NLS-1$
+	public static final String DECOMPILER_TYPE = "org.sf.feeling.decompiler.type"; //$NON-NLS-1$
 	public static final String PREF_DISPLAY_LINE_NUMBERS = jd.ide.eclipse.JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS;
 	public static final String PREF_DISPLAY_METADATA = jd.ide.eclipse.JavaDecompilerPlugin.PREF_DISPLAY_METADATA;
 	public static final String ALIGN = jd.ide.eclipse.JavaDecompilerPlugin.ALIGN;
-	public static final String DEFAULT_EDITOR = "net.sf.feeling.decompiler.default_editor"; //$NON-NLS-1$ ;
+	public static final String DEFAULT_EDITOR = "org.sf.feeling.decompiler.default_editor"; //$NON-NLS-1$ ;
 
 	private static JavaDecompilerPlugin plugin;
 
@@ -105,7 +103,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 			store.setDefault( CMD, jad );
 		store.setDefault( TEMP_DIR, System.getProperty( "java.io.tmpdir" ) //$NON-NLS-1$
 				+ File.separator
-				+ ".net.sf.feeling.decompiler" ); //$NON-NLS-1$
+				+ ".org.sf.feeling.decompiler" ); //$NON-NLS-1$
 		store.setDefault( REUSE_BUFFER, true );
 		store.setDefault( IGNORE_EXISTING, false );
 		store.setDefault( USE_ECLIPSE_FORMATTER, true );

@@ -46,7 +46,7 @@ import org.sf.feeling.decompiler.util.UIUtil;
 public class JavaDecompilerClassFileEditor extends ClassFileEditor
 {
 
-	public static final String ID = "net.sf.feeling.decompiler.ClassFileEditor"; //$NON-NLS-1$
+	public static final String ID = "org.sf.feeling.decompiler.ClassFileEditor"; //$NON-NLS-1$
 	public static final String MARK = "/*** Eclipse Class Decompiler plugin, copyright (c) 2016 Chen Chao (cnfree2000@hotmail.com) ***/"; //$NON-NLS-1$
 
 	public JavaDecompilerClassFileEditor( )
