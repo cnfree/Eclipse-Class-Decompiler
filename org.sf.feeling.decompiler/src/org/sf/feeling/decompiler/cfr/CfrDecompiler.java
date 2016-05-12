@@ -31,6 +31,7 @@ import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.editor.DecompilerType;
 import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.jad.JarClassExtractor;
+import org.sf.feeling.decompiler.util.FileUtil;
 
 public class CfrDecompiler implements IDecompiler
 {
@@ -52,26 +53,22 @@ public class CfrDecompiler implements IDecompiler
 		source = ""; //$NON-NLS-1$
 		File workingDir = new File( root + "/" + packege ); //$NON-NLS-1$
 
-		String classPathStr = new File( workingDir, className )
-				.getAbsolutePath( );
+		String classPathStr = new File( workingDir, className ).getAbsolutePath( );
 
 		GetOptParser getOptParser = new GetOptParser( );
 
 		try
 		{
 			Options options = (Options) getOptParser.parse( new String[]{
-					classPathStr
+				classPathStr
 			}, OptionsImpl.getFactory( ) );
-			ClassFileSource classFileSource = new ClassFileSourceImpl(
-					options );
+			ClassFileSource classFileSource = new ClassFileSourceImpl( options );
 			DCCommonState dcCommonState = new DCCommonState( options,
 					classFileSource );
 
-			IllegalIdentifierDump illegalIdentifierDump = IllegalIdentifierDump.Factory
-					.get( options );
+			IllegalIdentifierDump illegalIdentifierDump = IllegalIdentifierDump.Factory.get( options );
 
-			ClassFile c = dcCommonState.getClassFileMaybePath(
-					(String) options.getOption( OptionsImpl.FILENAME ) );
+			ClassFile c = dcCommonState.getClassFileMaybePath( (String) options.getOption( OptionsImpl.FILENAME ) );
 			dcCommonState.configureWith( c );
 			try
 			{
@@ -80,9 +77,7 @@ public class CfrDecompiler implements IDecompiler
 			catch ( CannotLoadClassException e )
 			{
 			}
-			if ( ( (Boolean) options
-					.getOption( OptionsImpl.DECOMPILE_INNER_CLASSES ) )
-							.booleanValue( ) )
+			if ( ( (Boolean) options.getOption( OptionsImpl.DECOMPILE_INNER_CLASSES ) ).booleanValue( ) )
 			{
 				c.loadInnerClasses( dcCommonState );
 			}
@@ -92,13 +87,15 @@ public class CfrDecompiler implements IDecompiler
 			TypeUsageCollector collectingDumper = new TypeUsageCollector( c );
 			c.collectTypeUsages( collectingDumper );
 
-			StringDumper dumper = new StringDumper(
-					collectingDumper.getTypeUsageInformation( ),
+			StringDumper dumper = new StringDumper( collectingDumper.getTypeUsageInformation( ),
 					options,
 					illegalIdentifierDump );
 			c.dump( dumper );
 
 			source = dumper.toString( );
+
+			byte[] converttoBytes = source.getBytes( "UTF-8" );
+			source = new String( converttoBytes, "UTF-8" );
 
 			Pattern wp = Pattern.compile( "/\\*.+?\\*/", Pattern.DOTALL ); //$NON-NLS-1$
 			Matcher m = wp.matcher( source );
@@ -160,26 +157,11 @@ public class CfrDecompiler implements IDecompiler
 		}
 		finally
 		{
-			deltree( workingDir );
+			FileUtil.deltree( workingDir );
 		}
 	}
 
-	void deltree( File root )
-	{
-		if ( root.isFile( ) )
-		{
-			root.delete( );
-			return;
-		}
-
-		File[] children = root.listFiles( );
-		for ( int i = 0; i < children.length; i++ )
-		{
-			deltree( children[i] );
-		}
-
-		root.delete( );
-	}
+	
 
 	public long getDecompilationTime( )
 	{

@@ -11,10 +11,11 @@
 
 package org.sf.feeling.decompiler.jad;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -224,10 +225,9 @@ public class JadDecompiler implements IDecompiler
 		log = new StringBuffer( );
 		source = ""; //$NON-NLS-1$
 		File workingDir = new File( root + "/" + packege ); //$NON-NLS-1$
-		StringWriter output = new StringWriter( );
-		Writer decor = (Writer) output;
-		StringWriter errors = new StringWriter( );
-		PrintWriter errorsP = new PrintWriter( errors );
+		ByteArrayOutputStream bos = new ByteArrayOutputStream( );
+		ByteArrayOutputStream errors = new ByteArrayOutputStream( );
+		PrintWriter errorsP = new PrintWriter( new OutputStreamWriter( errors ) );
 		// errorsP.println("\n\n\n/***** DECOMPILE LOG *****\n");
 		int status = 0;
 
@@ -240,7 +240,7 @@ public class JadDecompiler implements IDecompiler
 					workingDir );
 			StreamRedirectThread outRedirect = new StreamRedirectThread( "output_reader", //$NON-NLS-1$
 					p.getInputStream( ),
-					decor );
+					bos );
 			StreamRedirectThread errRedirect = new StreamRedirectThread( "error_reader", //$NON-NLS-1$
 					p.getErrorStream( ),
 					errors );
@@ -264,8 +264,8 @@ public class JadDecompiler implements IDecompiler
 		{
 			try
 			{
-				decor.flush( );
-				decor.close( );
+				bos.flush( );
+				bos.close( );
 				errorsP.println( "\tExit status: " + status ); //$NON-NLS-1$
 				// errorsP.print(" *************************/");
 				errors.flush( );
@@ -278,8 +278,15 @@ public class JadDecompiler implements IDecompiler
 			time = System.currentTimeMillis( ) - start;
 		}
 
-		source = output.toString( );
-		log = errors.getBuffer( );
+		try
+		{
+			source = new String( bos.toByteArray( ),
+					System.getProperty( "sun.jnu.encoding" ) );
+		}
+		catch ( UnsupportedEncodingException e )
+		{
+		}
+		log = new StringBuffer( errors.toString( ) );
 		// logExceptions();
 		// result = new DecompiledClassFile(classFile, source.toString());
 	}

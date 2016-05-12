@@ -40,8 +40,7 @@ public class FileUtil
 		{
 			if ( !file.getParentFile( ).exists( ) )
 				file.getParentFile( ).mkdirs( );
-			PrintWriter out = new PrintWriter(
-					new OutputStreamWriter( new FileOutputStream( file ) ) );
+			PrintWriter out = new PrintWriter( new OutputStreamWriter( new FileOutputStream( file ) ) );
 			out.print( string );
 			out.close( );
 		}
@@ -103,10 +102,9 @@ public class FileUtil
 				}
 				catch ( IOException f )
 				{
-					Logger.getLogger( FileUtil.class.getName( ) ).log(
-							Level.WARNING,
-							"Close input stream failed.", //$NON-NLS-1$
-							f );
+					Logger.getLogger( FileUtil.class.getName( ) )
+							.log( Level.WARNING, "Close input stream failed.", //$NON-NLS-1$
+									f );
 				}
 			}
 		}
@@ -171,14 +169,13 @@ public class FileUtil
 					desName = desDirectory
 							+ File.separator
 							+ allFile[currentFile].getName( );
-					if ( filter == null
-							|| filter.accept( new File( srcName ) ) )
+					if ( filter == null || filter.accept( new File( srcName ) ) )
 						copyFile( srcName, desName );
 				}
 				else
 				{
-					if ( !copyDirectory(
-							allFile[currentFile].getPath( ).toString( ),
+					if ( !copyDirectory( allFile[currentFile].getPath( )
+							.toString( ),
 							desDirectory
 									+ File.separator
 									+ allFile[currentFile].getName( )
@@ -302,8 +299,8 @@ public class FileUtil
 		deleteDirectory( monitor, directory, directory, step );
 	}
 
-	public static void cleanDirectory( IProgressMonitor monitor, File directory,
-			File base, int step ) throws IOException
+	public static void cleanDirectory( IProgressMonitor monitor,
+			File directory, File base, int step ) throws IOException
 	{
 		if ( !directory.exists( ) )
 		{
@@ -361,13 +358,12 @@ public class FileUtil
 		{
 			monitor.subTask( file.getAbsolutePath( )
 					.substring( base.getAbsolutePath( ).length( )
-							+ new Long( System.currentTimeMillis( ) )
-									.toString( ).length( )
+							+ new Long( System.currentTimeMillis( ) ).toString( )
+									.length( )
 							+ 2 ) );
 			if ( !file.exists( ) )
 			{
-				throw new FileNotFoundException(
-						"File does not exist: " + file ); //$NON-NLS-1$
+				throw new FileNotFoundException( "File does not exist: " + file ); //$NON-NLS-1$
 			}
 			if ( !file.delete( ) )
 			{
@@ -379,8 +375,8 @@ public class FileUtil
 
 	public static void recursiveZip( IProgressMonitor monitor,
 			ZipOutputStream zos, File file, final String path,
-			FileFilter filter, int step )
-			throws FileNotFoundException, IOException
+			FileFilter filter, int step ) throws FileNotFoundException,
+			IOException
 	{
 		if ( file.isDirectory( ) )
 		{
@@ -407,8 +403,7 @@ public class FileUtil
 			ZipEntry ze = new ZipEntry( path );
 			ze.setSize( file.length( ) );
 			zos.putNextEntry( ze );
-			BufferedInputStream fis = new BufferedInputStream(
-					new FileInputStream( file ) );
+			BufferedInputStream fis = new BufferedInputStream( new FileInputStream( file ) );
 			int i = 0;
 			while ( ( i = fis.read( bt ) ) != -1 )
 			{
@@ -420,8 +415,7 @@ public class FileUtil
 
 	public static void zipFile( File file, String zipFile ) throws Exception
 	{
-		ZipOutputStream zos = new ZipOutputStream(
-				new FileOutputStream( zipFile ) );
+		ZipOutputStream zos = new ZipOutputStream( new FileOutputStream( zipFile ) );
 		ZipEntry ze = null;
 		byte[] buf = new byte[1024];
 		int readLen = 0;
@@ -461,8 +455,7 @@ public class FileUtil
 		{
 			ByteArrayOutputStream out = new ByteArrayOutputStream( 4096 );
 			byte[] tmp = new byte[4096];
-			InputStream is = new BufferedInputStream(
-					new FileInputStream( file ) );
+			InputStream is = new BufferedInputStream( new FileInputStream( file ) );
 			while ( true )
 			{
 				int r = is.read( tmp );
@@ -481,5 +474,39 @@ public class FileUtil
 			e.printStackTrace( );
 		}
 		return null;
+	}
+
+	public static void writeToFile( File file, String string, String encoding )
+	{
+		try
+		{
+			if ( !file.getParentFile( ).exists( ) )
+				file.getParentFile( ).mkdirs( );
+			PrintWriter out = new PrintWriter( new OutputStreamWriter( new FileOutputStream( file ),
+					encoding ) );
+			out.print( string );
+			out.close( );
+		}
+		catch ( IOException e )
+		{
+			e.printStackTrace( );
+		}
+	}
+
+	public static void deltree( File root )
+	{
+		if ( root.isFile( ) )
+		{
+			root.delete( );
+			return;
+		}
+
+		File[] children = root.listFiles( );
+		for ( int i = 0; i < children.length; i++ )
+		{
+			deltree( children[i] );
+		}
+
+		root.delete( );
 	}
 }

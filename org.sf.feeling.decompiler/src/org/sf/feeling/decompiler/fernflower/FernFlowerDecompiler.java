@@ -49,8 +49,7 @@ public class FernFlowerDecompiler implements IDecompiler
 		source = ""; //$NON-NLS-1$
 		File workingDir = new File( root + "/" + packege ); //$NON-NLS-1$
 
-		final String classPathStr = new File( workingDir, className )
-				.getAbsolutePath( );
+		final String classPathStr = new File( workingDir, className ).getAbsolutePath( );
 		Map<String, Object> mapOptions = new HashMap<String, Object>( );
 
 		mapOptions.put( IFernflowerPreferences.REMOVE_SYNTHETIC, "1" );
@@ -64,20 +63,28 @@ public class FernFlowerDecompiler implements IDecompiler
 				|| JavaDecompilerPlugin.getDefault( ).isDisplayLineNumber( ) )
 		{
 			mapOptions.put( IFernflowerPreferences.DUMP_ORIGINAL_LINES, "1" );
-			mapOptions.put( IFernflowerPreferences.BYTECODE_SOURCE_MAPPING,
-					"1" );
+			mapOptions.put( IFernflowerPreferences.BYTECODE_SOURCE_MAPPING, "1" );
 		}
-		ConsoleDecompiler decompiler = new ConsoleDecompiler( workingDir,
+
+		File tmpDir = new File( System.getProperty( "java.io.tmpdir" ),
+				String.valueOf( System.currentTimeMillis( ) ) );
+
+		if ( !tmpDir.exists( ) )
+			tmpDir.mkdirs( );
+
+		ConsoleDecompiler decompiler = new ConsoleDecompiler( tmpDir,
 				mapOptions );
 		decompiler.addSpace( new File( classPathStr ), true );
 		decompiler.decompileContext( );
 
-		File classFile = new File( workingDir,
+		File classFile = new File( tmpDir,
 				className.replaceAll( "(?i)\\.class", ".java" ) );
 
 		source = FileUtil.getContent( classFile );
 
 		classFile.delete( );
+
+		FileUtil.deltree( tmpDir );
 
 		Pattern wp = Pattern.compile( "/\\*.+?\\*/", Pattern.DOTALL ); //$NON-NLS-1$
 		Matcher m = wp.matcher( source );
