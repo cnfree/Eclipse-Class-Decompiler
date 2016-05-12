@@ -28,6 +28,7 @@ import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.jad.JarClassExtractor;
 import org.sf.feeling.decompiler.util.FileUtil;
 import org.sf.feeling.decompiler.util.UIUtil;
+import org.sf.feeling.decompiler.util.UnicodeUtil;
 
 public class FernFlowerDecompiler implements IDecompiler
 {
@@ -58,7 +59,7 @@ public class FernFlowerDecompiler implements IDecompiler
 		mapOptions.put( IFernflowerPreferences.REMOVE_SYNTHETIC, "1" );
 		mapOptions.put( IFernflowerPreferences.LOG_LEVEL,
 				IFernflowerLogger.Severity.ERROR.name( ) );
-
+		mapOptions.put( IFernflowerPreferences.ASCII_STRING_CHARACTERS, "1" );
 		if ( UIUtil.isDebugPerspective( )
 				|| JavaDecompilerPlugin.getDefault( ).isDisplayLineNumber( ) )
 		{
@@ -80,7 +81,7 @@ public class FernFlowerDecompiler implements IDecompiler
 		File classFile = new File( tmpDir,
 				className.replaceAll( "(?i)\\.class", ".java" ) );
 
-		source = FileUtil.getContent( classFile );
+		source = UnicodeUtil.decode( FileUtil.getContent( classFile ) );
 
 		classFile.delete( );
 
