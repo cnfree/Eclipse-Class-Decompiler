@@ -3,7 +3,7 @@
    <description name="Chen Chao&apos;s Projects Update" url="http://cnfree.github.io/Eclipse-Class-Decompiler/update">
       Chen Chao&apos;s projects update site.
    </description>
-   <feature url="features/org.sf.feeling.decompiler_2.0.1.201605121620.jar" id="org.sf.feeling.decompiler" version="2.0.1.201605121620" os="linux,macosx,win32" arch="x86,x86_64">
+   <feature url="features/org.sf.feeling.decompiler_2.0.2.201605121738.jar" id="org.sf.feeling.decompiler" version="2.0.2.201605121738" os="linux,macosx,win32" arch="x86,x86_64">
       <category name="Eclipse Class Decompiler"/>
    </feature>
    <category-def name="Eclipse Class Decompiler" label="Eclipse Class Decompiler">
