@@ -120,7 +120,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 		store.setDefault( JadDecompiler.OPTION_PV, 0 );
 		store.setDefault( JadDecompiler.OPTION_FIELDSFIRST, true );
 		store.setDefault( JadDecompiler.OPTION_NOCTOR, true );
-		store.setDefault( JadDecompiler.OPTION_ANSI, true );
+		store.setDefault( JadDecompiler.OPTION_ANSI, false );
 	}
 
 	public void propertyChange( PropertyChangeEvent event )

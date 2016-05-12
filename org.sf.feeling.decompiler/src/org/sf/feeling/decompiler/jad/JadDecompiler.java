@@ -15,7 +15,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +22,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.editor.DecompilerType;
 import org.sf.feeling.decompiler.editor.IDecompiler;
+import org.sf.feeling.decompiler.util.UnicodeUtil;
 
 /**
  * This implementation of <code>IDecompiler</code> uses Jad as the underlying
@@ -278,14 +278,8 @@ public class JadDecompiler implements IDecompiler
 			time = System.currentTimeMillis( ) - start;
 		}
 
-		try
-		{
-			source = new String( bos.toByteArray( ),
-					System.getProperty( "sun.jnu.encoding" ) );
-		}
-		catch ( UnsupportedEncodingException e )
-		{
-		}
+		source = UnicodeUtil.decode( bos.toString( ) );
+
 		log = new StringBuffer( errors.toString( ) );
 		// logExceptions();
 		// result = new DecompiledClassFile(classFile, source.toString());

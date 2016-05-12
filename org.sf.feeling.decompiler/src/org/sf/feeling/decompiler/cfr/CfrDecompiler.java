@@ -31,6 +31,7 @@ import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.editor.DecompilerType;
 import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.jad.JarClassExtractor;
+import org.sf.feeling.decompiler.util.UnicodeUtil;
 import org.sf.feeling.decompiler.util.FileUtil;
 
 public class CfrDecompiler implements IDecompiler
@@ -92,10 +93,7 @@ public class CfrDecompiler implements IDecompiler
 					illegalIdentifierDump );
 			c.dump( dumper );
 
-			source = dumper.toString( );
-
-			byte[] converttoBytes = source.getBytes( "UTF-8" );
-			source = new String( converttoBytes, "UTF-8" );
+			source = UnicodeUtil.decode( dumper.toString( ) );
 
 			Pattern wp = Pattern.compile( "/\\*.+?\\*/", Pattern.DOTALL ); //$NON-NLS-1$
 			Matcher m = wp.matcher( source );
@@ -160,8 +158,6 @@ public class CfrDecompiler implements IDecompiler
 			FileUtil.deltree( workingDir );
 		}
 	}
-
-	
 
 	public long getDecompilationTime( )
 	{

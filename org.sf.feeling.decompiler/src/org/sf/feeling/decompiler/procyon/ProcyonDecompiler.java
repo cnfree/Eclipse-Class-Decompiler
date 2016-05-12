@@ -29,6 +29,7 @@ import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.jad.JarClassExtractor;
 import org.sf.feeling.decompiler.util.FileUtil;
 import org.sf.feeling.decompiler.util.UIUtil;
+import org.sf.feeling.decompiler.util.UnicodeUtil;
 
 import com.strobel.assembler.metadata.DeobfuscationUtilities;
 import com.strobel.assembler.metadata.MetadataSystem;
@@ -60,8 +61,7 @@ public class ProcyonDecompiler implements IDecompiler
 		source = ""; //$NON-NLS-1$
 		File workingDir = new File( root + "/" + packege ); //$NON-NLS-1$
 
-		final String classPathStr = new File( workingDir, className )
-				.getAbsolutePath( );
+		final String classPathStr = new File( workingDir, className ).getAbsolutePath( );
 
 		boolean includeLineNumbers = false;
 		boolean stretchLines = false;
@@ -80,18 +80,17 @@ public class ProcyonDecompiler implements IDecompiler
 		decompilationOptions.setSettings( settings );
 		decompilationOptions.setFullDecompilation( true );
 
-		MetadataSystem metadataSystem = new MetadataSystem(
-				decompilationOptions.getSettings( ).getTypeLoader( ) );
+		MetadataSystem metadataSystem = new MetadataSystem( decompilationOptions.getSettings( )
+				.getTypeLoader( ) );
 
 		TypeReference type = metadataSystem.lookupType( classPathStr );
 
 		TypeDefinition resolvedType;
-		if ( ( type == null )
-				|| ( ( resolvedType = type.resolve( ) ) == null ) )
+		if ( ( type == null ) || ( ( resolvedType = type.resolve( ) ) == null ) )
 		{
 			System.err.printf( "!!! ERROR: Failed to load class %s.\n", //$NON-NLS-1$
 					new Object[]{
-							classPathStr
+						classPathStr
 					} );
 			return;
 		}
@@ -104,18 +103,16 @@ public class ProcyonDecompiler implements IDecompiler
 		Writer writer = null;
 		try
 		{
-			writer = new BufferedWriter( new OutputStreamWriter(
-					new FileOutputStream( classFile ) ) );
+			writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( classFile ) ) );
 
 			PlainTextOutput output = new PlainTextOutput( writer );
 
 			output.setUnicodeOutputEnabled( decompilationOptions.getSettings( )
 					.isUnicodeOutputEnabled( ) );
 
-			TypeDecompilationResults results = decompilationOptions
-					.getSettings( ).getLanguage( ).decompileType( resolvedType,
-							output,
-							decompilationOptions );
+			TypeDecompilationResults results = decompilationOptions.getSettings( )
+					.getLanguage( )
+					.decompileType( resolvedType, output, decompilationOptions );
 
 			writer.flush( );
 			writer.close( );
@@ -126,23 +123,21 @@ public class ProcyonDecompiler implements IDecompiler
 
 			if ( includeLineNumbers || stretchLines )
 			{
-				EnumSet lineNumberOptions = EnumSet
-						.noneOf( LineNumberFormatter.LineNumberOption.class );
+				EnumSet lineNumberOptions = EnumSet.noneOf( LineNumberFormatter.LineNumberOption.class );
 
 				if ( includeLineNumbers )
 				{
-					lineNumberOptions.add(
-							LineNumberFormatter.LineNumberOption.LEADING_COMMENTS );
+					lineNumberOptions.add( LineNumberFormatter.LineNumberOption.LEADING_COMMENTS );
 				}
 
 				if ( stretchLines )
 				{
-					lineNumberOptions.add(
-							LineNumberFormatter.LineNumberOption.STRETCHED );
+					lineNumberOptions.add( LineNumberFormatter.LineNumberOption.STRETCHED );
 				}
 
-				LineNumberFormatter lineFormatter = new LineNumberFormatter(
-						classFile, lineNumberPositions, lineNumberOptions );
+				LineNumberFormatter lineFormatter = new LineNumberFormatter( classFile,
+						lineNumberPositions,
+						lineNumberOptions );
 
 				lineFormatter.reformatFile( );
 			}
@@ -166,7 +161,7 @@ public class ProcyonDecompiler implements IDecompiler
 			}
 		}
 
-		source = FileUtil.getContent( classFile );
+		source = UnicodeUtil.decode( FileUtil.getContent( classFile ) );
 
 		classFile.delete( );
 
