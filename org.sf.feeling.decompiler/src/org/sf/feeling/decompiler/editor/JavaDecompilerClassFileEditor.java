@@ -99,30 +99,20 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 						: sourceMapper.findSource( cf.getType( ) );
 				if ( src == null )
 				{
-					if ( DecompilerType.JAD.equals( decompilerType ) )
-					{
-						src = SourceMapperFactory.getSourceMapper( DecompilerType.JAD )
-								.findSource( cf.getType( ) );
-					}
-					else if ( DecompilerType.JDCORE.equals( decompilerType ) )
-					{
-						src = SourceMapperFactory.getSourceMapper( DecompilerType.JDCORE )
-								.findSource( cf.getType( ) );
-					}
-					else if ( DecompilerType.FernFlower.equals( decompilerType ) )
+					if ( DecompilerType.FernFlower.equals( decompilerType ) )
 					{
 						src = SourceMapperFactory.getSourceMapper( DecompilerType.FernFlower )
 								.findSource( cf.getType( ) );
 					}
-					else if ( DecompilerType.CFR.equals( decompilerType ) )
+					else
 					{
-						src = SourceMapperFactory.getSourceMapper( DecompilerType.CFR )
-								.findSource( cf.getType( ) );
-					}
-					else if ( DecompilerType.PROCYON.equals( decompilerType ) )
-					{
-						src = SourceMapperFactory.getSourceMapper( DecompilerType.PROCYON )
-								.findSource( cf.getType( ) );
+						IDecompilerDescriptor decompilerDescriptor = JavaDecompilerPlugin.getDefault( )
+								.getDecompilerDescriptor( decompilerType );
+						if ( decompilerDescriptor != null )
+						{
+							src = decompilerDescriptor.getDecompilerSourceMapper( )
+									.findSource( cf.getType( ) );
+						}
 					}
 				}
 				if ( src == null )

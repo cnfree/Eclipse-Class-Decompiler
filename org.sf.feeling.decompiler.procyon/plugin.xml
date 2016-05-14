@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+###############################################################################
+# Copyright (c) 2016 Chen Chao(cnfree2000@hotmail.com).
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+#
+# Contributors:
+#  Chen Chao  - initial API and implementation
+###############################################################################
+-->
+<plugin>
+   <extension point="org.eclipse.ui.commands">  
+      <command  
+            name="Decompile With Procyon"  
+            categoryId="org.sf.feeling.decompiler"  
+            id="org.sf.feeling.decompiler.decompile.procyon">  
+      </command>  
+   </extension> 
+   <extension
+ 		point="org.eclipse.ui.bindings">
+		<key
+      		sequence="Ctrl+Alt+V"
+      		commandId="org.sf.feeling.decompiler.decompile.procyon"
+      		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+		</key>
+ 	</extension>
+ 	<extension  
+         point="org.eclipse.ui.handlers">  
+      <handler  
+            commandId="org.sf.feeling.decompiler.decompile.procyon"  
+            class="org.sf.feeling.decompiler.procyon.actions.DecompileWithProcyonHandler">  
+      </handler>
+   </extension>
+  <extension
+        point="org.sf.feeling.decompiler.decompilerAdapters">
+     <adaptable
+           class="org.sf.feeling.decompiler.JavaDecompilerPlugin">
+           <adapter
+                 class="org.sf.feeling.decompiler.procyon.decompiler.ProcyonDecompilerDescriptor"
+                 id="org.sf.feeling.decompiler.procyon.ProcyonDecompilerAdapter"
+                 singleton="true"
+                 type="org.sf.feeling.decompiler.editor.IDecompilerDescriptor">
+           </adapter>
+     </adaptable>
+  </extension>
+</plugin>

@@ -178,6 +178,7 @@ public class DecompilerOutputUtil
 		String line;
 		int numLine;
 		StringBuffer realignOutput = new StringBuffer( );
+		Pattern pattern = Pattern.compile( "/\\*\\s+\\*/ " );
 
 		for ( int i = 1; i < javaSrcLines.size( ); i++ )
 		{
@@ -190,23 +191,31 @@ public class DecompilerOutputUtil
 					numLine = ( (Integer) javaSrcLine.inputLines.get( j ) ).intValue( );
 					line = ( (InputLine) inputLines.get( numLine ) ).line;
 					line = line.replace( "\r\n", "\n" ).replace( "\n", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+
+					Matcher matcher = pattern.matcher( line );
+					if ( matcher.find( ) )
+					{
+						line = line.replace( matcher.group( ),
+								generageEmptyString( matcher.group( ).length( ) ) );
+					}
+
 					realignOutput.append( line );
 				}
-			}
-			else if ( DecompilerType.JDCORE.equals( decompilerType ) )
-			{
-				StringBuffer buffer = new StringBuffer( );
-				buffer.append( "/*" ); //$NON-NLS-1$
-				for ( int j = 0; j < new Integer( javaSrcLines.size( ) ).toString( )
-						.length( ) + 2; j++ )
-					buffer.append( " " ); //$NON-NLS-1$
-				buffer.append( "*/" ); //$NON-NLS-1$
-				realignOutput.append( buffer.toString( ) );
 			}
 
 			realignOutput.append( line_separator );
 		}
 		return realignOutput.toString( );
+	}
+
+	private CharSequence generageEmptyString( int length )
+	{
+		char[] chs = new char[length];
+		for ( int i = 0; i < chs.length; i++ )
+		{
+			chs[i] = ' ';
+		}
+		return new String( chs );
 	}
 
 	private void fillOutputList( )

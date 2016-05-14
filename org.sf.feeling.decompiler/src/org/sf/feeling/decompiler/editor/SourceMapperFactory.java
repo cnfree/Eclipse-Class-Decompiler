@@ -12,40 +12,16 @@
 package org.sf.feeling.decompiler.editor;
 
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
-import org.sf.feeling.decompiler.cfr.CfrSourceMapper;
 import org.sf.feeling.decompiler.fernflower.FernFlowerSourceMapper;
-import org.sf.feeling.decompiler.jad.JadSourceMapper;
-import org.sf.feeling.decompiler.jdcore.JDCoreSourceMapper;
-import org.sf.feeling.decompiler.procyon.ProcyonSourceMapper;
 
 public class SourceMapperFactory
 {
-
-	private static DecompilerSourceMapper jadSourceMapper;
-	private static DecompilerSourceMapper jdCoreSourceMapper;
-	private static DecompilerSourceMapper cfrSourceMapper;
-	private static DecompilerSourceMapper procyonSourceMapper;
 	private static DecompilerSourceMapper fernFlowerSourceMapper;
 
 	public static DecompilerSourceMapper getSourceMapper( String decompiler )
 	{
-		if ( DecompilerType.JAD.equals( decompiler ) )
-		{
-			if ( jadSourceMapper == null )
-			{
-				jadSourceMapper = new JadSourceMapper( );
-			}
-			return jadSourceMapper;
-		}
-		else if ( DecompilerType.JDCORE.equals( decompiler ) )
-		{
-			if ( jdCoreSourceMapper == null )
-			{
-				jdCoreSourceMapper = new JDCoreSourceMapper( );
-			}
-			return jdCoreSourceMapper;
-		}
-		else if ( DecompilerType.FernFlower.equals( decompiler ) )
+
+		if ( DecompilerType.FernFlower.equals( decompiler ) )
 		{
 			if ( fernFlowerSourceMapper == null )
 			{
@@ -53,27 +29,12 @@ public class SourceMapperFactory
 			}
 			return fernFlowerSourceMapper;
 		}
-		else if ( DecompilerType.CFR.equals( decompiler ) )
+		else
 		{
-			if ( JavaDecompilerPlugin.getDefault( ).enableCfrDecompiler( ) )
-			{
-				if ( cfrSourceMapper == null )
-				{
-					cfrSourceMapper = new CfrSourceMapper( );
-				}
-				return cfrSourceMapper;
-			}
-		}
-		else if ( DecompilerType.PROCYON.equals( decompiler ) )
-		{
-			if ( JavaDecompilerPlugin.getDefault( ).enableProcyonDecompiler( ) )
-			{
-				if ( procyonSourceMapper == null )
-				{
-					procyonSourceMapper = new ProcyonSourceMapper( );
-				}
-				return procyonSourceMapper;
-			}
+			IDecompilerDescriptor descriptor = JavaDecompilerPlugin.getDefault( )
+					.getDecompilerDescriptor( decompiler );
+			if ( descriptor != null )
+				return descriptor.getDecompilerSourceMapper( );
 		}
 		return null;
 	}

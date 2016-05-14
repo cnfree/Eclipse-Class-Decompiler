@@ -75,4 +75,12 @@ public interface IDecompiler
 	public String getSource( );
 
 	public String getDecompilerType( );
+
+	public String removeComment( String source );
+
+	public boolean supportGreatLevel6AndDebug( );
+
+	public boolean supportGreatLevel6( );
+	
+	public boolean supportDebug( );
 }

@@ -177,7 +177,7 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 		boolean showReport = prefs.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_METADATA );
 		if ( !showReport )
 		{
-			code = ClassUtil.removeComment( currentDecompiler, code );
+			code = currentDecompiler.removeComment( code );
 		}
 
 		boolean showLineNumber = prefs.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS );
@@ -185,7 +185,7 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 		if ( ( showLineNumber && align ) || UIUtil.isDebugPerspective( ) )
 		{
 			if ( showReport )
-				code = ClassUtil.removeComment( currentDecompiler, code );
+				code = currentDecompiler.removeComment( code );
 			DecompilerOutputUtil decompilerOutputUtil = new DecompilerOutputUtil( currentDecompiler.getDecompilerType( ),
 					code );
 			code = decompilerOutputUtil.realign( );
@@ -272,7 +272,7 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 		boolean showReport = prefs.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_METADATA );
 		if ( !showReport )
 		{
-			code = ClassUtil.removeComment( currentDecompiler, code );
+			code = currentDecompiler.removeComment( code );
 		}
 
 		boolean showLineNumber = prefs.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS );
@@ -280,8 +280,8 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 		if ( ( showLineNumber && align ) || UIUtil.isDebugPerspective( ) )
 		{
 			if ( showReport )
-				code = ClassUtil.removeComment( currentDecompiler, code );
-			DecompilerOutputUtil decompilerOutputUtil = new DecompilerOutputUtil(currentDecompiler.getDecompilerType( ),
+				code = currentDecompiler.removeComment( code );
+			DecompilerOutputUtil decompilerOutputUtil = new DecompilerOutputUtil( currentDecompiler.getDecompilerType( ),
 					code );
 			code = decompilerOutputUtil.realign( );
 		}

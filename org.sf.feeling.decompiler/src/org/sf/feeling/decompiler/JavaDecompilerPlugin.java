@@ -14,6 +14,8 @@ package org.sf.feeling.decompiler;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -23,9 +25,9 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.sf.feeling.decompiler.editor.DecompilerType;
+import org.sf.feeling.decompiler.editor.IDecompilerDescriptor;
 import org.sf.feeling.decompiler.editor.JavaDecompilerBufferManager;
-import org.sf.feeling.decompiler.jad.JadDecompiler;
-import org.sf.feeling.decompiler.jad.JadLoader;
+import org.sf.feeling.decompiler.extension.DecompilerAdapterManager;
 import org.sf.feeling.decompiler.util.SortMemberUtil;
 
 public class JavaDecompilerPlugin extends AbstractUIPlugin implements
@@ -35,20 +37,37 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 	public static final String EDITOR_ID = "org.sf.feeling.decompiler.ClassFileEditor"; //$NON-NLS-1$
 	public static final String PLUGIN_ID = "org.sf.feeling.decompiler"; //$NON-NLS-1$
 	public static final String TEMP_DIR = "org.sf.feeling.decompiler.tempd"; //$NON-NLS-1$
-	public static final String CMD = "org.sf.feeling.decompiler.cmd"; //$NON-NLS-1$
+
 	public static final String REUSE_BUFFER = "org.sf.feeling.decompiler.reusebuff"; //$NON-NLS-1$
 	public static final String IGNORE_EXISTING = "org.sf.feeling.decompiler.alwaysuse"; //$NON-NLS-1$
 	public static final String USE_ECLIPSE_FORMATTER = "org.sf.feeling.decompiler.use_eclipse_formatter"; //$NON-NLS-1$
 	public static final String USE_ECLIPSE_SORTER = "org.sf.feeling.decompiler.use_eclipse_sorter"; //$NON-NLS-1$
 	public static final String DECOMPILER_TYPE = "org.sf.feeling.decompiler.type"; //$NON-NLS-1$
-	public static final String PREF_DISPLAY_LINE_NUMBERS = jd.ide.eclipse.JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS;
-	public static final String PREF_DISPLAY_METADATA = jd.ide.eclipse.JavaDecompilerPlugin.PREF_DISPLAY_METADATA;
-	public static final String ALIGN = jd.ide.eclipse.JavaDecompilerPlugin.ALIGN;
+	public static final String PREF_DISPLAY_LINE_NUMBERS = "jd.ide.eclipse.prefs.DisplayLineNumbers"; //$NON-NLS-1$
+	public static final String PREF_DISPLAY_METADATA = "jd.ide.eclipse.prefs.DisplayMetadata"; //$NON-NLS-1$
+	public static final String ALIGN = "jd.ide.eclipse.prefs.Align"; //$NON-NLS-1$
 	public static final String DEFAULT_EDITOR = "org.sf.feeling.decompiler.default_editor"; //$NON-NLS-1$ ;
 
 	private static JavaDecompilerPlugin plugin;
 
 	private IPreferenceStore preferenceStore;
+
+	private Map<String, IDecompilerDescriptor> decompilerDescriptorMap = new LinkedHashMap<String, IDecompilerDescriptor>( );
+
+	public Map<String, IDecompilerDescriptor> getDecompilerDescriptorMap( )
+	{
+		return decompilerDescriptorMap;
+	}
+
+	public String[] getDecompilerDescriptorTypes( )
+	{
+		return decompilerDescriptorMap.keySet( ).toArray( new String[0] );
+	}
+
+	public IDecompilerDescriptor getDecompilerDescriptor( String decompilerType )
+	{
+		return decompilerDescriptorMap.get( decompilerType );
+	}
 
 	public static JavaDecompilerPlugin getDefault( )
 	{
@@ -64,11 +83,9 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 
 	public static void log( int severity, Throwable t, String message )
 	{
-		JavaDecompilerPlugin.getDefault( ).getLog( ).log( new Status( severity,
-				PLUGIN_ID,
-				0,
-				message,
-				t ) );
+		JavaDecompilerPlugin.getDefault( )
+				.getLog( )
+				.log( new Status( severity, PLUGIN_ID, 0, message, t ) );
 	}
 
 	public static ImageDescriptor getImageDescriptor( String path )
@@ -98,9 +115,6 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 
 	protected void initializeDefaultPreferences( IPreferenceStore store )
 	{
-		String jad = JadLoader.loadJad( );
-		if ( jad != null )
-			store.setDefault( CMD, jad );
 		store.setDefault( TEMP_DIR, System.getProperty( "java.io.tmpdir" ) //$NON-NLS-1$
 				+ File.separator
 				+ ".org.sf.feeling.decompiler" ); //$NON-NLS-1$
@@ -111,16 +125,6 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 		store.setDefault( PREF_DISPLAY_METADATA, false );
 		store.setDefault( DECOMPILER_TYPE, DecompilerType.FernFlower );
 		store.setDefault( DEFAULT_EDITOR, true );
-
-		store.setDefault( JadDecompiler.OPTION_INDENT_SPACE, 4 );
-		store.setDefault( JadDecompiler.OPTION_IRADIX, 10 );
-		store.setDefault( JadDecompiler.OPTION_LRADIX, 10 );
-		store.setDefault( JadDecompiler.OPTION_SPLITSTR_MAX, 0 );
-		store.setDefault( JadDecompiler.OPTION_PI, 0 );
-		store.setDefault( JadDecompiler.OPTION_PV, 0 );
-		store.setDefault( JadDecompiler.OPTION_FIELDSFIRST, true );
-		store.setDefault( JadDecompiler.OPTION_NOCTOR, true );
-		store.setDefault( JadDecompiler.OPTION_ANSI, false );
 	}
 
 	public void propertyChange( PropertyChangeEvent event )
@@ -133,6 +137,26 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 	public void start( BundleContext context ) throws Exception
 	{
 		super.start( context );
+
+		Object[] adapters = DecompilerAdapterManager.getAdapters( this,
+				IDecompilerDescriptor.class );
+
+		if ( adapters != null )
+		{
+			for ( int i = 0; i < adapters.length; i++ )
+			{
+				Object adapter = adapters[i];
+				if ( adapter instanceof IDecompilerDescriptor )
+				{
+					IDecompilerDescriptor descriptor = (IDecompilerDescriptor) adapter;
+					if ( descriptor.isEnabled( ) )
+					{
+						decompilerDescriptorMap.put( descriptor.getDecompilerType( ),
+								descriptor );
+					}
+				}
+			}
+		}
 		getPreferenceStore( ).addPropertyChangeListener( this );
 		SortMemberUtil.deleteDecompilerProject( );
 	}
@@ -143,22 +167,13 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 		{
 			preferenceStore = super.getPreferenceStore( );
 
-			if ( DecompilerType.PROCYON.equals( getPreferenceStore( ).getString( DECOMPILER_TYPE ) ) )
+			IDecompilerDescriptor descriptor = getDecompilerDescriptor( getPreferenceStore( ).getString( DECOMPILER_TYPE ) );
+			if ( descriptor == null )
 			{
-				if ( !enableProcyonDecompiler( ) )
-				{
-					preferenceStore.setValue( DECOMPILER_TYPE,
-							DecompilerType.JDCORE );
-				}
+				preferenceStore.setValue( DECOMPILER_TYPE,
+						DecompilerType.FernFlower );
 			}
-			else if ( DecompilerType.CFR.equals( getPreferenceStore( ).getString( DECOMPILER_TYPE ) ) )
-			{
-				if ( !enableCfrDecompiler( ) )
-				{
-					preferenceStore.setValue( DECOMPILER_TYPE,
-							DecompilerType.JDCORE );
-				}
-			}
+
 		}
 		return preferenceStore;
 	}
@@ -179,15 +194,5 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 	{
 		getPreferenceStore( ).setValue( PREF_DISPLAY_LINE_NUMBERS,
 				display.booleanValue( ) );
-	}
-
-	public boolean enableCfrDecompiler( )
-	{
-		return !( System.getProperty( "java.version" ).compareTo( "1.6" ) < 0 ); //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	public boolean enableProcyonDecompiler( )
-	{
-		return !( System.getProperty( "java.version" ).compareTo( "1.7" ) < 0 ); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

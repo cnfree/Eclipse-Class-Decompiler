@@ -12,7 +12,8 @@
 ###############################################################################
 -->
 <plugin>
-     <extension
+	<extension-point id="decompilerAdapters" name="decompilerAdapters" schema="schema/decompilerAdapters.exsd"/>
+    <extension
          point="org.eclipse.ui.editors">
       <editor
             name="%DecompilerView"
@@ -95,29 +96,9 @@
             id="org.sf.feeling.decompiler.decompile">  
       </command>  
       <command  
-            name="Decompile With JD-Core"  
-            categoryId="org.sf.feeling.decompiler"  
-            id="org.sf.feeling.decompiler.decompile.jdcore">  
-      </command> 
-      <command  
-            name="Decompile With Jad"  
-            categoryId="org.sf.feeling.decompiler"  
-            id="org.sf.feeling.decompiler.decompile.jad">  
-      </command>  
-      <command  
             name="Decompile With FernFlower"  
             categoryId="org.sf.feeling.decompiler"  
             id="org.sf.feeling.decompiler.decompile.fernflower">  
-      </command>  
-      <command  
-            name="Decompile With Class File Reader"  
-            categoryId="org.sf.feeling.decompiler"  
-            id="org.sf.feeling.decompiler.decompile.cfr">  
-      </command>  
-      <command  
-            name="Decompile With Procyon"  
-            categoryId="org.sf.feeling.decompiler"  
-            id="org.sf.feeling.decompiler.decompile.procyon">  
       </command>  
    </extension> 
    <extension
@@ -128,28 +109,8 @@
       		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
-      		sequence="Ctrl+Alt+D"
-      		commandId="org.sf.feeling.decompiler.decompile.jdcore"
-      		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-		</key>
-		<key
-      		sequence="Ctrl+Alt+V"
-      		commandId="org.sf.feeling.decompiler.decompile.jad"
-      		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-		</key>
-		<key
       		sequence="Ctrl+Alt+R"
       		commandId="org.sf.feeling.decompiler.decompile.fernflower"
-      		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-		</key>
-		<key
-      		sequence="Ctrl+Alt+F"
-      		commandId="org.sf.feeling.decompiler.decompile.cfr"
-      		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-		</key>
-		<key
-      		sequence="Ctrl+Alt+P"
-      		commandId="org.sf.feeling.decompiler.decompile.procyon"
       		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
  	</extension>
@@ -160,25 +121,9 @@
             class="org.sf.feeling.decompiler.actions.DecompileHandler">  
       </handler>  
       <handler  
-            commandId="org.sf.feeling.decompiler.decompile.jdcore"  
-            class="org.sf.feeling.decompiler.actions.DecompileWithJDCoreHandler">  
-      </handler>
-      <handler  
-            commandId="org.sf.feeling.decompiler.decompile.jad"  
-            class="org.sf.feeling.decompiler.actions.DecompileWithJadHandler">  
-      </handler>
-      <handler  
             commandId="org.sf.feeling.decompiler.decompile.fernflower"  
             class="org.sf.feeling.decompiler.actions.DecompileWithFernFlowerHandler">  
       </handler>
-      <handler  
-            commandId="org.sf.feeling.decompiler.decompile.cfr"  
-            class="org.sf.feeling.decompiler.actions.DecompileWithCfrHandler">  
-      </handler>
-      <handler  
-            commandId="org.sf.feeling.decompiler.decompile.procyon"  
-            class="org.sf.feeling.decompiler.actions.DecompileWithProcyonHandler">  
-      </handler>  
    </extension>  
    <extension
          point="org.eclipse.ui.popupMenus">

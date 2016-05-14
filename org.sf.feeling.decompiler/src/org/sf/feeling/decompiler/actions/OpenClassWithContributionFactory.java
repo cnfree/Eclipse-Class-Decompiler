@@ -46,6 +46,7 @@ import org.eclipse.ui.menus.IContributionRoot;
 import org.eclipse.ui.services.IServiceLocator;
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.editor.DecompilerType;
+import org.sf.feeling.decompiler.editor.IDecompilerDescriptor;
 import org.sf.feeling.decompiler.editor.JavaDecompilerClassFileEditor;
 import org.sf.feeling.decompiler.i18n.Messages;
 
@@ -70,21 +71,15 @@ public class OpenClassWithContributionFactory extends
 
 		public String getText( )
 		{
-			if ( DecompilerType.JAD.equals( decompilerType ) )
-				return Messages.getString( "JavaDecompilerActionBarContributor.Action.DecompileWithJad" ); //$NON-NLS-1$
-			if ( DecompilerType.JDCORE.equals( decompilerType ) )
-				return Messages.getString( "JavaDecompilerActionBarContributor.Action.DecompileWithJDCore" ); //$NON-NLS-1$
 			if ( DecompilerType.FernFlower.equals( decompilerType ) )
 				return Messages.getString( "JavaDecompilerActionBarContributor.Action.DecompileWithFernFlower" ); //$NON-NLS-1$
-			if ( JavaDecompilerPlugin.getDefault( ).enableCfrDecompiler( ) )
+			else
 			{
-				if ( DecompilerType.CFR.equals( decompilerType ) )
-					return Messages.getString( "JavaDecompilerActionBarContributor.Action.DecompileWithCfr" ); //$NON-NLS-1$
-			}
-			if ( JavaDecompilerPlugin.getDefault( ).enableProcyonDecompiler( ) )
-			{
-				if ( DecompilerType.PROCYON.equals( decompilerType ) )
-					return Messages.getString( "JavaDecompilerActionBarContributor.Action.DecompileWithProcyon" ); //$NON-NLS-1$
+				IDecompilerDescriptor decompilerDescriptor = JavaDecompilerPlugin.getDefault( )
+						.getDecompilerDescriptor( decompilerType );
+				if ( decompilerDescriptor != null )
+					return decompilerDescriptor.getDecompileAction( ).getText( );
+
 			}
 			return classEditor.getLabel( );
 		}
@@ -185,28 +180,16 @@ public class OpenClassWithContributionFactory extends
 				if ( classes.size( ) == 1 )
 				{
 					IEditorDescriptor editor = registry.findEditor( JavaDecompilerPlugin.EDITOR_ID );
-					list.add( new ActionContributionItem( new OpenClassesAction( editor,
-							classes,
-							DecompilerType.JAD ) ) );
-					list.add( new ActionContributionItem( new OpenClassesAction( editor,
-							classes,
-							DecompilerType.JDCORE ) ) );
+
 					list.add( new ActionContributionItem( new OpenClassesAction( editor,
 							classes,
 							DecompilerType.FernFlower ) ) );
-					if ( JavaDecompilerPlugin.getDefault( )
-							.enableCfrDecompiler( ) )
+
+					for ( int i = 0; i < DecompilerType.getDecompilerTypes( ).length; i++ )
 					{
 						list.add( new ActionContributionItem( new OpenClassesAction( editor,
 								classes,
-								DecompilerType.CFR ) ) );
-					}
-					if ( JavaDecompilerPlugin.getDefault( )
-							.enableProcyonDecompiler( ) )
-					{
-						list.add( new ActionContributionItem( new OpenClassesAction( editor,
-								classes,
-								DecompilerType.PROCYON ) ) );
+								DecompilerType.getDecompilerTypes( )[i] ) ) );
 					}
 				}
 

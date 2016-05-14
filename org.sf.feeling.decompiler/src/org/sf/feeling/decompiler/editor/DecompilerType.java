@@ -11,12 +11,22 @@
 
 package org.sf.feeling.decompiler.editor;
 
-public interface DecompilerType
-{
+import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 
-	String JAD = "Jad"; //$NON-NLS-1$
-	String JDCORE = "JD-Core"; //$NON-NLS-1$
-	String CFR = "Class File Reader"; //$NON-NLS-1$
-	String PROCYON = "Procyon";//$NON-NLS-1$
-	String FernFlower = "FernFlower";//$NON-NLS-1$
+public class DecompilerType
+{
+	
+	public static final String FernFlower = "FernFlower";//$NON-NLS-1$
+
+	public static String[] decompilerTypes = null;
+
+	public static String[] getDecompilerTypes( )
+	{
+		if ( decompilerTypes == null )
+		{
+			decompilerTypes = JavaDecompilerPlugin.getDefault( )
+					.getDecompilerDescriptorTypes( );
+		}
+		return decompilerTypes;
+	}
 }

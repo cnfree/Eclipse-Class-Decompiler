@@ -18,80 +18,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
-import org.sf.feeling.decompiler.editor.DecompilerType;
 import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.fernflower.FernFlowerDecompiler;
 
 public class ClassUtil
 {
-
-	public static String removeComment( IDecompiler decompiler, String code )
-	{
-		if ( DecompilerType.JAD.equals( decompiler.getDecompilerType( ) ) )
-		{
-			return removeJadComments( code );
-		}
-		return code;
-	}
-
-	private static String removeJadComments( String code )
-	{
-		String[] spilts = code.replaceAll( "\r\n", "\n" ).split( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		StringBuffer buffer = new StringBuffer( );
-		for ( int i = 0; i < spilts.length; i++ )
-		{
-			if ( i > 0 && i < 5 )
-				continue;
-			String string = spilts[i];
-			Pattern pattern = Pattern.compile( "\\s*/\\*\\s*\\S*\\*/", //$NON-NLS-1$
-					Pattern.CASE_INSENSITIVE );
-			Matcher matcher = pattern.matcher( string );
-			if ( matcher.find( ) )
-			{
-				if ( matcher.start( ) == 0 )
-				{
-					buffer.append( string ).append( "\r\n" ); //$NON-NLS-1$
-					continue;
-				}
-			}
-
-			boolean refer = false;
-
-			pattern = Pattern.compile( "\\s*// Referenced", //$NON-NLS-1$
-					Pattern.CASE_INSENSITIVE );
-			matcher = pattern.matcher( string );
-			if ( matcher.find( ) )
-			{
-				refer = true;
-
-				while ( true )
-				{
-					i++;
-					if ( spilts[i].trim( ).startsWith( "//" ) ) //$NON-NLS-1$
-					{
-						continue;
-					}
-					else if ( i >= spilts.length )
-					{
-						break;
-					}
-					else
-					{
-						i--;
-						break;
-					}
-				}
-			}
-
-			if ( !refer )
-				buffer.append( string + "\r\n" ); //$NON-NLS-1$
-		}
-		return buffer.toString( );
-	}
 
 	public static IDecompiler checkAvailableDecompiler( IDecompiler decompiler,
 			File file )
@@ -131,12 +64,12 @@ public class ClassUtil
 			if ( JavaDecompilerPlugin.getDefault( ).isDisplayLineNumber( )
 					|| UIUtil.isDebugPerspective( ) )
 			{
-				if ( !supportGreatLevel6AndDebug( decompiler.getDecompilerType( ) ) )
+				if ( !decompiler.supportGreatLevel6AndDebug( ) )
 				{
 					return new FernFlowerDecompiler( );
 				}
 			}
-			else if ( !supportGreatLevel6( decompiler.getDecompilerType( ) ) )
+			else if ( !decompiler.supportGreatLevel6( ) )
 			{
 				return new FernFlowerDecompiler( );
 			}
@@ -146,33 +79,13 @@ public class ClassUtil
 			if ( JavaDecompilerPlugin.getDefault( ).isDisplayLineNumber( )
 					|| UIUtil.isDebugPerspective( ) )
 			{
-				if ( DecompilerType.CFR.equals( decompiler.getDecompilerType( ) ) )
+				if ( !decompiler.supportDebug( ) )
 				{
 					return new FernFlowerDecompiler( );
 				}
 			}
 		}
 		return decompiler;
-	}
-
-	private static boolean supportGreatLevel6( String decompilerType )
-	{
-		if ( DecompilerType.CFR.endsWith( decompilerType ) )
-			return true;
-		if ( DecompilerType.PROCYON.endsWith( decompilerType ) )
-			return true;
-		if ( DecompilerType.FernFlower.endsWith( decompilerType ) )
-			return true;
-		return false;
-	}
-
-	private static boolean supportGreatLevel6AndDebug( String decompilerType )
-	{
-		if ( DecompilerType.PROCYON.endsWith( decompilerType ) )
-			return true;
-		if ( DecompilerType.FernFlower.endsWith( decompilerType ) )
-			return true;
-		return false;
 	}
 
 	public static boolean greatLevel6( File file )

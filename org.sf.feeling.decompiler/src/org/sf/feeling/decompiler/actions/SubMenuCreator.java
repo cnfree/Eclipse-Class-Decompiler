@@ -24,6 +24,7 @@ import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
+import org.sf.feeling.decompiler.editor.DecompilerType;
 import org.sf.feeling.decompiler.util.UIUtil;
 
 public class SubMenuCreator implements IMenuCreator
@@ -53,17 +54,14 @@ public class SubMenuCreator implements IMenuCreator
 	{
 		final MenuManager menuMgr = new MenuManager( );
 
-		menuMgr.add( new DecompileWithJadAction( ) );
-		menuMgr.add( new DecompileWithJDCoreAction( ) );
+
 		menuMgr.add( new DecompileWithFernFlowerAction( ) );
 
-		if ( JavaDecompilerPlugin.getDefault( ).enableCfrDecompiler( ) )
+		for ( int i = 0; i < DecompilerType.getDecompilerTypes( ).length; i++ )
 		{
-			menuMgr.add( new DecompileWithCfrAction( ) );
-		}
-		if ( JavaDecompilerPlugin.getDefault( ).enableProcyonDecompiler( ) )
-		{
-			menuMgr.add( new DecompileWithProcyonAction( ) );
+			menuMgr.add( JavaDecompilerPlugin.getDefault( )
+					.getDecompilerDescriptor( DecompilerType.getDecompilerTypes( )[i] )
+					.getDecompileAction( ) );
 		}
 
 		IContributionItem[] items = menuMgr.getItems( );
@@ -114,19 +112,15 @@ public class SubMenuCreator implements IMenuCreator
 		{
 			dropDownMenuMgr = new MenuManager( );
 
-			dropDownMenuMgr.add( new DecompileWithJadAction( ) );
-			dropDownMenuMgr.add( new DecompileWithJDCoreAction( ) );
 			dropDownMenuMgr.add( new DecompileWithFernFlowerAction( ) );
 
-			if ( JavaDecompilerPlugin.getDefault( ).enableCfrDecompiler( ) )
+			for ( int i = 0; i < DecompilerType.getDecompilerTypes( ).length; i++ )
 			{
-				dropDownMenuMgr.add( new DecompileWithCfrAction( ) );
+				dropDownMenuMgr.add( JavaDecompilerPlugin.getDefault( )
+						.getDecompilerDescriptor( DecompilerType.getDecompilerTypes( )[i] )
+						.getDecompileAction( ) );
 			}
-			if ( JavaDecompilerPlugin.getDefault( ).enableProcyonDecompiler( ) )
-			{
-				dropDownMenuMgr.add( new DecompileWithProcyonAction( ) );
-			}
-
+			
 			dropDownMenuMgr.add( new Separator( ) );
 
 			List list = UIUtil.getExportSelections( );

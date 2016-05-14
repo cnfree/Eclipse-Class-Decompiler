@@ -25,8 +25,8 @@ import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.editor.DecompilerType;
 import org.sf.feeling.decompiler.editor.IDecompiler;
-import org.sf.feeling.decompiler.jad.JarClassExtractor;
 import org.sf.feeling.decompiler.util.FileUtil;
+import org.sf.feeling.decompiler.util.JarClassExtractor;
 import org.sf.feeling.decompiler.util.UIUtil;
 import org.sf.feeling.decompiler.util.UnicodeUtil;
 
@@ -191,6 +191,26 @@ public class FernFlowerDecompiler implements IDecompiler
 	public String getDecompilerType( )
 	{
 		return DecompilerType.FernFlower;
+	}
+
+	public String removeComment( String source )
+	{
+		return source;
+	}
+
+	public boolean supportGreatLevel6( )
+	{
+		return true;
+	}
+
+	public boolean supportGreatLevel6AndDebug( )
+	{
+		return true;
+	}
+	
+	public boolean supportDebug( )
+	{
+		return true;
 	}
 
 }
