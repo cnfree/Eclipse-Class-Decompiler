@@ -22,7 +22,7 @@
    <extension
  		point="org.eclipse.ui.bindings">
 		<key
-      		sequence="Ctrl+Alt+V"
+      		sequence="Ctrl+Alt+P"
       		commandId="org.sf.feeling.decompiler.decompile.procyon"
       		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>

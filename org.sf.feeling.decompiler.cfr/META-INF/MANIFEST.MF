@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Eclipse Class Decompiler Class File Rader Extension
+Bundle-Name: Eclipse Class Decompiler Cfr Extension
 Bundle-SymbolicName: org.sf.feeling.decompiler.cfr;singleton:=true
 Bundle-Version: 2.1.0.qualifier
 Bundle-Activator: org.sf.feeling.decompiler.cfr.CfrDecompilerPlugin

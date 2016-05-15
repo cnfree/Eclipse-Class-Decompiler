@@ -109,7 +109,7 @@
       		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
-      		sequence="Ctrl+Alt+R"
+      		sequence="Ctrl+Alt+W"
       		commandId="org.sf.feeling.decompiler.decompile.fernflower"
       		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
