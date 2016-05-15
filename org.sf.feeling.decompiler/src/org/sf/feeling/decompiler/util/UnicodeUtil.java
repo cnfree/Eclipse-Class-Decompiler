@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 public class UnicodeUtil
 {
 
-	static final Pattern unicodePattern = Pattern.compile( "\\\\u([0-9a-zA-Z]{4})" );
+	static final Pattern unicodePattern = Pattern.compile( "\\\\u([0-9a-zA-Z]{4})" ); //$NON-NLS-1$
 
 	public static String decode( String s )
 	{

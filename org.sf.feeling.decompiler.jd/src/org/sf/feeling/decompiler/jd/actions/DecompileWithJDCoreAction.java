@@ -13,8 +13,8 @@ package org.sf.feeling.decompiler.jd.actions;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.Action;
-import org.sf.feeling.decompiler.i18n.Messages;
 import org.sf.feeling.decompiler.jd.JDCoreDecompilerPlugin;
+import org.sf.feeling.decompiler.jd.i18n.Messages;
 import org.sf.feeling.decompiler.util.UIUtil;
 
 public class DecompileWithJDCoreAction extends Action

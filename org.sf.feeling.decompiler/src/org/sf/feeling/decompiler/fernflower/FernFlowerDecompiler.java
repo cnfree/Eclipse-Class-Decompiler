@@ -53,21 +53,21 @@ public class FernFlowerDecompiler implements IDecompiler
 		final String classPathStr = new File( workingDir, className ).getAbsolutePath( );
 		Map<String, Object> mapOptions = new HashMap<String, Object>( );
 
-		mapOptions.put( IFernflowerPreferences.REMOVE_SYNTHETIC, "1" );
+		mapOptions.put( IFernflowerPreferences.REMOVE_SYNTHETIC, "1" ); //$NON-NLS-1$
 		mapOptions.put( IFernflowerPreferences.DECOMPILE_GENERIC_SIGNATURES,
-				"1" );
-		mapOptions.put( IFernflowerPreferences.REMOVE_SYNTHETIC, "1" );
+				"1" ); //$NON-NLS-1$
+		mapOptions.put( IFernflowerPreferences.REMOVE_SYNTHETIC, "1" ); //$NON-NLS-1$
 		mapOptions.put( IFernflowerPreferences.LOG_LEVEL,
 				IFernflowerLogger.Severity.ERROR.name( ) );
-		mapOptions.put( IFernflowerPreferences.ASCII_STRING_CHARACTERS, "1" );
+		mapOptions.put( IFernflowerPreferences.ASCII_STRING_CHARACTERS, "1" ); //$NON-NLS-1$
 		if ( UIUtil.isDebugPerspective( )
 				|| JavaDecompilerPlugin.getDefault( ).isDisplayLineNumber( ) )
 		{
-			mapOptions.put( IFernflowerPreferences.DUMP_ORIGINAL_LINES, "1" );
-			mapOptions.put( IFernflowerPreferences.BYTECODE_SOURCE_MAPPING, "1" );
+			mapOptions.put( IFernflowerPreferences.DUMP_ORIGINAL_LINES, "1" ); //$NON-NLS-1$
+			mapOptions.put( IFernflowerPreferences.BYTECODE_SOURCE_MAPPING, "1" ); //$NON-NLS-1$
 		}
 
-		File tmpDir = new File( System.getProperty( "java.io.tmpdir" ),
+		File tmpDir = new File( System.getProperty( "java.io.tmpdir" ), //$NON-NLS-1$
 				String.valueOf( System.currentTimeMillis( ) ) );
 
 		if ( !tmpDir.exists( ) )
@@ -79,7 +79,7 @@ public class FernFlowerDecompiler implements IDecompiler
 		decompiler.decompileContext( );
 
 		File classFile = new File( tmpDir,
-				className.replaceAll( "(?i)\\.class", ".java" ) );
+				className.replaceAll( "(?i)\\.class", ".java" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
 		source = UnicodeUtil.decode( FileUtil.getContent( classFile ) );
 

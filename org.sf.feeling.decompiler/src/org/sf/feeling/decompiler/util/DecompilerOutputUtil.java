@@ -105,7 +105,7 @@ public class DecompilerOutputUtil
 		if ( input.startsWith( JavaDecompilerClassFileEditor.MARK ) )
 		{
 			String content = input.replace( JavaDecompilerClassFileEditor.MARK,
-					"" );
+					"" ); //$NON-NLS-1$
 			parser.setSource( content.toCharArray( ) );
 		}
 		else
@@ -178,7 +178,7 @@ public class DecompilerOutputUtil
 		String line;
 		int numLine;
 		StringBuffer realignOutput = new StringBuffer( );
-		Pattern pattern = Pattern.compile( "/\\*\\s+\\*/ " );
+		Pattern pattern = Pattern.compile( "/\\*\\s+\\*/ " ); //$NON-NLS-1$
 
 		for ( int i = 1; i < javaSrcLines.size( ); i++ )
 		{
@@ -253,7 +253,7 @@ public class DecompilerOutputUtil
 		Matcher matcher = pattern.matcher( line.trim( ) );
 		if ( matcher.find( ) )
 		{
-			return Integer.parseInt( matcher.group( ).replaceAll( "[^0-9]", "" ) );
+			return Integer.parseInt( matcher.group( ).replaceAll( "[^0-9]", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return -1;
 	}

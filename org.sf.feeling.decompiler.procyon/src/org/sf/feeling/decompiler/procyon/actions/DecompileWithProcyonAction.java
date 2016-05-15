@@ -13,8 +13,8 @@ package org.sf.feeling.decompiler.procyon.actions;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.Action;
-import org.sf.feeling.decompiler.i18n.Messages;
 import org.sf.feeling.decompiler.procyon.ProcyonDecompilerPlugin;
+import org.sf.feeling.decompiler.procyon.i18n.Messages;
 import org.sf.feeling.decompiler.util.UIUtil;
 
 public class DecompileWithProcyonAction extends Action

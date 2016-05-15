@@ -14,7 +14,7 @@ package org.sf.feeling.decompiler.cfr.actions;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.Action;
 import org.sf.feeling.decompiler.cfr.CfrDecompilerPlugin;
-import org.sf.feeling.decompiler.i18n.Messages;
+import org.sf.feeling.decompiler.cfr.i18n.Messages;
 import org.sf.feeling.decompiler.util.UIUtil;
 
 public class DecompileWithCfrAction extends Action
