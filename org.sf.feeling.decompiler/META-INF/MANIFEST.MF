@@ -4,7 +4,7 @@ Bundle-ClassPath: .,
  lib/cfr_0_115.jar,
  lib/fernflower.jar,
  lib/procyon.jar
-Bundle-Name: Eclipse Class Decompiler Core
+Bundle-Name: Eclipse Class Decompiler
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.core.runtime,
