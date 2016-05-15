@@ -22,7 +22,7 @@ public class JadDecompilerPlugin extends AbstractUIPlugin implements
 
 	public static final String CMD = "org.sf.feeling.decompiler.jad.cmd"; //$NON-NLS-1$
 
-	public static final String decompilerType = "Jad";
+	public static final String decompilerType = "Jad"; //$NON-NLS-1$
 
 	private static JadDecompilerPlugin plugin;
 

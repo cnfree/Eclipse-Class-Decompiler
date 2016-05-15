@@ -7,6 +7,7 @@ import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.editor.IDecompilerDescriptor;
 import org.sf.feeling.decompiler.jad.JadDecompilerPlugin;
 import org.sf.feeling.decompiler.jad.actions.DecompileWithJadAction;
+import org.sf.feeling.decompiler.jad.i18n.Messages;
 
 public class JadDecompilerDescriptor implements IDecompilerDescriptor
 {
@@ -24,7 +25,7 @@ public class JadDecompilerDescriptor implements IDecompilerDescriptor
 
 	public String getDecompilerPreferenceLabel( )
 	{
-		return "Jad ( Fast )";
+		return Messages.getString("JadDecompilerDescriptor.PreferenceLabel"); //$NON-NLS-1$
 	}
 
 	public IDecompiler getDecompiler( )

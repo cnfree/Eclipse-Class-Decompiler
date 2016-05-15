@@ -18,7 +18,7 @@ public class CfrDecompilerPlugin extends AbstractUIPlugin implements
 
 	public static final String PLUGIN_ID = "org.sf.feeling.decompiler.cfr"; //$NON-NLS-1$
 
-	public static final String decompilerType = "Class File Reader";
+	public static final String decompilerType = "Class File Reader"; //$NON-NLS-1$
 
 	private static CfrDecompilerPlugin plugin;
 

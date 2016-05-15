@@ -4,6 +4,7 @@ package org.sf.feeling.decompiler.cfr.decompiler;
 import org.eclipse.jface.action.Action;
 import org.sf.feeling.decompiler.cfr.CfrDecompilerPlugin;
 import org.sf.feeling.decompiler.cfr.actions.DecompileWithCfrAction;
+import org.sf.feeling.decompiler.cfr.i18n.Messages;
 import org.sf.feeling.decompiler.editor.BaseDecompilerSourceMapper;
 import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.editor.IDecompilerDescriptor;
@@ -24,7 +25,7 @@ public class CfrDecompilerDescriptor implements IDecompilerDescriptor
 
 	public String getDecompilerPreferenceLabel( )
 	{
-		return "Class File Reader ( Normal, Support JDK8 )";
+		return Messages.getString("CfrDecompilerDescriptor.PreferenceLabel"); //$NON-NLS-1$
 	}
 
 	public IDecompiler getDecompiler( )
@@ -56,7 +57,7 @@ public class CfrDecompilerDescriptor implements IDecompilerDescriptor
 
 	public boolean isEnabled( )
 	{
-		return !( System.getProperty( "java.version" ).compareTo( "1.6" ) < 0 );
+		return !( System.getProperty( "java.version" ).compareTo( "1.6" ) < 0 ); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }
