@@ -18,7 +18,7 @@ public class ProcyonDecompilerPlugin extends AbstractUIPlugin implements
 
 	public static final String PLUGIN_ID = "org.sf.feeling.decompiler.procyon"; //$NON-NLS-1$
 
-	public static final String decompilerType = "Procyon";
+	public static final String decompilerType = "Procyon"; //$NON-NLS-1$
 
 	private static ProcyonDecompilerPlugin plugin;
 

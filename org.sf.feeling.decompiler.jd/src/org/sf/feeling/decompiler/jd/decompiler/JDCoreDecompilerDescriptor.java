@@ -9,6 +9,7 @@ import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.editor.IDecompilerDescriptor;
 import org.sf.feeling.decompiler.jd.JDCoreDecompilerPlugin;
 import org.sf.feeling.decompiler.jd.actions.DecompileWithJDCoreAction;
+import org.sf.feeling.decompiler.jd.i18n.Messages;
 
 public class JDCoreDecompilerDescriptor implements IDecompilerDescriptor
 {
@@ -26,7 +27,7 @@ public class JDCoreDecompilerDescriptor implements IDecompilerDescriptor
 
 	public String getDecompilerPreferenceLabel( )
 	{
-		return "JD-Core ( Fast, Recommend  )";
+		return Messages.getString("JDCoreDecompilerDescriptor.PreferenceLabel"); //$NON-NLS-1$
 	}
 
 	public IDecompiler getDecompiler( )

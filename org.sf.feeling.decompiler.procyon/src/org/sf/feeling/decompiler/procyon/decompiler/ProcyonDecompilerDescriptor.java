@@ -7,6 +7,7 @@ import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.editor.IDecompilerDescriptor;
 import org.sf.feeling.decompiler.procyon.ProcyonDecompilerPlugin;
 import org.sf.feeling.decompiler.procyon.actions.DecompileWithProcyonAction;
+import org.sf.feeling.decompiler.procyon.i18n.Messages;
 
 public class ProcyonDecompilerDescriptor implements IDecompilerDescriptor
 {
@@ -24,7 +25,7 @@ public class ProcyonDecompilerDescriptor implements IDecompilerDescriptor
 
 	public String getDecompilerPreferenceLabel( )
 	{
-		return "Procyon ( Slow, Support JDK8 )";
+		return Messages.getString("ProcyonDecompilerDescriptor.PreferenceLabel"); //$NON-NLS-1$
 	}
 
 	public IDecompiler getDecompiler( )
@@ -54,7 +55,7 @@ public class ProcyonDecompilerDescriptor implements IDecompilerDescriptor
 
 	public boolean isEnabled( )
 	{
-		return !( System.getProperty( "java.version" ).compareTo( "1.7" ) < 0 );
+		return !( System.getProperty( "java.version" ).compareTo( "1.7" ) < 0 ); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

@@ -4,9 +4,7 @@
       label="%featureName"
       version="2.1.0.qualifier"
       provider-name="%providerName"
-      plugin="org.sf.feeling.decompiler"
-      os="linux,macosx,win32"
-      arch="x86,x86_64">
+      plugin="org.sf.feeling.decompiler">
 
    <description url="%aboutURL">
       %description

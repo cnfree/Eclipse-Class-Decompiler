@@ -20,7 +20,7 @@ public class JDCoreDecompilerPlugin extends AbstractUIPlugin implements
 
 	public static final String CMD = "org.sf.feeling.decompiler.jd.cmd"; //$NON-NLS-1$
 
-	public static final String decompilerType = "JD-Core";
+	public static final String decompilerType = "JD-Core"; //$NON-NLS-1$
 
 	private static JDCoreDecompilerPlugin plugin;
 
