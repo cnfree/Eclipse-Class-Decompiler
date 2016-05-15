@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.sf.feeling.decompiler.jad"
+      label="%featureName"
+      version="2.1.0.qualifier"
+      provider-name="%providerName"
+      plugin="org.sf.feeling.decompiler.jad"
+      os="linux,macosx,win32"
+      arch="x86,x86_64">
+
+   <description url="%aboutURL">
+      %description
+   </description>
+
+   <copyright url="%copyrightURL">
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <url>
+      <update label="Eclipse Class Decompiler Updates" url="http://cnfree.github.io/Eclipse-Class-Decompiler/update"/>
+      <discovery label="%updateSiteName" url="http://cnfree.github.io/Eclipse-Class-Decompiler/update"/>
+   </url>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.workbench"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.eclipse.jdt.debug.ui"/>
+      <import plugin="org.eclipse.debug.ui"/>
+      <import plugin="org.eclipse.jdt.launching"/>
+      <import plugin="org.eclipse.core.expressions"/>
+      <import plugin="org.eclipse.ui.navigator"/>
+      <import plugin="org.eclipse.core.filesystem"/>
+   </requires>
+
+   <plugin
+         id="org.sf.feeling.decompiler.jad"
+         os="linux,macosx,win32"
+         arch="x86,x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.sf.feeling.decompiler.jad.source"
+         os="linux,macosx,win32"
+         arch="x86,x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
