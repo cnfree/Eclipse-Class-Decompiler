@@ -432,6 +432,33 @@ public class FileUtil
 		zos.close( );
 	}
 
+	public static void zipDir( File dir, String zipFile ) throws Exception
+	{
+		File[] files = dir.listFiles( );
+		if ( files != null )
+		{
+			ZipOutputStream zos = new ZipOutputStream( new FileOutputStream( zipFile ) );
+			ZipEntry ze = null;
+			byte[] buf = new byte[1024];
+			int readLen = 0;
+			for ( int i = 0; i < files.length; i++ )
+			{
+				File file = files[i];
+				ze = new ZipEntry( file.getName( ) );
+				ze.setSize( file.length( ) );
+				ze.setTime( file.lastModified( ) );
+				zos.putNextEntry( ze );
+				InputStream is = new BufferedInputStream( new FileInputStream( file ) );
+				while ( ( readLen = is.read( buf, 0, 1024 ) ) != -1 )
+				{
+					zos.write( buf, 0, readLen );
+				}
+				is.close( );
+			}
+			zos.close( );
+		}
+	}
+
 	public static boolean isZipFile( String path )
 	{
 		if ( path == null )

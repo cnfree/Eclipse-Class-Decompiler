@@ -62,7 +62,7 @@ public class JDCoreDecompiler implements IDecompiler
 
 		try
 		{
-			FileUtil.zipFile( file, zipFileName );
+			FileUtil.zipDir( workingDir, zipFileName );
 
 			if ( UIUtil.isDebugPerspective( ) )
 			{

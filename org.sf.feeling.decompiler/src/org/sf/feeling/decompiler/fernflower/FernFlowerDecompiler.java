@@ -50,13 +50,14 @@ public class FernFlowerDecompiler implements IDecompiler
 		source = ""; //$NON-NLS-1$
 		File workingDir = new File( root + "/" + packege ); //$NON-NLS-1$
 
-		final String classPathStr = new File( workingDir, className ).getAbsolutePath( );
 		Map<String, Object> mapOptions = new HashMap<String, Object>( );
 
 		mapOptions.put( IFernflowerPreferences.REMOVE_SYNTHETIC, "1" ); //$NON-NLS-1$
 		mapOptions.put( IFernflowerPreferences.DECOMPILE_GENERIC_SIGNATURES,
 				"1" ); //$NON-NLS-1$
 		mapOptions.put( IFernflowerPreferences.REMOVE_SYNTHETIC, "1" ); //$NON-NLS-1$
+		mapOptions.put( IFernflowerPreferences.DECOMPILE_INNER, "1" );
+		mapOptions.put( IFernflowerPreferences.DECOMPILE_ENUM, "1" );
 		mapOptions.put( IFernflowerPreferences.LOG_LEVEL,
 				IFernflowerLogger.Severity.ERROR.name( ) );
 		mapOptions.put( IFernflowerPreferences.ASCII_STRING_CHARACTERS, "1" ); //$NON-NLS-1$
@@ -75,7 +76,15 @@ public class FernFlowerDecompiler implements IDecompiler
 
 		ConsoleDecompiler decompiler = new ConsoleDecompiler( tmpDir,
 				mapOptions );
-		decompiler.addSpace( new File( classPathStr ), true );
+		File[] files = workingDir.listFiles( );
+		if ( files != null )
+		{
+			for ( int j = 0; j < files.length; j++ )
+			{
+				decompiler.addSpace( files[j], true );
+			}
+		}
+
 		decompiler.decompileContext( );
 
 		File classFile = new File( tmpDir,
@@ -207,7 +216,7 @@ public class FernFlowerDecompiler implements IDecompiler
 	{
 		return true;
 	}
-	
+
 	public boolean supportDebug( )
 	{
 		return true;
