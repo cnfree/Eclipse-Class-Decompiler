@@ -6,8 +6,9 @@ Bundle-Version: 2.2.0.qualifier
 Bundle-Activator: org.sf.feeling.decompiler.update.DecompilerUpdatePlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.epp.mpc.ui,
- org.eclipse.epp.mpc.core,
+ org.eclipse.core.expressions,
+ org.eclipse.epp.mpc.ui;resolution:=optional,
+ org.eclipse.epp.mpc.core;resolution:=optional,
  org.eclipse.equinox.p2.core,
  org.eclipse.equinox.p2.metadata,
  org.eclipse.equinox.p2.repository,
@@ -17,4 +18,5 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Chen Chao
-Export-Package: org.sf.feeling.decompiler.update
+Export-Package: org.sf.feeling.decompiler.update,
+ org.sf.feeling.decompiler.update.tester
