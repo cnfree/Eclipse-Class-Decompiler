@@ -98,7 +98,7 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage impl
 			{
 				super.doFillIntoGrid( parent, numColumns );
 				GridData gd = (GridData) getControl( ).getLayoutData( );
-				gd.widthHint = 200;
+				gd.widthHint = 300;
 				gd.grabExcessHorizontalSpace = false;
 				gd.horizontalAlignment = SWT.BEGINNING;
 				getControl( ).setLayoutData( gd );
