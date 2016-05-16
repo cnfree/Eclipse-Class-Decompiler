@@ -28,6 +28,7 @@ import org.sf.feeling.decompiler.editor.DecompilerType;
 import org.sf.feeling.decompiler.editor.IDecompilerDescriptor;
 import org.sf.feeling.decompiler.editor.JavaDecompilerBufferManager;
 import org.sf.feeling.decompiler.extension.DecompilerAdapterManager;
+import org.sf.feeling.decompiler.update.IDecompilerUpdateHandler;
 import org.sf.feeling.decompiler.util.SortMemberUtil;
 
 public class JavaDecompilerPlugin extends AbstractUIPlugin implements
@@ -47,6 +48,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 	public static final String PREF_DISPLAY_METADATA = "jd.ide.eclipse.prefs.DisplayMetadata"; //$NON-NLS-1$
 	public static final String ALIGN = "jd.ide.eclipse.prefs.Align"; //$NON-NLS-1$
 	public static final String DEFAULT_EDITOR = "org.sf.feeling.decompiler.default_editor"; //$NON-NLS-1$ ;
+	public static final String CHECK_UPDATE = "org.sf.feeling.decompiler.check_update"; //$NON-NLS-1$ ;
 
 	private static JavaDecompilerPlugin plugin;
 
@@ -125,6 +127,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 		store.setDefault( PREF_DISPLAY_METADATA, false );
 		store.setDefault( DECOMPILER_TYPE, DecompilerType.FernFlower );
 		store.setDefault( DEFAULT_EDITOR, true );
+		store.setDefault( CHECK_UPDATE, true );
 	}
 
 	public void propertyChange( PropertyChangeEvent event )
@@ -138,14 +141,14 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 	{
 		super.start( context );
 
-		Object[] adapters = DecompilerAdapterManager.getAdapters( this,
+		Object[] decompilerAdapters = DecompilerAdapterManager.getAdapters( this,
 				IDecompilerDescriptor.class );
 
-		if ( adapters != null )
+		if ( decompilerAdapters != null )
 		{
-			for ( int i = 0; i < adapters.length; i++ )
+			for ( int i = 0; i < decompilerAdapters.length; i++ )
 			{
-				Object adapter = adapters[i];
+				Object adapter = decompilerAdapters[i];
 				if ( adapter instanceof IDecompilerDescriptor )
 				{
 					IDecompilerDescriptor descriptor = (IDecompilerDescriptor) adapter;
@@ -194,5 +197,16 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 	{
 		getPreferenceStore( ).setValue( PREF_DISPLAY_LINE_NUMBERS,
 				display.booleanValue( ) );
+	}
+
+	public boolean enableCheckUpdate( )
+	{
+		Object updateAdapter = DecompilerAdapterManager.getAdapter( this,
+				IDecompilerUpdateHandler.class );
+		if ( updateAdapter instanceof IDecompilerUpdateHandler )
+		{
+			return true;
+		}
+		return false;
 	}
 }

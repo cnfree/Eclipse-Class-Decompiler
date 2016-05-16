@@ -23,6 +23,8 @@ import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.registry.EditorRegistry;
 import org.eclipse.ui.internal.registry.FileEditorMapping;
+import org.sf.feeling.decompiler.extension.DecompilerAdapterManager;
+import org.sf.feeling.decompiler.update.IDecompilerUpdateHandler;
 import org.sf.feeling.decompiler.util.ReflectionUtils;
 
 public class Startup implements IStartup
@@ -33,15 +35,36 @@ public class Startup implements IStartup
 
 	public void earlyStartup( )
 	{
-		// Setup ".class" file association
-		Display.getDefault( )
-				.syncExec( new SetupClassFileAssociationRunnable( ) );
+		Display.getDefault( ).syncExec( new SetupRunnable( ) );
 	}
 
-	public static class SetupClassFileAssociationRunnable implements Runnable
+	public static class SetupRunnable implements Runnable
 	{
 
 		public void run( )
+		{
+			checkDecompilerUpdate( );
+			checkClassFileAssociation( );
+		}
+
+		private void checkDecompilerUpdate( )
+		{
+
+			IPreferenceStore prefs = JavaDecompilerPlugin.getDefault( )
+					.getPreferenceStore( );
+			if ( prefs.getBoolean( JavaDecompilerPlugin.CHECK_UPDATE ) )
+			{
+				Object updateAdapter = DecompilerAdapterManager.getAdapter( JavaDecompilerPlugin.getDefault( ),
+						IDecompilerUpdateHandler.class );
+
+				if ( updateAdapter instanceof IDecompilerUpdateHandler )
+				{
+					( (IDecompilerUpdateHandler) updateAdapter ).execute( );
+				}
+			}
+		}
+
+		private void checkClassFileAssociation( )
 		{
 			IPreferenceStore prefs = JavaDecompilerPlugin.getDefault( )
 					.getPreferenceStore( );
@@ -61,7 +84,6 @@ public class Startup implements IStartup
 						}
 					}
 				} );
-
 			}
 		}
 
@@ -118,7 +140,7 @@ public class Startup implements IStartup
 							catch ( ClassNotFoundException e )
 							{
 							}
-							
+
 							try
 							{
 								ReflectionUtils.invokeMethod( (FileEditorMapping) mapping,

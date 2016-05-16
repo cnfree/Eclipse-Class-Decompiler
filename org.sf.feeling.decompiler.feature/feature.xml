@@ -2,7 +2,7 @@
 <feature
       id="org.sf.feeling.decompiler"
       label="%featureName"
-      version="2.1.1.qualifier"
+      version="2.2.0.qualifier"
       provider-name="%providerName"
       plugin="org.sf.feeling.decompiler">
 
@@ -54,6 +54,13 @@
          id="org.sf.feeling.decompiler.source"
          os="linux,macosx,win32"
          arch="x86,x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.sf.feeling.decompiler.update"
          download-size="0"
          install-size="0"
          version="0.0.0"

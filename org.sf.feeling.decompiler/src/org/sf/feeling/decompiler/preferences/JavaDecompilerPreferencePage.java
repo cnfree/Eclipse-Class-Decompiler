@@ -196,6 +196,14 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage impl
 				startupGroup );
 		addField( defaultViewerEditor );
 
+		if ( JavaDecompilerPlugin.getDefault( ).enableCheckUpdate( ) )
+		{
+			CheckFieldEditor checkUpdate = new CheckFieldEditor( JavaDecompilerPlugin.CHECK_UPDATE,
+					Messages.getString("JavaDecompilerPreferencePage.Label.CheckForUpdate"), //$NON-NLS-1$
+					startupGroup );
+			addField( checkUpdate );
+		}
+
 		layout = (GridLayout) startupGroup.getLayout( );
 		layout.marginWidth = layout.marginHeight = 5;
 		startupGroup.layout( );
