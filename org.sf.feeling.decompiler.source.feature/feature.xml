@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.sf.feeling.decompiler.source"
+      label="%featureName"
+      version="2.2.0.qualifier"
+      provider-name="%providerName">
+
+   <description url="%aboutURL">
+      %description
+   </description>
+
+   <copyright url="%copyrightURL">
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <url>
+      <update label="Eclipse Class Decompiler Updates" url="http://cnfree.github.io/Eclipse-Class-Decompiler/update"/>
+      <discovery label="%updateSiteName" url="http://cnfree.github.io/Eclipse-Class-Decompiler/update"/>
+   </url>
+
+   <plugin
+         id="org.sf.feeling.decompiler.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+         
+   <plugin
+         id="org.sf.feeling.decompiler.update.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.sf.feeling.decompiler.jd.source"
+         os="linux,macosx,win32"
+         arch="x86,x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.sf.feeling.decompiler.jad.source"
+         os="linux,macosx,win32"
+         arch="x86,x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.sf.feeling.decompiler.cfr.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.sf.feeling.decompiler.procyon.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

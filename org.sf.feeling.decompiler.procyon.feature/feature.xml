@@ -48,13 +48,4 @@
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="org.sf.feeling.decompiler.procyon.source"
-         os="linux,macosx,win32"
-         arch="x86,x86_64"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
 </feature>
