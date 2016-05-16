@@ -432,7 +432,8 @@ public class FileUtil
 		zos.close( );
 	}
 
-	public static void zipDir( File dir, String zipFile ) throws Exception
+	public static void zipDir( File dir, String classPackage, String zipFile )
+			throws Exception
 	{
 		File[] files = dir.listFiles( );
 		if ( files != null )
@@ -444,7 +445,7 @@ public class FileUtil
 			for ( int i = 0; i < files.length; i++ )
 			{
 				File file = files[i];
-				ze = new ZipEntry( file.getName( ) );
+				ze = new ZipEntry( classPackage + "/" + file.getName( ) ); //$NON-NLS-1$
 				ze.setSize( file.length( ) );
 				ze.setTime( file.lastModified( ) );
 				zos.putNextEntry( ze );

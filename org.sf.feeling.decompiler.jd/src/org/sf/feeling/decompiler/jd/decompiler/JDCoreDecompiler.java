@@ -46,15 +46,14 @@ public class JDCoreDecompiler implements IDecompiler
 	 * 
 	 * @see IDecompiler#decompile(String, String, String)
 	 */
-	public void decompile( String root, String packege, String className )
+	public void decompile( String root, String classPackage, String className )
 	{
 		start = System.currentTimeMillis( );
 		log = ""; //$NON-NLS-1$
 		source = ""; //$NON-NLS-1$
 		Boolean displayNumber = null;
 
-		File workingDir = new File( root + "/" + packege ); //$NON-NLS-1$
-		File file = new File( workingDir, className );
+		File workingDir = new File( root ); //$NON-NLS-1$
 
 		File zipFile = new File( System.getProperty( "java.io.tmpdir" ), //$NON-NLS-1$
 				className.replaceAll( "(?i)\\.class", ".jar" ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -62,7 +61,7 @@ public class JDCoreDecompiler implements IDecompiler
 
 		try
 		{
-			FileUtil.zipDir( workingDir, zipFileName );
+			FileUtil.zipDir( workingDir, classPackage, zipFileName );
 
 			if ( UIUtil.isDebugPerspective( ) )
 			{
@@ -72,7 +71,9 @@ public class JDCoreDecompiler implements IDecompiler
 						.displayLineNumber( Boolean.TRUE );
 			}
 
-			source = mapper.decompile( zipFileName, file.getName( ) );
+			source = mapper.decompile( zipFileName, classPackage
+					+ "/"
+					+ className );
 
 			zipFile.delete( );
 		}
@@ -135,7 +136,7 @@ public class JDCoreDecompiler implements IDecompiler
 					className,
 					true,
 					workingDir.getAbsolutePath( ) );
-			decompile( workingDir.getAbsolutePath( ), "", className ); //$NON-NLS-1$
+			decompile( workingDir.getAbsolutePath( ), packege, className ); //$NON-NLS-1$
 		}
 		catch ( Exception e )
 		{
