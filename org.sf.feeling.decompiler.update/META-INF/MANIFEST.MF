@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Eclipse Class Decompiler Update
 Bundle-SymbolicName: org.sf.feeling.decompiler.update;singleton:=true
-Bundle-Version: 2.2.0.qualifier
+Bundle-Version: 2.2.1.qualifier
 Bundle-Activator: org.sf.feeling.decompiler.update.DecompilerUpdatePlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -14,7 +14,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.equinox.p2.repository,
  org.eclipse.equinox.p2.operations,
  org.eclipse.equinox.p2.ui,
- org.sf.feeling.decompiler;bundle-version="2.2.0"
+ org.sf.feeling.decompiler;bundle-version="2.2.1"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Chen Chao
