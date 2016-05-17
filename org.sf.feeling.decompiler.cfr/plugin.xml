@@ -14,7 +14,7 @@
 <plugin>
    <extension point="org.eclipse.ui.commands">  
       <command  
-            name="Decompile With Cfr"  
+            name="Decompile With CFR"  
             categoryId="org.sf.feeling.decompiler"  
             id="org.sf.feeling.decompiler.decompile.cfr">  
       </command>  
