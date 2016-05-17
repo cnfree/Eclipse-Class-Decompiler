@@ -178,7 +178,49 @@ public class DecompilerOutputUtil
 		String line;
 		int numLine;
 		StringBuffer realignOutput = new StringBuffer( );
-		Pattern pattern = Pattern.compile( "/\\*\\s+\\*/ " ); //$NON-NLS-1$
+
+		int lineNumberWidth = String.valueOf( javaSrcLines.size( ) ).length( );
+
+		boolean generateEmptyString = true;
+		int leftTrimSpace = 0;
+
+		Pattern pattern = Pattern.compile( "/\\*\\s+\\*/", Pattern.CASE_INSENSITIVE );//$NON-NLS-1$
+		Matcher matcher = pattern.matcher( input );
+		if ( matcher.find( ) )
+		{
+			generateEmptyString = false;
+
+			pattern = Pattern.compile( "([ ]+)import", Pattern.CASE_INSENSITIVE );//$NON-NLS-1$
+			matcher = pattern.matcher( input );
+			if ( matcher.find( ) )
+			{
+				leftTrimSpace = matcher.group( ).replace( "import", "" ) //$NON-NLS-1$ //$NON-NLS-2$
+						.length( );
+			}
+		}
+		else
+		{
+			pattern = Pattern.compile( "([ ]+)import", Pattern.CASE_INSENSITIVE );//$NON-NLS-1$
+			matcher = pattern.matcher( input );
+			if ( matcher.find( ) )
+			{
+				leftTrimSpace = matcher.group( ).replace( "import", "" ) //$NON-NLS-1$ //$NON-NLS-2$
+						.length( );
+				generateEmptyString = true;
+			}
+		}
+
+		int lastBracketIndex = input.lastIndexOf( '}' );
+		if ( lastBracketIndex != -1 )
+		{
+			int trimSpace = getLeftPosition( input,
+					input.lastIndexOf( '}', lastBracketIndex - 1 ) )
+					- getLeftPosition( input, lastBracketIndex );
+			if ( trimSpace > 4 )
+			{
+				leftTrimSpace += trimSpace - 4;
+			}
+		}
 
 		for ( int i = 1; i < javaSrcLines.size( ); i++ )
 		{
@@ -186,29 +228,62 @@ public class DecompilerOutputUtil
 
 			if ( javaSrcLine.inputLines.size( ) > 0 )
 			{
+				if ( i > 1 )
+				{
+					realignOutput.append( "/* " //$NON-NLS-1$
+							+ getLineNumber( i, lineNumberWidth )
+							+ " */ " ); //$NON-NLS-1$
+				}
 				for ( int j = 0; j < javaSrcLine.inputLines.size( ); j++ )
 				{
 					numLine = ( (Integer) javaSrcLine.inputLines.get( j ) ).intValue( );
 					line = ( (InputLine) inputLines.get( numLine ) ).line;
-					line = line.replace( "\r\n", "\n" ).replace( "\n", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-
-					Matcher matcher = pattern.matcher( line );
-					if ( matcher.find( ) )
-					{
-						line = line.replace( matcher.group( ),
-								generageEmptyString( matcher.group( ).length( ) ) );
-					}
-
+					line = removeJavaLineNumber( line.replace( "\r\n", "\n" ).replace( "\n", "" ), j == 0 && generateEmptyString, leftTrimSpace ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 					realignOutput.append( line );
 				}
 			}
-
+			else if ( i > 1 )
+			{
+				realignOutput.append( "/* " //$NON-NLS-1$
+						+ getLineNumber( i, lineNumberWidth )
+						+ " */ " ); //$NON-NLS-1$
+			}
 			realignOutput.append( line_separator );
 		}
 		return realignOutput.toString( );
 	}
 
-	private CharSequence generageEmptyString( int length )
+	private int getLeftPosition( String string, int index )
+	{
+		if ( string == null || string.length( ) < index )
+			return -1;
+		
+		for ( int j = index - 1; j >= 0; j-- )
+		{
+			if ( j < 0 )
+				break;
+			if ( string.charAt( j ) == '\n' )
+				return index - j;
+		}
+		return -1;
+	}
+
+	private String getLineNumber( int i, int lineNumberWidth )
+	{
+		String number = String.valueOf( i );
+		int width = number.length( );
+		if ( width < lineNumberWidth )
+		{
+			for ( int j = 0; j < lineNumberWidth - width; j++ )
+			{
+				number = " " + number; //$NON-NLS-1$
+			}
+		}
+
+		return number;
+	}
+
+	private String generageEmptyString( int length )
 	{
 		char[] chs = new char[length];
 		for ( int i = 0; i < chs.length; i++ )
@@ -256,6 +331,50 @@ public class DecompilerOutputUtil
 			return Integer.parseInt( matcher.group( ).replaceAll( "[^0-9]", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return -1;
+	}
+
+	private String removeJavaLineNumber( String line,
+			boolean generageEmptyString, int leftTrimSpace )
+	{
+		String regex = "/\\*\\s*\\d+\\s*\\*/"; //$NON-NLS-1$
+		if ( DecompilerType.FernFlower.equals( decompilerType ) )
+		{
+			regex = "//\\s+\\d+\\s*\\d*"; //$NON-NLS-1$
+		}
+		Pattern pattern = Pattern.compile( regex, Pattern.CASE_INSENSITIVE );
+		Matcher matcher = pattern.matcher( line.trim( ) );
+
+		if ( matcher.find( ) )
+		{
+			line = line.replace( matcher.group( ), "" ); //$NON-NLS-1$
+			if ( !DecompilerType.FernFlower.equals( decompilerType )
+					&& generageEmptyString )
+			{
+				line = generageEmptyString( matcher.group( ).length( ) ) + line;
+			}
+		}
+		if ( !DecompilerType.FernFlower.equals( decompilerType ) )
+		{
+			regex = "/\\*\\s+\\*/"; //$NON-NLS-1$
+			pattern = Pattern.compile( regex, Pattern.CASE_INSENSITIVE );
+			matcher = pattern.matcher( line );
+
+			if ( matcher.find( ) )
+			{
+				line = line.replace( matcher.group( ), "" ); //$NON-NLS-1$
+				if ( generageEmptyString )
+				{
+					line = generageEmptyString( matcher.group( ).length( ) )
+							+ line;
+				}
+			}
+		}
+		if ( leftTrimSpace > 0
+				&& line.startsWith( generageEmptyString( leftTrimSpace ) ) )
+		{
+			line = line.substring( leftTrimSpace );
+		}
+		return line;
 	}
 
 	/**
