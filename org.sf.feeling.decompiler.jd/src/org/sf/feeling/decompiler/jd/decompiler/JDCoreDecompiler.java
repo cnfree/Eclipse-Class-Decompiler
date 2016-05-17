@@ -12,13 +12,23 @@
 package org.sf.feeling.decompiler.jd.decompiler;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import jd.ide.eclipse.editors.JDSourceMapper;
 
+import org.jetbrains.java.decompiler.main.DecompilerContext;
+import org.jetbrains.java.decompiler.main.collectors.CounterContainer;
+import org.jetbrains.java.decompiler.main.extern.IBytecodeProvider;
+import org.jetbrains.java.decompiler.struct.StructClass;
+import org.jetbrains.java.decompiler.struct.lazy.LazyLoader;
+import org.jetbrains.java.decompiler.util.InterpreterUtil;
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.jd.JDCoreDecompilerPlugin;
@@ -56,11 +66,24 @@ public class JDCoreDecompiler implements IDecompiler
 		File workingDir = new File( root ); //$NON-NLS-1$
 
 		File zipFile = new File( System.getProperty( "java.io.tmpdir" ), //$NON-NLS-1$
-				className.replaceAll( "(?i)\\.class", ".jar" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+				className.replaceAll( "(?i)\\.class", System.currentTimeMillis( ) + ".jar" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 		String zipFileName = zipFile.getAbsolutePath( );
 
 		try
 		{
+			if ( classPackage.length( ) == 0 )
+			{
+				DecompilerContext.initContext( new HashMap<String, Object>( ) );
+				DecompilerContext.setCounterContainer( new CounterContainer( ) );
+				StructClass structClass = new StructClass( FileUtil.getBytes( new File( root,
+						className ) ),
+						true,
+						new LazyLoader( null ) );
+				structClass.releaseResources( );
+				classPackage = structClass.qualifiedName.replace( "/"
+						+ className.replaceAll( "(?i)\\.class", "" ), "" );
+			}
+
 			FileUtil.zipDir( workingDir, classPackage, zipFileName );
 
 			if ( UIUtil.isDebugPerspective( ) )
@@ -71,9 +94,9 @@ public class JDCoreDecompiler implements IDecompiler
 						.displayLineNumber( Boolean.TRUE );
 			}
 
-			source = mapper.decompile( zipFileName, classPackage
-					+ "/"
-					+ className );
+			source = mapper.decompile( zipFileName,
+					( classPackage.length( ) > 0 ? ( classPackage + "/" ) : "" )
+							+ className );
 
 			zipFile.delete( );
 		}

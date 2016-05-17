@@ -445,7 +445,7 @@ public class FileUtil
 			for ( int i = 0; i < files.length; i++ )
 			{
 				File file = files[i];
-				ze = new ZipEntry( classPackage + "/" + file.getName( ) ); //$NON-NLS-1$
+				ze = new ZipEntry( ( classPackage.length( ) > 0 ? ( classPackage + "/" ) : "" ) + file.getName( ) ); //$NON-NLS-1$
 				ze.setSize( file.length( ) );
 				ze.setTime( file.lastModified( ) );
 				zos.putNextEntry( ze );
@@ -496,6 +496,34 @@ public class FileUtil
 			out.close( );
 			String content = new String( bytes );
 			return content.trim( );
+		}
+		catch ( Exception e )
+		{
+			e.printStackTrace( );
+		}
+		return null;
+	}
+	
+	public static byte[] getBytes( File file )
+	{
+		if ( file == null || !file.exists( ) )
+			return null;
+		try
+		{
+			ByteArrayOutputStream out = new ByteArrayOutputStream( 4096 );
+			byte[] tmp = new byte[4096];
+			InputStream is = new BufferedInputStream( new FileInputStream( file ) );
+			while ( true )
+			{
+				int r = is.read( tmp );
+				if ( r == -1 )
+					break;
+				out.write( tmp, 0, r );
+			}
+			byte[] bytes = out.toByteArray( );
+			is.close( );
+			out.close( );
+			return bytes;
 		}
 		catch ( Exception e )
 		{
