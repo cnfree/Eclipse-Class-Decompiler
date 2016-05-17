@@ -451,14 +451,14 @@ public class JadDecompiler implements IDecompiler
 
 	}
 
-	public boolean supportGreatLevel6( )
+	public boolean supportLevel( int level )
 	{
-		return false;
+		return level < 8;
 	}
 
-	public boolean supportGreatLevel6AndDebug( )
+	public boolean supportDebugLevel( int level )
 	{
-		return false;
+		return level < 8;
 	}
 
 	public boolean supportDebug( )

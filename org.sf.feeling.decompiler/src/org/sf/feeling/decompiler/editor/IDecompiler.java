@@ -78,9 +78,9 @@ public interface IDecompiler
 
 	public String removeComment( String source );
 
-	public boolean supportGreatLevel6AndDebug( );
+	public boolean supportDebugLevel( int level );
 
-	public boolean supportGreatLevel6( );
-	
+	public boolean supportLevel( int level );
+
 	public boolean supportDebug( );
 }

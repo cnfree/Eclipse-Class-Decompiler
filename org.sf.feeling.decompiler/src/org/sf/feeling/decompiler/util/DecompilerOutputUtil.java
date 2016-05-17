@@ -41,7 +41,7 @@ public class DecompilerOutputUtil
 	/**
 	 * Input split into lines
 	 */
-	private final List inputLines = new ArrayList( );//
+	private final List<InputLine> inputLines = new ArrayList<InputLine>( );
 
 	/**
 	 * Parsed input
@@ -230,9 +230,20 @@ public class DecompilerOutputUtil
 			{
 				if ( i > 1 )
 				{
-					realignOutput.append( "/* " //$NON-NLS-1$
-							+ getLineNumber( i, lineNumberWidth )
-							+ " */ " ); //$NON-NLS-1$
+					numLine = ( (Integer) javaSrcLine.inputLines.get( 0 ) ).intValue( );
+					InputLine inputLine = inputLines.get( numLine );
+					if ( inputLine != null )
+					{
+						realignOutput.append( "/* " //$NON-NLS-1$
+								+ getLineNumber( inputLine.outputLineNum,
+										lineNumberWidth ) + " */ " ); //$NON-NLS-1$
+					}
+					else
+					{
+						realignOutput.append( "/* " //$NON-NLS-1$
+								+ getLineNumber( -1, lineNumberWidth )
+								+ " */ " ); //$NON-NLS-1$
+					}
 				}
 				for ( int j = 0; j < javaSrcLine.inputLines.size( ); j++ )
 				{
@@ -245,7 +256,7 @@ public class DecompilerOutputUtil
 			else if ( i > 1 )
 			{
 				realignOutput.append( "/* " //$NON-NLS-1$
-						+ getLineNumber( i, lineNumberWidth )
+						+ getLineNumber( -1, lineNumberWidth )
 						+ " */ " ); //$NON-NLS-1$
 			}
 			realignOutput.append( line_separator );
@@ -257,7 +268,7 @@ public class DecompilerOutputUtil
 	{
 		if ( string == null || string.length( ) < index )
 			return -1;
-		
+
 		for ( int j = index - 1; j >= 0; j-- )
 		{
 			if ( j < 0 )
@@ -272,6 +283,11 @@ public class DecompilerOutputUtil
 	{
 		String number = String.valueOf( i );
 		int width = number.length( );
+		if ( i == -1 )
+		{
+			width = 0;
+			number = "";
+		}
 		if ( width < lineNumberWidth )
 		{
 			for ( int j = 0; j < lineNumberWidth - width; j++ )

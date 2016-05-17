@@ -59,31 +59,21 @@ public class ClassUtil
 	public static IDecompiler checkAvailableDecompiler( IDecompiler decompiler,
 			InputStream is )
 	{
-		if ( greatLevel6( is ) )
+		int classLevel = getLevel( is );
+		if ( decompiler.supportLevel( classLevel ) )
 		{
 			if ( JavaDecompilerPlugin.getDefault( ).isDisplayLineNumber( )
 					|| UIUtil.isDebugPerspective( ) )
 			{
-				if ( !decompiler.supportGreatLevel6AndDebug( ) )
+				if ( !decompiler.supportDebugLevel( classLevel ) )
 				{
 					return new FernFlowerDecompiler( );
 				}
-			}
-			else if ( !decompiler.supportGreatLevel6( ) )
-			{
-				return new FernFlowerDecompiler( );
 			}
 		}
 		else
 		{
-			if ( JavaDecompilerPlugin.getDefault( ).isDisplayLineNumber( )
-					|| UIUtil.isDebugPerspective( ) )
-			{
-				if ( !decompiler.supportDebug( ) )
-				{
-					return new FernFlowerDecompiler( );
-				}
-			}
+			return new FernFlowerDecompiler( );
 		}
 		return decompiler;
 	}
@@ -125,7 +115,7 @@ public class ClassUtil
 		return false;
 	}
 
-	public static boolean greatLevel6( InputStream is )
+	public static int getLevel( InputStream is )
 	{
 		DataInputStream data = null;
 		try
@@ -133,17 +123,17 @@ public class ClassUtil
 			data = new DataInputStream( is );
 			if ( 0xCAFEBABE != data.readInt( ) )
 			{
-				return false;
+				return -1;
 			}
 			data.readUnsignedShort( );
 			int major = data.readUnsignedShort( );
-			return major >= 51;
+			return major - 44;
 		}
 		catch ( IOException e )
 		{
 			e.printStackTrace( );
 		}
-		return false;
+		return -1;
 	}
 
 	public static boolean isClassFile( byte[] bytes )

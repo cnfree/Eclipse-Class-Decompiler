@@ -44,9 +44,9 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 	public static final String USE_ECLIPSE_FORMATTER = "org.sf.feeling.decompiler.use_eclipse_formatter"; //$NON-NLS-1$
 	public static final String USE_ECLIPSE_SORTER = "org.sf.feeling.decompiler.use_eclipse_sorter"; //$NON-NLS-1$
 	public static final String DECOMPILER_TYPE = "org.sf.feeling.decompiler.type"; //$NON-NLS-1$
-	public static final String PREF_DISPLAY_LINE_NUMBERS = "jd.ide.eclipse.prefs.DisplayLineNumbers"; //$NON-NLS-1$
-	public static final String PREF_DISPLAY_METADATA = "jd.ide.eclipse.prefs.DisplayMetadata"; //$NON-NLS-1$
-	public static final String ALIGN = "jd.ide.eclipse.prefs.Align"; //$NON-NLS-1$
+	public static final String PREF_DISPLAY_LINE_NUMBERS = "jd.ide.eclipse.prefs.ShowLineNumbers"; //$NON-NLS-1$
+	public static final String PREF_DISPLAY_METADATA = "jd.ide.eclipse.prefs.ShowMetadata"; //$NON-NLS-1$
+	public static final String ALIGN = "jd.ide.eclipse.prefs.RealignLineNumbers"; //$NON-NLS-1$
 	public static final String DEFAULT_EDITOR = "org.sf.feeling.decompiler.default_editor"; //$NON-NLS-1$ ;
 	public static final String CHECK_UPDATE = "org.sf.feeling.decompiler.check_update"; //$NON-NLS-1$ ;
 

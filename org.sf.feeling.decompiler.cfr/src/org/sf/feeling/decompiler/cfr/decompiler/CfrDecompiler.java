@@ -195,12 +195,12 @@ public class CfrDecompiler implements IDecompiler
 		return source;
 	}
 
-	public boolean supportGreatLevel6( )
+	public boolean supportLevel( int level )
 	{
 		return true;
 	}
 
-	public boolean supportGreatLevel6AndDebug( )
+	public boolean supportDebugLevel( int level )
 	{
 		return false;
 	}
