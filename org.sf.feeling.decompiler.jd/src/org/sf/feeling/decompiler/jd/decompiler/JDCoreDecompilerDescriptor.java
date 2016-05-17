@@ -27,7 +27,7 @@ public class JDCoreDecompilerDescriptor implements IDecompilerDescriptor
 
 	public String getDecompilerPreferenceLabel( )
 	{
-		return Messages.getString("JDCoreDecompilerDescriptor.PreferenceLabel"); //$NON-NLS-1$
+		return Messages.getString( "JDCoreDecompilerDescriptor.PreferenceLabel" ); //$NON-NLS-1$
 	}
 
 	public IDecompiler getDecompiler( )
@@ -60,4 +60,8 @@ public class JDCoreDecompilerDescriptor implements IDecompilerDescriptor
 		return true;
 	}
 
+	public boolean isDefault( )
+	{
+		return true;
+	}
 }

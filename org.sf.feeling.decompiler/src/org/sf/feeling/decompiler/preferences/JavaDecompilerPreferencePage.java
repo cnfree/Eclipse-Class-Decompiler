@@ -105,16 +105,25 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage impl
 			}
 		};
 
+		String defaultDecompilerType = JavaDecompilerPlugin.getDefault( )
+				.getDefalutDecompilerType( );
+
+		String label = Messages.getString( "JavaDecompilerPreferencePage.Decompiler.FernFlower" ); //$NON-NLS-1$
+		label = getRecommendLabel( label,
+				defaultDecompilerType.equals( DecompilerType.FernFlower ) );
 		defaultDecompiler.addItem( DecompilerType.FernFlower,
-				Messages.getString( "JavaDecompilerPreferencePage.Decompiler.FernFlower" ), //$NON-NLS-1$
+				label,
 				DecompilerType.FernFlower );
 
 		for ( int i = 0; i < DecompilerType.getDecompilerTypes( ).length; i++ )
 		{
 			IDecompilerDescriptor descriptor = JavaDecompilerPlugin.getDefault( )
 					.getDecompilerDescriptor( DecompilerType.getDecompilerTypes( )[i] );
+			label = descriptor.getDecompilerPreferenceLabel( ).trim( );
+			label = getRecommendLabel( label,
+					defaultDecompilerType.equals( descriptor.getDecompilerType( ) ) );
 			defaultDecompiler.addItem( descriptor.getDecompilerType( ),
-					descriptor.getDecompilerPreferenceLabel( ),
+					label,
 					descriptor.getDecompilerType( ) );
 		}
 
@@ -199,7 +208,7 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage impl
 		if ( JavaDecompilerPlugin.getDefault( ).enableCheckUpdate( ) )
 		{
 			CheckFieldEditor checkUpdate = new CheckFieldEditor( JavaDecompilerPlugin.CHECK_UPDATE,
-					Messages.getString("JavaDecompilerPreferencePage.Label.CheckForUpdate"), //$NON-NLS-1$
+					Messages.getString( "JavaDecompilerPreferencePage.Label.CheckForUpdate" ), //$NON-NLS-1$
 					startupGroup );
 			addField( checkUpdate );
 		}
@@ -209,6 +218,18 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage impl
 		startupGroup.layout( );
 
 		getFieldEditorParent( ).layout( );
+	}
+
+	private String getRecommendLabel( String label, boolean isRecommended )
+	{
+		if ( isRecommended )
+		{
+			char lastChar = label.charAt( label.length( ) - 1 );
+			label = label.substring( 0, label.length( ) - 1 )
+					+ Messages.getString( "JavaDecompilerPreferencePage.Label.Recommend" ) //$NON-NLS-1$ 
+					+ lastChar;
+		}
+		return label;
 	}
 
 	public void init( IWorkbench arg0 )

@@ -25,7 +25,7 @@ public class JadDecompilerDescriptor implements IDecompilerDescriptor
 
 	public String getDecompilerPreferenceLabel( )
 	{
-		return Messages.getString("JadDecompilerDescriptor.PreferenceLabel"); //$NON-NLS-1$
+		return Messages.getString( "JadDecompilerDescriptor.PreferenceLabel" ); //$NON-NLS-1$
 	}
 
 	public IDecompiler getDecompiler( )
@@ -44,8 +44,6 @@ public class JadDecompilerDescriptor implements IDecompilerDescriptor
 		return sourceMapper;
 	}
 
-
-
 	public Action getDecompileAction( )
 	{
 		if ( decompileAction == null )
@@ -58,6 +56,11 @@ public class JadDecompilerDescriptor implements IDecompilerDescriptor
 	public boolean isEnabled( )
 	{
 		return true;
+	}
+
+	public boolean isDefault( )
+	{
+		return false;
 	}
 
 }

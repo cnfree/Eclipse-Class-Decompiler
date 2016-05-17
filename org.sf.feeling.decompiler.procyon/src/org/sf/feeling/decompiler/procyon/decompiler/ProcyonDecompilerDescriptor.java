@@ -25,7 +25,7 @@ public class ProcyonDecompilerDescriptor implements IDecompilerDescriptor
 
 	public String getDecompilerPreferenceLabel( )
 	{
-		return Messages.getString("ProcyonDecompilerDescriptor.PreferenceLabel"); //$NON-NLS-1$
+		return Messages.getString( "ProcyonDecompilerDescriptor.PreferenceLabel" ); //$NON-NLS-1$
 	}
 
 	public IDecompiler getDecompiler( )
@@ -56,6 +56,11 @@ public class ProcyonDecompilerDescriptor implements IDecompilerDescriptor
 	public boolean isEnabled( )
 	{
 		return !( System.getProperty( "java.version" ).compareTo( "1.7" ) < 0 ); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	public boolean isDefault( )
+	{
+		return false;
 	}
 
 }

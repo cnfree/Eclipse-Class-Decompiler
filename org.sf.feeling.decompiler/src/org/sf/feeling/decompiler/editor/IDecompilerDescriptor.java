@@ -17,4 +17,6 @@ public interface IDecompilerDescriptor
 	Action getDecompileAction( );
 
 	boolean isEnabled( );
+
+	boolean isDefault( );
 }

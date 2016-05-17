@@ -25,7 +25,7 @@ public class CfrDecompilerDescriptor implements IDecompilerDescriptor
 
 	public String getDecompilerPreferenceLabel( )
 	{
-		return Messages.getString("CfrDecompilerDescriptor.PreferenceLabel"); //$NON-NLS-1$
+		return Messages.getString( "CfrDecompilerDescriptor.PreferenceLabel" ); //$NON-NLS-1$
 	}
 
 	public IDecompiler getDecompiler( )
@@ -44,8 +44,6 @@ public class CfrDecompilerDescriptor implements IDecompilerDescriptor
 		return sourceMapper;
 	}
 
-
-
 	public Action getDecompileAction( )
 	{
 		if ( decompileAction == null )
@@ -58,6 +56,11 @@ public class CfrDecompilerDescriptor implements IDecompilerDescriptor
 	public boolean isEnabled( )
 	{
 		return !( System.getProperty( "java.version" ).compareTo( "1.6" ) < 0 ); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	public boolean isDefault( )
+	{
+		return false;
 	}
 
 }

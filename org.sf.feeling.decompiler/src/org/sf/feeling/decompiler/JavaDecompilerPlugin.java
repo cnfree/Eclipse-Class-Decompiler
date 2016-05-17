@@ -14,14 +14,17 @@ package org.sf.feeling.decompiler;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.LinkedHashMap;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.sf.feeling.decompiler.editor.DecompilerType;
@@ -54,7 +57,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 
 	private IPreferenceStore preferenceStore;
 
-	private Map<String, IDecompilerDescriptor> decompilerDescriptorMap = new LinkedHashMap<String, IDecompilerDescriptor>( );
+	private TreeMap<String, IDecompilerDescriptor> decompilerDescriptorMap = new TreeMap<String, IDecompilerDescriptor>( );
 
 	public Map<String, IDecompilerDescriptor> getDecompilerDescriptorMap( )
 	{
@@ -117,30 +120,6 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 
 	protected void initializeDefaultPreferences( IPreferenceStore store )
 	{
-		store.setDefault( TEMP_DIR, System.getProperty( "java.io.tmpdir" ) //$NON-NLS-1$
-				+ File.separator
-				+ ".org.sf.feeling.decompiler" ); //$NON-NLS-1$
-		store.setDefault( REUSE_BUFFER, true );
-		store.setDefault( IGNORE_EXISTING, false );
-		store.setDefault( USE_ECLIPSE_FORMATTER, true );
-		store.setDefault( USE_ECLIPSE_SORTER, false );
-		store.setDefault( PREF_DISPLAY_METADATA, false );
-		store.setDefault( DECOMPILER_TYPE, DecompilerType.FernFlower );
-		store.setDefault( DEFAULT_EDITOR, true );
-		store.setDefault( CHECK_UPDATE, true );
-	}
-
-	public void propertyChange( PropertyChangeEvent event )
-	{
-		if ( event.getProperty( ).equals( IGNORE_EXISTING )
-				&& event.getNewValue( ).equals( Boolean.FALSE ) )
-			JavaDecompilerBufferManager.closeDecompilerBuffers( false );
-	}
-
-	public void start( BundleContext context ) throws Exception
-	{
-		super.start( context );
-
 		Object[] decompilerAdapters = DecompilerAdapterManager.getAdapters( this,
 				IDecompilerDescriptor.class );
 
@@ -160,8 +139,33 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 				}
 			}
 		}
+
+		store.setDefault( TEMP_DIR, System.getProperty( "java.io.tmpdir" ) //$NON-NLS-1$
+				+ File.separator
+				+ ".org.sf.feeling.decompiler" ); //$NON-NLS-1$
+		store.setDefault( REUSE_BUFFER, true );
+		store.setDefault( IGNORE_EXISTING, false );
+		store.setDefault( USE_ECLIPSE_FORMATTER, true );
+		store.setDefault( USE_ECLIPSE_SORTER, false );
+		store.setDefault( PREF_DISPLAY_METADATA, false );
+		store.setDefault( DECOMPILER_TYPE, getDefalutDecompilerType( ) );
+		store.setDefault( DEFAULT_EDITOR, true );
+		store.setDefault( CHECK_UPDATE, true );
+	}
+
+	public void propertyChange( PropertyChangeEvent event )
+	{
+		if ( event.getProperty( ).equals( IGNORE_EXISTING )
+				&& event.getNewValue( ).equals( Boolean.FALSE ) )
+			JavaDecompilerBufferManager.closeDecompilerBuffers( false );
+	}
+
+	public void start( BundleContext context ) throws Exception
+	{
+		super.start( context );
 		getPreferenceStore( ).addPropertyChangeListener( this );
 		SortMemberUtil.deleteDecompilerProject( );
+		Display.getDefault( ).asyncExec( new SetupRunnable( ) );
 	}
 
 	public IPreferenceStore getPreferenceStore( )
@@ -174,7 +178,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 			if ( descriptor == null )
 			{
 				preferenceStore.setValue( DECOMPILER_TYPE,
-						DecompilerType.FernFlower );
+						getDefalutDecompilerType( ) );
 			}
 
 		}
@@ -209,4 +213,24 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 		}
 		return false;
 	}
+
+	public String getDefalutDecompilerType( )
+	{
+		Collection<IDecompilerDescriptor> descriptors = JavaDecompilerPlugin.getDefault( )
+				.getDecompilerDescriptorMap( )
+				.values( );
+		if ( descriptors != null )
+		{
+			for ( Iterator iterator = descriptors.iterator( ); iterator.hasNext( ); )
+			{
+				IDecompilerDescriptor iDecompilerDescriptor = (IDecompilerDescriptor) iterator.next( );
+				if ( iDecompilerDescriptor.isDefault( ) )
+				{
+					return iDecompilerDescriptor.getDecompilerType( );
+				}
+			}
+		}
+		return DecompilerType.FernFlower;
+	}
+
 }
