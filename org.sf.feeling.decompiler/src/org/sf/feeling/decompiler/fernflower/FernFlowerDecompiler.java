@@ -55,7 +55,6 @@ public class FernFlowerDecompiler implements IDecompiler
 		mapOptions.put( IFernflowerPreferences.REMOVE_SYNTHETIC, "1" ); //$NON-NLS-1$
 		mapOptions.put( IFernflowerPreferences.DECOMPILE_GENERIC_SIGNATURES,
 				"1" ); //$NON-NLS-1$
-		mapOptions.put( IFernflowerPreferences.REMOVE_SYNTHETIC, "1" ); //$NON-NLS-1$
 		mapOptions.put( IFernflowerPreferences.DECOMPILE_INNER, "1" );
 		mapOptions.put( IFernflowerPreferences.DECOMPILE_ENUM, "1" );
 		mapOptions.put( IFernflowerPreferences.LOG_LEVEL,

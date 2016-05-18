@@ -74,7 +74,7 @@ public class DecompilerOutputUtil
 	private class JavaSrcLine
 	{
 
-		List inputLines = new ArrayList( );
+		List<Integer> inputLines = new ArrayList<Integer>( );
 
 		public String toString( )
 		{
@@ -228,26 +228,46 @@ public class DecompilerOutputUtil
 
 			if ( javaSrcLine.inputLines.size( ) > 0 )
 			{
-				if ( i > 1 )
+				int outputLineNumber = getOutputLineNumber( javaSrcLine );
+
+				if ( outputLineNumber != -1 )
 				{
-					numLine = ( (Integer) javaSrcLine.inputLines.get( 0 ) ).intValue( );
-					InputLine inputLine = inputLines.get( numLine );
-					if ( inputLine != null )
+					List<Integer> beforeLines = getBeforeLines( javaSrcLine );
+					if ( beforeLines != null && !beforeLines.isEmpty( ) )
 					{
-						realignOutput.append( "/* " //$NON-NLS-1$
-								+ getLineNumber( inputLine.outputLineNum,
-										lineNumberWidth ) + " */ " ); //$NON-NLS-1$
-					}
-					else
-					{
-						realignOutput.append( "/* " //$NON-NLS-1$
-								+ getLineNumber( -1, lineNumberWidth )
-								+ " */ " ); //$NON-NLS-1$
+
+						int index = realignOutput.lastIndexOf( line_separator );
+						if ( index == realignOutput.length( )
+								- line_separator.length( ) )
+						{
+							realignOutput.replace( index, index
+									+ line_separator.length( ), "" );
+
+							for ( int j = 0; j < beforeLines.size( ); j++ )
+							{
+								numLine = beforeLines.get( j );
+								line = ( (InputLine) inputLines.get( numLine ) ).line;
+								line = removeJavaLineNumber( line.replace( "\r\n", "\n" ).replace( "\n", "" ), j == 0 && generateEmptyString, leftTrimSpace ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+								realignOutput.append( line );
+							}
+
+							realignOutput.append( line_separator );
+
+							javaSrcLine.inputLines.removeAll( beforeLines );
+						}
 					}
 				}
+
+				if ( i > 1 )
+				{
+					realignOutput.append( "/* " //$NON-NLS-1$
+							+ getLineNumber( outputLineNumber, lineNumberWidth )
+							+ " */ " ); //$NON-NLS-1$
+				}
+
 				for ( int j = 0; j < javaSrcLine.inputLines.size( ); j++ )
 				{
-					numLine = ( (Integer) javaSrcLine.inputLines.get( j ) ).intValue( );
+					numLine = javaSrcLine.inputLines.get( j );
 					line = ( (InputLine) inputLines.get( numLine ) ).line;
 					line = removeJavaLineNumber( line.replace( "\r\n", "\n" ).replace( "\n", "" ), j == 0 && generateEmptyString, leftTrimSpace ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 					realignOutput.append( line );
@@ -262,6 +282,37 @@ public class DecompilerOutputUtil
 			realignOutput.append( line_separator );
 		}
 		return realignOutput.toString( );
+	}
+
+	private List<Integer> getBeforeLines( JavaSrcLine javaSrcLine )
+	{
+		List<Integer> lineNumbers = new ArrayList<Integer>( );
+		for ( int i = 0; i < javaSrcLine.inputLines.size( ); i++ )
+		{
+			int num = javaSrcLine.inputLines.get( i );
+			InputLine line = inputLines.get( num );
+			if ( line != null && line.outputLineNum != -1 )
+			{
+				break;
+			}
+			else
+			{
+				lineNumbers.add( num );
+			}
+		}
+		return lineNumbers;
+	}
+
+	private int getOutputLineNumber( JavaSrcLine javaSrcLine )
+	{
+		for ( int i = 0; i < javaSrcLine.inputLines.size( ); i++ )
+		{
+			int numLine = javaSrcLine.inputLines.get( i );
+			InputLine inputLine = inputLines.get( numLine );
+			if ( inputLine != null && inputLine.outputLineNum != -1 )
+				return inputLine.outputLineNum;
+		}
+		return -1;
 	}
 
 	private int getLeftPosition( String string, int index )
