@@ -1,15 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2010 The Eclipse Foundation and others.
+ * Copyright (c) 2016 Chen Chao(cnfree2000@hotmail.com).
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- * 	The Eclipse Foundation - initial API and implementation
- * 	Yatta Solutions - category filtering (bug 314936), error handling (bug 374105),
- *                      multiselect hints (bug 337774), public API (bug 432803),
- *                      performance (bug 413871), featured market (bug 461603)
+ *  Chen Chao  - initial API and implementation
  *******************************************************************************/
 
 package org.sf.feeling.mars.mpc.ui.commands;

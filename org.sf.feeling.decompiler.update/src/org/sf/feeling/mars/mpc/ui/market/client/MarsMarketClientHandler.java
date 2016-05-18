@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Chen Chao(cnfree2000@hotmail.com).
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *  Chen Chao  - initial API and implementation
+ *******************************************************************************/
 
 package org.sf.feeling.mars.mpc.ui.market.client;
 
@@ -41,8 +51,7 @@ public class MarsMarketClientHandler
 			MarketplaceClientUi.getLog( )
 					.log( new Status( IStatus.INFO,
 							MarketplaceClientUi.BUNDLE_ID,
-							NLS.bind( Messages.MarketplaceUrlHandler_performInstallRequest,
-									info.getRequestUrl( ) ) ) );
+							NLS.bind( Messages.MarketplaceUrlHandler_performInstallRequest, info.getRequestUrl( ) ) ) );
 		}
 		String installId = info.getInstallId( );
 		String mpcState = info.getState( );
@@ -56,8 +65,7 @@ public class MarsMarketClientHandler
 				command.setWizardState( URLDecoder.decode( mpcState, UTF_8 ) );
 			}
 			Map<String, Operation> nodeToOperation = new HashMap<String, Operation>( );
-			nodeToOperation.put( URLDecoder.decode( installId, UTF_8 ),
-					Operation.INSTALL );
+			nodeToOperation.put( URLDecoder.decode( installId, UTF_8 ), Operation.INSTALL );
 			command.setOperations( nodeToOperation );
 		}
 		catch ( UnsupportedEncodingException e1 )
@@ -72,10 +80,7 @@ public class MarsMarketClientHandler
 		{
 			IStatus status = MarketplaceClientCore.computeStatus( e,
 					Messages.MarketplaceUrlHandler_cannotOpenMarketplaceWizard );
-			StatusManager.getManager( ).handle( status,
-					StatusManager.SHOW
-							| StatusManager.BLOCK
-							| StatusManager.LOG );
+			StatusManager.getManager( ).handle( status, StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG );
 		}
 	}
 }

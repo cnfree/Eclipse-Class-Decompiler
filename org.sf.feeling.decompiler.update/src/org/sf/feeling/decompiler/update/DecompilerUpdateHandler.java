@@ -138,11 +138,11 @@ public class DecompilerUpdateHandler implements IDecompilerUpdateHandler
 	private String getUpdateVersion( IProgressMonitor monitor ) throws Exception
 	{
 		String updateUrl = null;
-		if ( existClass( "org.eclipse.epp.internal.mpc.core.service.Node" ) )
+		if ( existClass( "org.eclipse.epp.internal.mpc.core.service.Node" ) ) //$NON-NLS-1$
 		{
 			updateUrl = MarsDecompilerMarketplace.getUpdateUrl( monitor );
 		}
-		else if ( existClass( "org.eclipse.epp.internal.mpc.core.model.Node" ) )
+		else if ( existClass( "org.eclipse.epp.internal.mpc.core.model.Node" ) ) //$NON-NLS-1$
 		{
 			updateUrl = NeonDecompilerMarketplace.getUpdateUrl( monitor );
 		}
