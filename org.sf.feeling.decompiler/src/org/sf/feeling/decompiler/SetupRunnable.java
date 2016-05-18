@@ -40,7 +40,8 @@ public class SetupRunnable implements Runnable
 				.getPreferenceStore( );
 		if ( prefs.getBoolean( JavaDecompilerPlugin.CHECK_UPDATE ) )
 		{
-			Object updateAdapter = DecompilerAdapterManager.getAdapter( JavaDecompilerPlugin.getDefault( ),
+			Object updateAdapter = DecompilerAdapterManager.getAdapter(
+					JavaDecompilerPlugin.getDefault( ),
 					IDecompilerUpdateHandler.class );
 
 			if ( updateAdapter instanceof IDecompilerUpdateHandler )
@@ -64,7 +65,8 @@ public class SetupRunnable implements Runnable
 
 				public void propertyChange( PropertyChangeEvent event )
 				{
-					if ( IPreferenceConstants.RESOURCES.equals( event.getProperty( ) ) )
+					if ( IPreferenceConstants.RESOURCES
+							.equals( event.getProperty( ) ) )
 					{
 						updateClassDefaultEditor( );
 					}
@@ -114,13 +116,14 @@ public class SetupRunnable implements Runnable
 					{
 						try
 						{
-							ReflectionUtils.invokeMethod( (FileEditorMapping) mapping,
+							ReflectionUtils.invokeMethod(
+									(FileEditorMapping) mapping,
 									"setDefaultEditor", //$NON-NLS-1$
 									new Class[]{
-										Class.forName( "org.eclipse.ui.IEditorDescriptor" ) //$NON-NLS-1$
-									},
-									new Object[]{
-										editor
+											Class.forName(
+													"org.eclipse.ui.IEditorDescriptor" ) //$NON-NLS-1$
+									}, new Object[]{
+											editor
 									} );
 						}
 						catch ( ClassNotFoundException e )
@@ -129,13 +132,14 @@ public class SetupRunnable implements Runnable
 
 						try
 						{
-							ReflectionUtils.invokeMethod( (FileEditorMapping) mapping,
+							ReflectionUtils.invokeMethod(
+									(FileEditorMapping) mapping,
 									"setDefaultEditor", //$NON-NLS-1$
 									new Class[]{
-										Class.forName( "org.eclipse.ui.internal.registry.EditorDescriptor" ) //$NON-NLS-1$
-									},
-									new Object[]{
-										editor
+											Class.forName(
+													"org.eclipse.ui.internal.registry.EditorDescriptor" ) //$NON-NLS-1$
+									}, new Object[]{
+											editor
 									} );
 						}
 						catch ( ClassNotFoundException e )

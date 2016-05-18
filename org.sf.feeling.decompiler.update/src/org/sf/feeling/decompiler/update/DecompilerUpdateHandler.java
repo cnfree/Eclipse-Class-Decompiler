@@ -12,7 +12,6 @@
 package org.sf.feeling.decompiler.update;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IBundleGroup;
@@ -22,8 +21,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.epp.internal.mpc.core.service.DefaultMarketplaceService;
-import org.eclipse.epp.internal.mpc.core.service.Node;
 import org.eclipse.equinox.internal.p2.metadata.OSGiVersion;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.metadata.Version;
@@ -39,6 +36,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Display;
 import org.sf.feeling.decompiler.update.i18n.Messages;
+import org.sf.feeling.luna.mpc.ui.market.client.LunaDecompilerMarketplace;
+import org.sf.feeling.mars.mpc.ui.market.client.MarsDecompilerMarketplace;
+import org.sf.feeling.mars.mpc.ui.market.client.MarsMarketClientHandler;
+import org.sf.feeling.neon.mpc.ui.market.client.NeonDecompilerMarketplace;
 
 public class DecompilerUpdateHandler implements IDecompilerUpdateHandler
 {
@@ -105,28 +106,53 @@ public class DecompilerUpdateHandler implements IDecompilerUpdateHandler
 
 					if ( result - IDialogConstants.INTERNAL_ID == 1 )
 					{
-						new DecompilerMarketplace( ).proceedInstallation(
-								"http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=472922" ); //$NON-NLS-1$
+						String installUrl = "http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=472922"; //$NON-NLS-1$
+						if ( MarsDecompilerMarketplace.isInteresting( ) )
+						{
+							new MarsMarketClientHandler( ).proceedInstallation( installUrl );
+
+						}
+						else if ( LunaDecompilerMarketplace.isInteresting( ) )
+						{
+							new LunaDecompilerMarketplace( ).proceedInstallation( installUrl );
+						}
 					}
 				}
 			} );
 		}
 	}
 
+	protected boolean existClass( String classFullName )
+	{
+		try
+		{
+			Class.forName( classFullName );
+			return true;
+		}
+		catch ( ClassNotFoundException e )
+		{
+			return false;
+		}
+	}
+
 	private String getUpdateVersion( IProgressMonitor monitor ) throws Exception
 	{
-		DefaultMarketplaceService service = new DefaultMarketplaceService(
-				new URL( "http://marketplace.eclipse.org" ) ); //$NON-NLS-1$
-		Node node = new Node( );
-		node.setId( "472922" ); //$NON-NLS-1$
-		node = service.getNode( node, monitor );
+		String updateUrl = null;
+		if ( existClass( "org.eclipse.epp.internal.mpc.core.service.Node" ) )
+		{
+			updateUrl = MarsDecompilerMarketplace.getUpdateUrl( monitor );
+		}
+		else if ( existClass( "org.eclipse.epp.internal.mpc.core.model.Node" ) )
+		{
+			updateUrl = NeonDecompilerMarketplace.getUpdateUrl( monitor );
+		}
 
 		ProvisioningSession session = ProvisioningUI.getDefaultUI( ).getSession( );
 		IMetadataRepositoryManager manager = (IMetadataRepositoryManager) session.getProvisioningAgent( )
 				.getService( IMetadataRepositoryManager.SERVICE_NAME );
 
-		URI updateUrl = new URI( node.getUpdateurl( ) );
-		IMetadataRepository repository = manager.loadRepository( updateUrl, monitor );
+		URI updateUri = new URI( updateUrl );
+		IMetadataRepository repository = manager.loadRepository( updateUri, monitor );
 		IQuery<IInstallableUnit> query = QueryUtil.createMatchQuery( "id ~= /*.feature.group/ && " + //$NON-NLS-1$
 				"properties['org.eclipse.equinox.p2.type.group'] == true " );//$NON-NLS-1$
 		IQueryResult<IInstallableUnit> result = repository.query( query, monitor );
