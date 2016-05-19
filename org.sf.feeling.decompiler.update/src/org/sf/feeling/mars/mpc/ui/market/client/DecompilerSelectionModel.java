@@ -17,7 +17,9 @@ import java.util.Set;
 
 import org.eclipse.epp.internal.mpc.ui.wizards.InstallProfile;
 import org.eclipse.epp.internal.mpc.ui.wizards.SelectionModel;
+import org.eclipse.epp.mpc.ui.Operation;
 import org.eclipse.equinox.internal.p2.discovery.model.CatalogItem;
+import org.sf.feeling.decompiler.util.ReflectionUtils;
 
 public class DecompilerSelectionModel extends SelectionModel
 {
@@ -32,23 +34,20 @@ public class DecompilerSelectionModel extends SelectionModel
 		Set<CatalogItem> items = new HashSet<CatalogItem>( );
 		for ( CatalogItemEntry entry : getCatalogItemEntries( ) )
 		{
-			if ( entry.getSelectedOperation( ) != org.eclipse.epp.mpc.ui.Operation.NONE )
+			if ( entry.getSelectedOperation( ) != Operation.NONE )
 			{
 				for ( FeatureEntry featureEntry : entry.getChildren( ) )
 				{
 					featureEntry.setChecked( true );
 					featureEntry.getInstallableUnitItem( ).setUpdateAvailable( true );
-					featureEntry.getInstallableUnitItem( ).setInstalled( true );
-					org.eclipse.epp.mpc.ui.Operation operation = featureEntry.computeChangeOperation( );
-					if ( ( operation != null ) && ( operation != org.eclipse.epp.mpc.ui.Operation.NONE ) )
+					featureEntry.getInstallableUnitItem( ).setAvailable( true );
+					Operation operation = featureEntry.computeChangeOperation( );
+					if ( ( operation != null ) && ( operation != Operation.NONE ) )
 					{
 						items.add( getEntryItem( entry ) );
 					}
 				}
-				if ( entry.getSelectedOperation( ) == org.eclipse.epp.mpc.ui.Operation.CHANGE )
-				{
-					items.add( getEntryItem( entry ) );
-				}
+				ReflectionUtils.setFieldValue( entry, "operation", Operation.CHANGE );
 			}
 		}
 		return Collections.unmodifiableSet( items );
