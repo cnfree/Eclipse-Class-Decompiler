@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-SymbolicName: org.sf.feeling.decompiler.source
-Bundle-Version: 1.0.4.201605020120
-Bundle-Name: %pluginName
-Bundle-Localization: plugin
-Bundle-ManifestVersion: 2
-Eclipse-SourceBundle: org.sf.feeling.decompiler;version="1.0.4.2016050
- 20120";roots:="."
-
