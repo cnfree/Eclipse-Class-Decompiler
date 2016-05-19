@@ -38,6 +38,7 @@ public class DecompilerSelectionModel extends SelectionModel
 				{
 					featureEntry.setChecked( true );
 					featureEntry.getInstallableUnitItem( ).setUpdateAvailable( true );
+					featureEntry.getInstallableUnitItem( ).setInstalled( true );
 					org.eclipse.epp.mpc.ui.Operation operation = featureEntry.computeChangeOperation( );
 					if ( ( operation != null ) && ( operation != org.eclipse.epp.mpc.ui.Operation.NONE ) )
 					{
