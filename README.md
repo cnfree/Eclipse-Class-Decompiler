@@ -4,8 +4,8 @@ Eclipse Class Decompiler integrates JD, Jad, FernFlower, CFR, Procyon seamlessly
 <p align="center"><img src="http://images.blogjava.net/blogjava_net/cnfree/17092/o_debug_class.png"></p>
 
 - Eclipse Marketplace Page: [https://marketplace.eclipse.org/content/eclipse-class-decompiler](https://marketplace.eclipse.org/content/eclipse-class-decompiler)
-- Eclipse Update Site: [http://cnfree.github.io/Eclipse-Class-Decompiler/update](http://cnfree.github.io/Eclipse-Class-Decompiler/update)
-- Project Page: [https://github.com/cnfree/Eclipse-Class-Decompiler](https://github.com/cnfree/Eclipse-Class-Decompiler)
+- Plugin Update Site: [http://cnfree.github.io/Eclipse-Class-Decompiler/update](http://cnfree.github.io/Eclipse-Class-Decompiler/update)
+- Github Project Page: [https://github.com/cnfree/Eclipse-Class-Decompiler](https://github.com/cnfree/Eclipse-Class-Decompiler)
 
 ##Description
 Eclipse Class Decompiler is a plug-in for the Eclipse platform. It integrates JD, Jad, FernFlower, CFR, Procyon seamlessly with Eclipse, 
