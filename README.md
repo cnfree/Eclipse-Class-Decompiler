@@ -1,5 +1,5 @@
 # Eclipse Class Decompiler
-Eclipse Class Decompiler integrates JD, Jad, FernFlower, CFR, Procyon seamlessly with Eclipse and allows Java developers to debug class files without source code directly
+Eclipse Class Decompiler integrates **JD**, **Jad**, **FernFlower**, **CFR**, **Procyon** seamlessly with Eclipse and allows Java developers to debug class files without source code directly
 
 <p align="center"><img src="http://images.blogjava.net/blogjava_net/cnfree/17092/o_debug_class.png"></p>
 
