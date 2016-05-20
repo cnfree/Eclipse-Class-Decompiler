@@ -473,7 +473,7 @@ p.tagline {
 }
 
 #main {
-  margin-top: 20px;
+  margin-top: -1px;
   padding: 0 20px 90px;
   background-color: #fff;
 }
