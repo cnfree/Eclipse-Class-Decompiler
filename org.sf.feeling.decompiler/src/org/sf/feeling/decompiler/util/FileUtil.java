@@ -466,7 +466,7 @@ public class FileUtil
 			return false;
 		try
 		{
-			new ZipFile( path );
+			new ZipFile( path ).close( );;
 			return true;
 		}
 		catch ( IOException e )
