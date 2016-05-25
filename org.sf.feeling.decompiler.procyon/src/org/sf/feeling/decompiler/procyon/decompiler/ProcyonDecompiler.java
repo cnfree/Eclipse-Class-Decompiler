@@ -76,12 +76,14 @@ public class ProcyonDecompiler implements IDecompiler
 
 		DecompilerSettings settings = DecompilerSettings.javaDefaults( );
 		settings.setTypeLoader( new com.strobel.assembler.InputTypeLoader( ) );
+		settings.setForceExplicitImports( true );
 
 		decompilationOptions.setSettings( settings );
 		decompilationOptions.setFullDecompilation( true );
 
-		MetadataSystem metadataSystem = new MetadataSystem( decompilationOptions.getSettings( )
+		MetadataSystem metadataSystem = new NoRetryMetadataSystem( decompilationOptions.getSettings( )
 				.getTypeLoader( ) );
+		metadataSystem.setEagerMethodLoadingEnabled( false );
 
 		TypeReference type = metadataSystem.lookupType( classPathStr );
 
@@ -99,7 +101,8 @@ public class ProcyonDecompiler implements IDecompiler
 
 		String property = "java.io.tmpdir"; //$NON-NLS-1$
 		String tempDir = System.getProperty( property );
-		File classFile = new File( tempDir, className );
+		File classFile = new File( tempDir, System.currentTimeMillis( )
+				+ className );
 		Writer writer = null;
 		try
 		{
@@ -114,6 +117,7 @@ public class ProcyonDecompiler implements IDecompiler
 					.getLanguage( )
 					.decompileType( resolvedType, output, decompilationOptions );
 
+			System.out.println( System.currentTimeMillis( ) - start );
 			writer.flush( );
 			writer.close( );
 
