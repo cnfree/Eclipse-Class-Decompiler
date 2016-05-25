@@ -188,15 +188,27 @@ public class OpenClassWithContributionFactory extends
 				{
 					IEditorDescriptor editor = registry.findEditor( JavaDecompilerPlugin.EDITOR_ID );
 
-					list.add( new ActionContributionItem( new OpenClassesAction( editor,
-							classes,
-							DecompilerType.FernFlower ) ) );
-
+					boolean isAddFernFlower = false;
+					
 					for ( int i = 0; i < DecompilerType.getDecompilerTypes( ).length; i++ )
 					{
+						if ( DecompilerType.getDecompilerTypes( )[i] .compareToIgnoreCase( DecompilerType.FernFlower ) > 0 && !isAddFernFlower )
+						{
+							list.add( new ActionContributionItem( new OpenClassesAction( editor,
+									classes,
+									DecompilerType.FernFlower ) ) );
+							isAddFernFlower = true;
+						}
+						
 						list.add( new ActionContributionItem( new OpenClassesAction( editor,
 								classes,
 								DecompilerType.getDecompilerTypes( )[i] ) ) );
+					}
+					
+					if(!isAddFernFlower){
+						list.add( new ActionContributionItem( new OpenClassesAction( editor,
+								classes,
+								DecompilerType.FernFlower ) ) );
 					}
 				}
 

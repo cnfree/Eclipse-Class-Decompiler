@@ -117,7 +117,6 @@ public class ProcyonDecompiler implements IDecompiler
 					.getLanguage( )
 					.decompileType( resolvedType, output, decompilationOptions );
 
-			System.out.println( System.currentTimeMillis( ) - start );
 			writer.flush( );
 			writer.close( );
 
