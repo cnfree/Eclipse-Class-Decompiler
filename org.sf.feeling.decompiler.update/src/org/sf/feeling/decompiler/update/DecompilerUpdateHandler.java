@@ -12,6 +12,7 @@
 package org.sf.feeling.decompiler.update;
 
 import java.net.URI;
+import java.net.URL;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IBundleGroup;
@@ -21,6 +22,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.epp.internal.mpc.core.service.DefaultMarketplaceService;
 import org.eclipse.equinox.internal.p2.metadata.OSGiVersion;
 import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.metadata.Version;
@@ -36,10 +38,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Display;
 import org.sf.feeling.decompiler.update.i18n.Messages;
+import org.sf.feeling.decompiler.util.ReflectionUtils;
 import org.sf.feeling.luna.mpc.ui.market.client.LunaDecompilerMarketplace;
 import org.sf.feeling.mars.mpc.ui.market.client.MarsDecompilerMarketplace;
 import org.sf.feeling.mars.mpc.ui.market.client.MarsMarketClientHandler;
-import org.sf.feeling.neon.mpc.ui.market.client.NeonDecompilerMarketplace;
 
 public class DecompilerUpdateHandler implements IDecompilerUpdateHandler
 {
@@ -122,29 +124,29 @@ public class DecompilerUpdateHandler implements IDecompilerUpdateHandler
 		}
 	}
 
-	protected boolean existClass( String classFullName )
+	protected Class<?> existClass( String classFullName )
 	{
 		try
 		{
-			Class.forName( classFullName );
-			return true;
+			return Class.forName( classFullName );
 		}
 		catch ( ClassNotFoundException e )
 		{
-			return false;
+			return null;
 		}
 	}
 
 	private String getUpdateVersion( IProgressMonitor monitor ) throws Exception
 	{
 		String updateUrl = null;
-		if ( existClass( "org.eclipse.epp.internal.mpc.core.service.Node" ) ) //$NON-NLS-1$
+		Class<?> nodeClass = null;
+		if ( ( nodeClass = existClass( "org.eclipse.epp.internal.mpc.core.service.Node" ) ) != null ) //$NON-NLS-1$
 		{
-			updateUrl = MarsDecompilerMarketplace.getUpdateUrl( monitor );
+			updateUrl = getUpdateUrl( nodeClass, monitor );
 		}
-		else if ( existClass( "org.eclipse.epp.internal.mpc.core.model.Node" ) ) //$NON-NLS-1$
+		else if ( ( nodeClass = existClass( "org.eclipse.epp.internal.mpc.core.model.Node" ) ) != null ) //$NON-NLS-1$
 		{
-			updateUrl = NeonDecompilerMarketplace.getUpdateUrl( monitor );
+			updateUrl = getUpdateUrl( nodeClass, monitor );
 		}
 
 		ProvisioningSession session = ProvisioningUI.getDefaultUI( ).getSession( );
@@ -177,6 +179,31 @@ public class DecompilerUpdateHandler implements IDecompilerUpdateHandler
 		}
 
 		return null;
+	}
+
+	@SuppressWarnings({
+			"rawtypes"
+	})
+	public static String getUpdateUrl( Class nodeClass, IProgressMonitor monitor ) throws Exception
+	{
+		DefaultMarketplaceService service = new DefaultMarketplaceService(
+				new URL( "http://marketplace.eclipse.org" ) ); //$NON-NLS-1$
+
+		Object node = nodeClass.newInstance( );
+
+		ReflectionUtils.invokeMethod( node, "setId", new Class[]{
+				String.class
+		}, new Object[]{
+				"472922"
+		} );
+
+		node = ReflectionUtils.invokeMethod( service, "getNode", new Class[]{
+				nodeClass, IProgressMonitor.class
+		}, new Object[]{
+				node, monitor
+		} );
+
+		return (String) ReflectionUtils.invokeMethod( node, "getUpdateurl", new Class[]{}, new Object[]{} );
 	}
 
 	private String getVersion( OSGiVersion remoteVersion )
