@@ -98,33 +98,39 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage impl
 			{
 				super.doFillIntoGrid( parent, numColumns );
 				GridData gd = (GridData) getControl( ).getLayoutData( );
-				gd.widthHint = 300;
+				gd.widthHint = 175;
 				gd.grabExcessHorizontalSpace = false;
 				gd.horizontalAlignment = SWT.BEGINNING;
 				getControl( ).setLayoutData( gd );
 			}
 		};
 
-		String defaultDecompilerType = JavaDecompilerPlugin.getDefault( )
-				.getDefalutDecompilerType( );
+		String fernLabel = Messages.getString( "JavaDecompilerPreferencePage.Decompiler.FernFlower" ); //$NON-NLS-1$
 
-		String label = Messages.getString( "JavaDecompilerPreferencePage.Decompiler.FernFlower" ); //$NON-NLS-1$
-		label = getRecommendLabel( label,
-				defaultDecompilerType.equals( DecompilerType.FernFlower ) );
-		defaultDecompiler.addItem( DecompilerType.FernFlower,
-				label,
-				DecompilerType.FernFlower );
+		boolean isAddFernFlower = false;
 
 		for ( int i = 0; i < DecompilerType.getDecompilerTypes( ).length; i++ )
 		{
 			IDecompilerDescriptor descriptor = JavaDecompilerPlugin.getDefault( )
 					.getDecompilerDescriptor( DecompilerType.getDecompilerTypes( )[i] );
-			label = descriptor.getDecompilerPreferenceLabel( ).trim( );
-			label = getRecommendLabel( label,
-					defaultDecompilerType.equals( descriptor.getDecompilerType( ) ) );
+			String label = descriptor.getDecompilerPreferenceLabel( ).trim( );
+			if ( label.compareToIgnoreCase( fernLabel ) > 0 && !isAddFernFlower )
+			{
+				defaultDecompiler.addItem( DecompilerType.FernFlower,
+						fernLabel,
+						DecompilerType.FernFlower );
+				isAddFernFlower = true;
+			}
 			defaultDecompiler.addItem( descriptor.getDecompilerType( ),
 					label,
 					descriptor.getDecompilerType( ) );
+		}
+
+		if ( !isAddFernFlower )
+		{
+			defaultDecompiler.addItem( DecompilerType.FernFlower,
+					fernLabel,
+					DecompilerType.FernFlower );
 		}
 
 		addField( defaultDecompiler );
@@ -218,18 +224,6 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage impl
 		startupGroup.layout( );
 
 		getFieldEditorParent( ).layout( );
-	}
-
-	private String getRecommendLabel( String label, boolean isRecommended )
-	{
-		if ( isRecommended )
-		{
-			char lastChar = label.charAt( label.length( ) - 1 );
-			label = label.substring( 0, label.length( ) - 1 )
-					+ Messages.getString( "JavaDecompilerPreferencePage.Label.Recommend" ) //$NON-NLS-1$ 
-					+ lastChar;
-		}
-		return label;
 	}
 
 	public void init( IWorkbench arg0 )

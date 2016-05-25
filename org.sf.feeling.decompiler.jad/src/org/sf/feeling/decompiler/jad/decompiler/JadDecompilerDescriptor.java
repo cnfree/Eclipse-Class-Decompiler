@@ -2,6 +2,7 @@
 package org.sf.feeling.decompiler.jad.decompiler;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.sf.feeling.decompiler.editor.BaseDecompilerSourceMapper;
 import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.editor.IDecompilerDescriptor;
@@ -61,6 +62,11 @@ public class JadDecompilerDescriptor implements IDecompilerDescriptor
 	public boolean isDefault( )
 	{
 		return false;
+	}
+
+	public ImageDescriptor getDecompilerIcon( )
+	{
+		return JadDecompilerPlugin.getImageDescriptor( "icons/jad_16.gif" ); //$NON-NLS-1$;
 	}
 
 }

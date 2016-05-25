@@ -2,6 +2,7 @@
 package org.sf.feeling.decompiler.cfr.decompiler;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.sf.feeling.decompiler.cfr.CfrDecompilerPlugin;
 import org.sf.feeling.decompiler.cfr.actions.DecompileWithCfrAction;
 import org.sf.feeling.decompiler.cfr.i18n.Messages;
@@ -61,6 +62,11 @@ public class CfrDecompilerDescriptor implements IDecompilerDescriptor
 	public boolean isDefault( )
 	{
 		return false;
+	}
+
+	public ImageDescriptor getDecompilerIcon( )
+	{
+		return CfrDecompilerPlugin.getImageDescriptor( "icons/cfr_16.gif" ); //$NON-NLS-1$;
 	}
 
 }

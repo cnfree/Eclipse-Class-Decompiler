@@ -2,6 +2,7 @@
 package org.sf.feeling.decompiler.procyon.decompiler;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.sf.feeling.decompiler.editor.BaseDecompilerSourceMapper;
 import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.editor.IDecompilerDescriptor;
@@ -63,4 +64,8 @@ public class ProcyonDecompilerDescriptor implements IDecompilerDescriptor
 		return false;
 	}
 
+	public ImageDescriptor getDecompilerIcon( )
+	{
+		return ProcyonDecompilerPlugin.getImageDescriptor( "icons/procyon_16.png" ); //$NON-NLS-1$;
+	}
 }

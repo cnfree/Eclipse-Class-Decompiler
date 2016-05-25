@@ -86,7 +86,14 @@ public class OpenClassWithContributionFactory extends
 
 		public ImageDescriptor getImageDescriptor( )
 		{
-			return classEditor.getImageDescriptor( );
+			if ( DecompilerType.FernFlower.equals( decompilerType ) )
+			{
+				return JavaDecompilerPlugin.getImageDescriptor( "icons/fernflower_16.png" ); //$NON-NLS-1$
+			}
+			else
+				return JavaDecompilerPlugin.getDefault( )
+						.getDecompilerDescriptor( decompilerType )
+						.getDecompilerIcon( );
 		}
 
 		public void run( )

@@ -4,6 +4,7 @@ package org.sf.feeling.decompiler.jd.decompiler;
 import jd.ide.eclipse.editors.JDSourceMapper;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.sf.feeling.decompiler.editor.BaseDecompilerSourceMapper;
 import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.editor.IDecompilerDescriptor;
@@ -63,5 +64,10 @@ public class JDCoreDecompilerDescriptor implements IDecompilerDescriptor
 	public boolean isDefault( )
 	{
 		return true;
+	}
+
+	public ImageDescriptor getDecompilerIcon( )
+	{
+		return JDCoreDecompilerPlugin.getImageDescriptor( "icons/jd_16.png" ); //$NON-NLS-1$
 	}
 }

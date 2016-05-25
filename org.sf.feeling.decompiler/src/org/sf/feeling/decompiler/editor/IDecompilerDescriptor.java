@@ -2,6 +2,7 @@
 package org.sf.feeling.decompiler.editor;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 
 public interface IDecompilerDescriptor
 {
@@ -19,4 +20,6 @@ public interface IDecompilerDescriptor
 	boolean isEnabled( );
 
 	boolean isDefault( );
+
+	ImageDescriptor getDecompilerIcon( );
 }
