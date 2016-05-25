@@ -51,7 +51,7 @@ public class DecompilerOutputUtil
 	/**
 	 * Output lines
 	 */
-	private final List javaSrcLines = new ArrayList( );
+	private final List<JavaSrcLine> javaSrcLines = new ArrayList<JavaSrcLine>( );
 
 	private final String line_separator = System.getProperty( "line.separator", //$NON-NLS-1$
 			"\r\n" ); //$NON-NLS-1$
@@ -171,6 +171,39 @@ public class DecompilerOutputUtil
 
 		// Create aligned source
 		return toString( );
+	}
+
+	public static boolean isEmpty( String str )
+	{
+		return str == null || str.length( ) == 0;
+	}
+
+	public static String replace( String text, String searchString,
+			String replacement )
+	{
+		if ( isEmpty( text ) || isEmpty( searchString ) || replacement == null )
+		{
+			return text;
+		}
+		int start = 0;
+		int end = text.indexOf( searchString, start );
+		if ( end == -1 )
+		{
+			return text;
+		}
+		int replLength = searchString.length( );
+		int increase = replacement.length( ) - replLength;
+		increase = ( increase < 0 ? 0 : increase );
+		increase *= 16;
+		StringBuffer buf = new StringBuffer( text.length( ) + increase );
+		while ( end != -1 )
+		{
+			buf.append( text.substring( start, end ) ).append( replacement );
+			start = end + replLength;
+			end = text.indexOf( searchString, 2 );
+		}
+		buf.append( text.substring( start ) );
+		return buf.toString( );
 	}
 
 	public String toString( )
@@ -447,7 +480,7 @@ public class DecompilerOutputUtil
 	/**
 	 * Make sure {@link #javaSrcLines} is at least outputLineNum entries long
 	 * (adding nulls if necessary).
-	 * 
+	 *
 	 * @param outputLineNum
 	 * @return the {@link JavaSrcLine} at index outputLineNum (creating one if
 	 *         one doesn't already exist).
@@ -464,7 +497,7 @@ public class DecompilerOutputUtil
 		}
 
 		// Create an output entry at the outputLineNum index
-		JavaSrcLine javaSrcLine = (JavaSrcLine) javaSrcLines.get( outputLineNum );
+		JavaSrcLine javaSrcLine = javaSrcLines.get( outputLineNum );
 		if ( javaSrcLine == null )
 		{
 			javaSrcLine = new JavaSrcLine( );
@@ -480,32 +513,36 @@ public class DecompilerOutputUtil
 			return;
 
 		int offset = 1;
-
-		/*
-		 * Example:
-		 * 
-		 * 19: / / public static boolean isTranslucencySupported(Translucency
-		 * paramTranslucency) 20: / / { 21: / 105 / switch
-		 * (1.$SwitchMap$com$sun$awt$AWTUtilities$Translucency
-		 * [paramTranslucency.ordinal()]) 22: / / { 23: / / case 1: 24: / 107 /
-		 * return isWindowShapingSupported(); # addAbove(19, 21, 105)
-		 * javaSrcLines[105] = [21] is already set when this method is called.
-		 * This method creates the following entries in javaSrcLines:
-		 * javaSrcLines[103] = [19] javaSrcLines[104] = [20] # addAbove(19, 24,
-		 * 107) javaSrcLines[107] = [24] is already set when this method is
-		 * called. This method creates the following entries in javaSrcLines:
+		/* Example:
+		 *
+		 * 19: /     /   public static boolean isTranslucencySupported(Translucency paramTranslucency)
+		 * 20: /     /   {
+		 * 21: / 105 /     switch (1.$SwitchMap$com$sun$awt$AWTUtilities$Translucency[paramTranslucency.ordinal()])
+		 * 22: /     /     {
+		 * 23: /     /     case 1:
+		 * 24: / 107 /       return isWindowShapingSupported();
+		 *
+		 * # addAbove(19, 21, 105)
+		 * javaSrcLines[105] = [21] is already set when this method is called. This method creates the
+		 * following entries in javaSrcLines:
+		 * javaSrcLines[103] = [19]
+		 * javaSrcLines[104] = [20]
+		 *
+		 * # addAbove(19, 24, 107)
+		 * javaSrcLines[107] = [24] is already set when this method is called. This method creates the
+		 * following entries in javaSrcLines:
 		 * javaSrcLines[106] = [23]
-		 * 
-		 * javaSrcLines[105] already has an entry so we add input line 22 to
-		 * javaSrcLines[106]: javaSrcLines[105] = [22,23]
-		 * 
+		 *
+		 * javaSrcLines[105] already has an entry so we add input line 22 to javaSrcLines[106]:
+		 * javaSrcLines[105] = [22,23]
+		 *
 		 * The result is the following folding of the code:
-		 * 
-		 * 103: / / public static boolean isTranslucencySupported(Translucency
-		 * paramTranslucency) 104: / / { 105: / 105 / switch
-		 * (1.$SwitchMap$com$sun$awt$AWTUtilities$Translucency
-		 * [paramTranslucency.ordinal()]) 106: / / {/ / case 1: 107: / 107 /
-		 * return isWindowShapingSupported();
+		 *
+		 * 103: /     /   public static boolean isTranslucencySupported(Translucency paramTranslucency)
+		 * 104: /     /   {
+		 * 105: / 105 /     switch (1.$SwitchMap$com$sun$awt$AWTUtilities$Translucency[paramTranslucency.ordinal()])
+		 * 106: /     /     {/     /     case 1:
+		 * 107: / 107 /       return isWindowShapingSupported();
 		 */
 
 		// Iterate backwards through the input lines towards inputBeginLineNo
@@ -513,7 +550,7 @@ public class DecompilerOutputUtil
 		{
 
 			int offsetInputLine = inputLineNo - offset;
-			InputLine inputLine = (InputLine) inputLines.get( offsetInputLine );
+			InputLine inputLine = inputLines.get( offsetInputLine );
 
 			if ( inputLine.outputLineNum == -1 )
 			{
@@ -544,13 +581,13 @@ public class DecompilerOutputUtil
 					{
 
 						int innerOffsetInputLine = inputLineNo - innerOffset;
-						inputLine = (InputLine) inputLines.get( innerOffsetInputLine );
+						inputLine = inputLines.get( innerOffsetInputLine );
 						if ( inputLine.outputLineNum == -1 )
 						{
 							// Found an input line without a source line number
 							// - add it to javaSrcLineNext
 							javaSrcLineNext.inputLines.add( 0,
-									new Integer( innerOffsetInputLine ) );
+									innerOffsetInputLine );
 							inputLine.calculatedNumLineJavaSrc = offsetOutputLineNext;
 						}
 						else
@@ -568,7 +605,7 @@ public class DecompilerOutputUtil
 				}
 
 				// Add the offsetInputLine to the current javaSrcLine
-				javaSrcLine.inputLines.add( new Integer( offsetInputLine ) );
+				javaSrcLine.inputLines.add( offsetInputLine );
 				inputLine.calculatedNumLineJavaSrc = offsetOutputLine;
 			}
 			else
@@ -592,7 +629,7 @@ public class DecompilerOutputUtil
 		{
 
 			int offsetInputLine = inputLineNo + offset;
-			InputLine outputLine = (InputLine) inputLines.get( offsetInputLine );
+			InputLine outputLine = inputLines.get( offsetInputLine );
 
 			if ( outputLine.outputLineNum == -1 )
 			{
@@ -615,12 +652,12 @@ public class DecompilerOutputUtil
 					{
 
 						int innerOffsetInputLine = inputLineNo + innerOffset;
-						outputLine = (InputLine) inputLines.get( innerOffsetInputLine );
+						outputLine = inputLines.get( innerOffsetInputLine );
 						if ( outputLine.outputLineNum == -1 )
 						{
 							// Found an input line without a source line number
 							// - add it to javaSrcLineNext
-							javaSrcLinePrev.inputLines.add( new Integer( innerOffsetInputLine ) );
+							javaSrcLinePrev.inputLines.add( innerOffsetInputLine );
 							outputLine.calculatedNumLineJavaSrc = offsetOutputLinePrev;
 						}
 						else
@@ -636,7 +673,7 @@ public class DecompilerOutputUtil
 					// Run out of lines to process - bail out
 					break;
 				}
-				javaSrcLine.inputLines.add( new Integer( offsetInputLine ) );
+				javaSrcLine.inputLines.add( offsetInputLine );
 				outputLine.calculatedNumLineJavaSrc = offsetOutputLine;
 			}
 			else
@@ -652,10 +689,9 @@ public class DecompilerOutputUtil
 
 	private void processTypes( AbstractTypeDeclaration rootType )
 	{
-		List declarations = rootType.bodyDeclarations( );
-		for ( int i = 0; i < declarations.size( ); i++ )
+		List<?> declarations = rootType.bodyDeclarations( );
+		for ( Object declaration : declarations )
 		{
-			Object declaration = declarations.get( i );
 			if ( declaration instanceof AbstractTypeDeclaration )
 			{
 				AbstractTypeDeclaration typeDeclaration = (AbstractTypeDeclaration) declaration;
@@ -678,7 +714,7 @@ public class DecompilerOutputUtil
 		{
 
 			// Get the output line number
-			InputLine inputLine = (InputLine) inputLines.get( inputLineNo );
+			InputLine inputLine = inputLines.get( inputLineNo );
 			int numLineJavaSrc = inputLine.outputLineNum;
 			if ( numLineJavaSrc == -1 )
 				numLineJavaSrc = inputLine.calculatedNumLineJavaSrc;
@@ -707,21 +743,21 @@ public class DecompilerOutputUtil
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void processMembers( AbstractTypeDeclaration rootType )
 	{
 
 		// Iterate over the declarations in this type
-		List bodyDeclarations = new ArrayList( );
+		List<Object> bodyDeclarations = new ArrayList<Object>( );
 		if ( rootType instanceof EnumDeclaration )
 		{
 			EnumDeclaration enumDeclaration = (EnumDeclaration) rootType;
-			List enumDeclarations = enumDeclaration.enumConstants( );
+			List<?> enumDeclarations = enumDeclaration.enumConstants( );
 
 			// Iterate over the enum constant declarations
 			int lastInputLineNo = -1;
-			for ( int i = 0; i < enumDeclarations.size( ); i++ )
+			for ( Object enumDeclObj : enumDeclarations )
 			{
-				Object enumDeclObj = enumDeclarations.get( i );
 				if ( enumDeclObj instanceof EnumConstantDeclaration )
 				{
 					ASTNode element = (ASTNode) enumDeclObj;
@@ -739,9 +775,8 @@ public class DecompilerOutputUtil
 		}
 		bodyDeclarations.addAll( rootType.bodyDeclarations( ) );
 
-		for ( int i = 0; i < bodyDeclarations.size( ); i++ )
+		for ( Object bodyDeclaration : bodyDeclarations )
 		{
-			Object bodyDeclaration = bodyDeclarations.get( i );
 			if ( ( bodyDeclaration instanceof MethodDeclaration )
 					|| ( bodyDeclaration instanceof Initializer )
 					|| ( bodyDeclaration instanceof FieldDeclaration )
@@ -768,7 +803,7 @@ public class DecompilerOutputUtil
 		{
 
 			// Parse the commented line number if available
-			InputLine inputLine = (InputLine) inputLines.get( inputNumLine );
+			InputLine inputLine = inputLines.get( inputNumLine );
 			inputLine.outputLineNum = parseJavaLineNumber( inputLine.line );
 
 			if ( inputLine.outputLineNum > 1 )
@@ -780,7 +815,7 @@ public class DecompilerOutputUtil
 
 				// Add the input line to the output JavaSrcLine
 				JavaSrcLine javaSrcLine = initJavaSrcListItem( inputLine.outputLineNum );
-				javaSrcLine.inputLines.add( new Integer( inputNumLine ) );
+				javaSrcLine.inputLines.add( inputNumLine );
 				addAbove( inputBeginLine, inputNumLine, inputLine.outputLineNum );
 			}
 		}
@@ -798,47 +833,13 @@ public class DecompilerOutputUtil
 		}
 
 		// Recurse into inner types and process their methods
-		List bodyDeclarations = rootType.bodyDeclarations( );
-		for ( int i = 0; i < bodyDeclarations.size( ); i++ )
+		List<?> bodyDeclarations = rootType.bodyDeclarations( );
+		for ( Object bodyDeclaration : bodyDeclarations )
 		{
-			Object bodyDeclaration = bodyDeclarations.get( i );
 			if ( bodyDeclaration instanceof AbstractTypeDeclaration )
 			{
 				processElements( (AbstractTypeDeclaration) bodyDeclaration );
 			}
 		}
-	}
-
-	public static boolean isEmpty( String str )
-	{
-		return str == null || str.length( ) == 0;
-	}
-
-	public static String replace( String text, String searchString,
-			String replacement )
-	{
-		if ( isEmpty( text ) || isEmpty( searchString ) || replacement == null )
-		{
-			return text;
-		}
-		int start = 0;
-		int end = text.indexOf( searchString, start );
-		if ( end == -1 )
-		{
-			return text;
-		}
-		int replLength = searchString.length( );
-		int increase = replacement.length( ) - replLength;
-		increase = ( increase < 0 ? 0 : increase );
-		increase *= 16;
-		StringBuffer buf = new StringBuffer( text.length( ) + increase );
-		while ( end != -1 )
-		{
-			buf.append( text.substring( start, end ) ).append( replacement );
-			start = end + replLength;
-			end = text.indexOf( searchString, 2 );
-		}
-		buf.append( text.substring( start ) );
-		return buf.toString( );
 	}
 }
