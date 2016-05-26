@@ -28,7 +28,7 @@ public class ProcyonSourceMapper extends BaseDecompilerSourceMapper
 	public ProcyonSourceMapper( )
 	{
 		super( new Path( "." ), "", new HashMap( ) ); //$NON-NLS-1$ //$NON-NLS-2$
-		decompiler = new ProcyonDecompiler( );
+		origionalDecompiler = new ProcyonDecompiler( );
 	}
 
 	protected void printDecompileReport( StringBuffer source,
@@ -43,10 +43,10 @@ public class ProcyonSourceMapper extends BaseDecompilerSourceMapper
 				.append( decompilationTime )
 				.append( " ms\n" ); //$NON-NLS-1$
 		source.append( "\t" //$NON-NLS-1$
-				+ decompiler.getLog( )
+				+ origionalDecompiler.getLog( )
 						.replaceAll( "\t", "" ) //$NON-NLS-1$ //$NON-NLS-2$
 						.replaceAll( "\n\\s*", "\n\t" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-		exceptions.addAll( decompiler.getExceptions( ) );
+		exceptions.addAll( origionalDecompiler.getExceptions( ) );
 		logExceptions( exceptions, source );
 		source.append( "\n\tDecompiled with Procyon " //$NON-NLS-1$
 				+ Procyon.version( )

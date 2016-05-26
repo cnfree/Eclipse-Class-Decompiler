@@ -26,7 +26,7 @@ public class JadSourceMapper extends BaseDecompilerSourceMapper
 	public JadSourceMapper( )
 	{
 		super( new Path( "." ), "", new HashMap( ) ); //$NON-NLS-1$ //$NON-NLS-2$
-		decompiler = new JadDecompiler( );
+		origionalDecompiler = new JadDecompiler( );
 	}
 
 	protected void logExceptions( Collection exceptions, StringBuffer buffer )
@@ -65,7 +65,7 @@ public class JadSourceMapper extends BaseDecompilerSourceMapper
 				.append( decompilationTime )
 				.append( " ms\n" ); //$NON-NLS-1$
 		source.append( "\t" //$NON-NLS-1$
-				+ decompiler.getLog( ).replaceAll( "\t", "" ).replaceAll( "\n", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ origionalDecompiler.getLog( ).replaceAll( "\t", "" ).replaceAll( "\n", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						"\n\t" ) ); //$NON-NLS-1$
 		logExceptions( exceptions, source );
 		source.append( "\n*/" ); //$NON-NLS-1$

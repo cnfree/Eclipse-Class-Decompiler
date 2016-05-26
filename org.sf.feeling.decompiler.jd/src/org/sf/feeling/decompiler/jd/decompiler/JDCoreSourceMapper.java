@@ -37,7 +37,7 @@ public class JDCoreSourceMapper extends JDSourceMapper
 		{
 			JavaDecompilerPlugin.logError( e, e.getMessage( ) );
 		}
-		decompiler = new JDCoreDecompiler( this );
+		origionalDecompiler = new JDCoreDecompiler( this );
 	}
 
 	protected void printDecompileReport( StringBuffer source,
@@ -52,10 +52,10 @@ public class JDCoreSourceMapper extends JDSourceMapper
 				.append( decompilationTime )
 				.append( " ms\n" ); //$NON-NLS-1$
 		source.append( "\t" //$NON-NLS-1$
-				+ decompiler.getLog( )
+				+ origionalDecompiler.getLog( )
 						.replaceAll( "\t", "" ) //$NON-NLS-1$ //$NON-NLS-2$
 						.replaceAll( "\n\\s*", "\n\t" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-		exceptions.addAll( decompiler.getExceptions( ) );
+		exceptions.addAll( origionalDecompiler.getExceptions( ) );
 		logExceptions( exceptions, source );
 		source.append( "\n*/" ); //$NON-NLS-1$
 	}
