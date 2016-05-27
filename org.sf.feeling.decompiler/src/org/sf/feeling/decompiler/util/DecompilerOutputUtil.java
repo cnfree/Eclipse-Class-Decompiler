@@ -274,7 +274,7 @@ public class DecompilerOutputUtil
 								- line_separator.length( ) )
 						{
 							realignOutput.replace( index, index
-									+ line_separator.length( ), "" );
+									+ line_separator.length( ), "" ); //$NON-NLS-1$
 
 							for ( int j = 0; j < beforeLines.size( ); j++ )
 							{
@@ -370,7 +370,7 @@ public class DecompilerOutputUtil
 		if ( i == -1 )
 		{
 			width = 0;
-			number = "";
+			number = ""; //$NON-NLS-1$
 		}
 		if ( width < lineNumberWidth )
 		{

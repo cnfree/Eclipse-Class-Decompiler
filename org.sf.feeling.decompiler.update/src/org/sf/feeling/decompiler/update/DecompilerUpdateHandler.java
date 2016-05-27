@@ -191,19 +191,19 @@ public class DecompilerUpdateHandler implements IDecompilerUpdateHandler
 
 		Object node = nodeClass.newInstance( );
 
-		ReflectionUtils.invokeMethod( node, "setId", new Class[]{
+		ReflectionUtils.invokeMethod( node, "setId", new Class[]{ //$NON-NLS-1$
 				String.class
 		}, new Object[]{
-				"472922"
+				"472922" //$NON-NLS-1$
 		} );
 
-		node = ReflectionUtils.invokeMethod( service, "getNode", new Class[]{
+		node = ReflectionUtils.invokeMethod( service, "getNode", new Class[]{ //$NON-NLS-1$
 				nodeClass, IProgressMonitor.class
 		}, new Object[]{
 				node, monitor
 		} );
 
-		return (String) ReflectionUtils.invokeMethod( node, "getUpdateurl", new Class[]{}, new Object[]{} );
+		return (String) ReflectionUtils.invokeMethod( node, "getUpdateurl", new Class[]{}, new Object[]{} ); //$NON-NLS-1$
 	}
 
 	private String getVersion( OSGiVersion remoteVersion )

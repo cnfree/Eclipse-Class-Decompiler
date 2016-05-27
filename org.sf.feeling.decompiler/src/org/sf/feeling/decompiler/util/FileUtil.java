@@ -447,7 +447,7 @@ public class FileUtil
 				File file = files[i];
 				if(file.isDirectory( ))
 					continue;
-				ze = new ZipEntry( ( classPackage.length( ) > 0 ? ( classPackage + "/" ) : "" ) + file.getName( ) ); //$NON-NLS-1$
+				ze = new ZipEntry( ( classPackage.length( ) > 0 ? ( classPackage + "/" ) : "" ) + file.getName( ) ); //$NON-NLS-1$ //$NON-NLS-2$
 				ze.setSize( file.length( ) );
 				ze.setTime( file.lastModified( ) );
 				zos.putNextEntry( ze );

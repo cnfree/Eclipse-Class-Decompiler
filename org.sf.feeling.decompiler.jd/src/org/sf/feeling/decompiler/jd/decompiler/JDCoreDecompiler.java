@@ -75,8 +75,8 @@ public class JDCoreDecompiler implements IDecompiler
 						true,
 						new LazyLoader( null ) );
 				structClass.releaseResources( );
-				classPackage = structClass.qualifiedName.replace( "/"
-						+ className.replaceAll( "(?i)\\.class", "" ), "" );
+				classPackage = structClass.qualifiedName.replace( "/" //$NON-NLS-1$
+						+ className.replaceAll( "(?i)\\.class", "" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 
 			FileUtil.zipDir( workingDir, classPackage, zipFileName );
@@ -90,7 +90,7 @@ public class JDCoreDecompiler implements IDecompiler
 			}
 
 			source = mapper.decompile( zipFileName,
-					( classPackage.length( ) > 0 ? ( classPackage + "/" ) : "" )
+					( classPackage.length( ) > 0 ? ( classPackage + "/" ) : "" ) //$NON-NLS-1$ //$NON-NLS-2$
 							+ className );
 
 			zipFile.delete( );

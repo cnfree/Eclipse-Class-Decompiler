@@ -47,7 +47,7 @@ public class DecompilerSelectionModel extends SelectionModel
 						items.add( getEntryItem( entry ) );
 					}
 				}
-				ReflectionUtils.setFieldValue( entry, "operation", Operation.CHANGE );
+				ReflectionUtils.setFieldValue( entry, "operation", Operation.CHANGE ); //$NON-NLS-1$
 			}
 		}
 		return Collections.unmodifiableSet( items );
