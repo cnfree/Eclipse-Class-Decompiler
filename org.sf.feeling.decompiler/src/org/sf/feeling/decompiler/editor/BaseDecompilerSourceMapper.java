@@ -46,11 +46,13 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 		IPackageFragment pkgFrag = type.getPackageFragment( );
 		IPackageFragmentRoot root = (IPackageFragmentRoot) pkgFrag.getParent( );
 
-		if ( originalSourceMapper.containsKey( root ) && !always )
+		char[] attachedSource = null;
+		if ( originalSourceMapper.containsKey( root ) )
 		{
-			char[] attachedSource = ( (SourceMapper) originalSourceMapper.get( root ) ).findSource( type,
+			attachedSource = ( (SourceMapper) originalSourceMapper.get( root ) ).findSource( type,
 					info );
-			if ( attachedSource != null )
+
+			if ( attachedSource != null && !always )
 			{
 				isAttachedSource = true;
 				return attachedSource;
@@ -59,7 +61,9 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 
 		if ( info == null )
 		{
-			return null;
+			if ( always )
+				return null;
+			return attachedSource;
 		}
 
 		try
@@ -73,7 +77,7 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 						&& !always
 						&& !( sourceMapper instanceof DecompilerSourceMapper ) )
 				{
-					char[] attachedSource = sourceMapper.findSource( type, info );
+					attachedSource = sourceMapper.findSource( type, info );
 					if ( attachedSource != null )
 					{
 						isAttachedSource = true;

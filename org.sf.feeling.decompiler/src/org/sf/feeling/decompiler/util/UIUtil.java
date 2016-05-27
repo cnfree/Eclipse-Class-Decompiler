@@ -29,6 +29,7 @@ import org.eclipse.jdt.internal.ui.navigator.IExtensionStateConstants.Values;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.ISelectionService;
@@ -48,12 +49,19 @@ public class UIUtil
 
 	public static JavaDecompilerClassFileEditor getActiveEditor( )
 	{
-		IWorkbenchPart editor = getActiveEditor( true );
-		if ( editor instanceof JavaDecompilerClassFileEditor )
-		{
-			return (JavaDecompilerClassFileEditor) editor;
-		}
-		return null;
+		final JavaDecompilerClassFileEditor[] editors = new JavaDecompilerClassFileEditor[1];
+		Display.getDefault( ).syncExec( new Runnable( ) {
+
+			public void run( )
+			{
+				IWorkbenchPart editor = getActiveEditor( true );
+				if ( editor instanceof JavaDecompilerClassFileEditor )
+				{
+					editors[0] = (JavaDecompilerClassFileEditor) editor;
+				}
+			}
+		} );
+		return editors[0];
 	}
 
 	public static List getActiveSelection( )
@@ -92,7 +100,8 @@ public class UIUtil
 
 	public static boolean isDebugPerspective( )
 	{
-		return "org.eclipse.debug.ui.DebugPerspective".equals( getActivePerspectiveId( ) ); //$NON-NLS-1$
+		return "org.eclipse.debug.ui.DebugPerspective" //$NON-NLS-1$
+				.equals( getActivePerspectiveId( ) );
 	}
 
 	public static List getSelectedElements( ISelectionService selService,
@@ -205,8 +214,8 @@ public class UIUtil
 	{
 		IWorkbenchWindow window = PlatformUI.getWorkbench( )
 				.getActiveWorkbenchWindow( );
-		final List selectedJars = getSelectedElements( window.getSelectionService( ),
-				IPackageFragmentRoot.class );
+		final List selectedJars = getSelectedElements(
+				window.getSelectionService( ), IPackageFragmentRoot.class );
 		if ( selectedJars.size( ) == 1 )
 		{
 			return selectedJars;
@@ -215,10 +224,10 @@ public class UIUtil
 		if ( selectedJars.size( ) > 1 )
 			return null;
 
-		final List selectedPackages = getSelectedElements( window.getSelectionService( ),
-				IPackageFragment.class );
-		final List selectedClasses = getSelectedElements( window.getSelectionService( ),
-				IClassFile.class );
+		final List selectedPackages = getSelectedElements(
+				window.getSelectionService( ), IPackageFragment.class );
+		final List selectedClasses = getSelectedElements(
+				window.getSelectionService( ), IClassFile.class );
 		selectedClasses.addAll( selectedPackages );
 		if ( !selectedClasses.isEmpty( ) )
 		{
@@ -236,30 +245,34 @@ public class UIUtil
 			IWorkbenchPart view = getActiveEditor( true );
 			if ( view != null )
 			{
-				if ( view.getSite( )
-						.getId( )
-						.equals( "org.eclipse.ui.navigator.ProjectExplorer" ) ) //$NON-NLS-1$
+				if ( view.getSite( ).getId( ).equals(
+						"org.eclipse.ui.navigator.ProjectExplorer" ) ) //$NON-NLS-1$
 				{
 					CommonNavigator explorer = (CommonNavigator) view;
-					Field field = CommonNavigator.class.getDeclaredField( "commonManager" ); //$NON-NLS-1$
+					Field field = CommonNavigator.class
+							.getDeclaredField( "commonManager" ); //$NON-NLS-1$
 					if ( field != null )
 					{
 						field.setAccessible( true );
-						CommonNavigatorManager manager = (CommonNavigatorManager) field.get( explorer );
+						CommonNavigatorManager manager = (CommonNavigatorManager) field
+								.get( explorer );
 
-						field = CommonNavigatorManager.class.getDeclaredField( "contentService" ); //$NON-NLS-1$
+						field = CommonNavigatorManager.class
+								.getDeclaredField( "contentService" ); //$NON-NLS-1$
 						if ( field != null )
 						{
 							field.setAccessible( true );
-							INavigatorContentService service = (INavigatorContentService) field.get( manager );
-							IExtensionStateModel model = service.findStateModel( "org.eclipse.jdt.java.ui.javaContent" ); //$NON-NLS-1$
-							isFlat = model.getBooleanProperty( Values.IS_LAYOUT_FLAT );
+							INavigatorContentService service = (INavigatorContentService) field
+									.get( manager );
+							IExtensionStateModel model = service.findStateModel(
+									"org.eclipse.jdt.java.ui.javaContent" ); //$NON-NLS-1$
+							isFlat = model.getBooleanProperty(
+									Values.IS_LAYOUT_FLAT );
 						}
 					}
 				}
-				else if ( view.getSite( )
-						.getId( )
-						.equals( "org.eclipse.jdt.ui.PackageExplorer" ) ) //$NON-NLS-1$
+				else if ( view.getSite( ).getId( ).equals(
+						"org.eclipse.jdt.ui.PackageExplorer" ) ) //$NON-NLS-1$
 				{
 					PackageExplorerPart explorer = (PackageExplorerPart) view;
 					isFlat = explorer.isFlatLayout( );

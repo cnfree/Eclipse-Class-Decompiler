@@ -49,6 +49,7 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 
 	public static final String ID = "org.sf.feeling.decompiler.ClassFileEditor"; //$NON-NLS-1$
 	public static final String MARK = "/*** Eclipse Class Decompiler plugin, copyright (c) 2016 Chen Chao (cnfree2000@hotmail.com) ***/"; //$NON-NLS-1$
+	private IBuffer classBuffer;
 
 	public JavaDecompilerClassFileEditor( )
 	{
@@ -120,9 +121,9 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 					return false;
 				}
 				char[] markedSrc = src;
-				IBuffer buffer = BufferManager.createBuffer( cf );
-				buffer.setContents( markedSrc );
-				getBufferManager( ).addBuffer( buffer );
+				classBuffer = BufferManager.createBuffer( cf );
+				classBuffer.setContents( markedSrc );
+				getBufferManager( ).addBuffer( classBuffer );
 				sourceMapper.mapSource( cf.getType( ), markedSrc, true );
 
 				ClassFileSourceMap.updateSource( getBufferManager( ),
@@ -135,6 +136,12 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 
 		}
 		return false;
+	}
+
+	
+	public IBuffer getClassBuffer( )
+	{
+		return classBuffer;
 	}
 
 	/**
