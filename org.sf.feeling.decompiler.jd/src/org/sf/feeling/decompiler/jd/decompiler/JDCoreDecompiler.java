@@ -58,7 +58,7 @@ public class JDCoreDecompiler implements IDecompiler
 		source = ""; //$NON-NLS-1$
 		Boolean displayNumber = null;
 
-		File workingDir = new File( root ); //$NON-NLS-1$
+		File workingDir = new File( root ); // $NON-NLS-1$
 
 		File zipFile = new File( System.getProperty( "java.io.tmpdir" ), //$NON-NLS-1$
 				className.replaceAll( "(?i)\\.class", System.currentTimeMillis( ) + ".jar" ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -70,8 +70,7 @@ public class JDCoreDecompiler implements IDecompiler
 			{
 				DecompilerContext.initContext( new HashMap<String, Object>( ) );
 				DecompilerContext.setCounterContainer( new CounterContainer( ) );
-				StructClass structClass = new StructClass( FileUtil.getBytes( new File( root,
-						className ) ),
+				StructClass structClass = new StructClass( FileUtil.getBytes( new File( root, className ) ),
 						true,
 						new LazyLoader( null ) );
 				structClass.releaseResources( );
@@ -83,15 +82,12 @@ public class JDCoreDecompiler implements IDecompiler
 
 			if ( UIUtil.isDebugPerspective( ) )
 			{
-				displayNumber = JavaDecompilerPlugin.getDefault( )
-						.isDisplayLineNumber( );
-				JavaDecompilerPlugin.getDefault( )
-						.displayLineNumber( Boolean.TRUE );
+				displayNumber = JavaDecompilerPlugin.getDefault( ).isDisplayLineNumber( );
+				JavaDecompilerPlugin.getDefault( ).displayLineNumber( Boolean.TRUE );
 			}
 
-			source = mapper.decompile( zipFileName,
-					( classPackage.length( ) > 0 ? ( classPackage + "/" ) : "" ) //$NON-NLS-1$ //$NON-NLS-2$
-							+ className );
+			source = mapper.decompile( zipFileName, ( classPackage.length( ) > 0 ? ( classPackage + "/" ) : "" ) //$NON-NLS-1$ //$NON-NLS-2$
+					+ className );
 
 			zipFile.delete( );
 		}
@@ -102,28 +98,30 @@ public class JDCoreDecompiler implements IDecompiler
 
 		if ( displayNumber != null )
 		{
-			JavaDecompilerPlugin.getDefault( )
-					.displayLineNumber( displayNumber );
+			JavaDecompilerPlugin.getDefault( ).displayLineNumber( displayNumber );
 		}
 
-		Pattern wp = Pattern.compile( "/\\*.+?\\*/", Pattern.DOTALL ); //$NON-NLS-1$
-		Matcher m = wp.matcher( source );
-		while ( m.find( ) )
+		if ( source != null )
 		{
-			if ( m.group( ).matches( "/\\*\\s+\\d*\\s+\\*/" ) ) //$NON-NLS-1$
-				continue;
+			Pattern wp = Pattern.compile( "/\\*.+?\\*/", Pattern.DOTALL ); //$NON-NLS-1$
+			Matcher m = wp.matcher( source );
+			while ( m.find( ) )
+			{
+				if ( m.group( ).matches( "/\\*\\s+\\d*\\s+\\*/" ) ) //$NON-NLS-1$
+					continue;
 
-			String group = m.group( );
-			group = group.replace( "/* ", "\t" ); //$NON-NLS-1$ //$NON-NLS-2$
-			group = group.replace( " */", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-			group = group.replace( " * ", "\t" ); //$NON-NLS-1$ //$NON-NLS-2$
+				String group = m.group( );
+				group = group.replace( "/* ", "\t" ); //$NON-NLS-1$ //$NON-NLS-2$
+				group = group.replace( " */", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+				group = group.replace( " * ", "\t" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-			if ( log.length( ) > 0 )
-				log += "\n"; //$NON-NLS-1$
-			log += group;
+				if ( log.length( ) > 0 )
+					log += "\n"; //$NON-NLS-1$
+				log += group;
 
-			source = source.replace( m.group( ), "" ); //$NON-NLS-1$
+				source = source.replace( m.group( ), "" ); //$NON-NLS-1$
 
+			}
 		}
 
 		time = System.currentTimeMillis( ) - start;
@@ -136,25 +134,19 @@ public class JDCoreDecompiler implements IDecompiler
 	 * 
 	 * @see IDecompiler#decompileFromArchive(String, String, String)
 	 */
-	public void decompileFromArchive( String archivePath, String packege,
-			String className )
+	public void decompileFromArchive( String archivePath, String packege, String className )
 	{
 		start = System.currentTimeMillis( );
-		File workingDir = new File( JavaDecompilerPlugin.getDefault( )
-				.getPreferenceStore( )
-				.getString( JavaDecompilerPlugin.TEMP_DIR )
-				+ "/" //$NON-NLS-1$
-				+ System.currentTimeMillis( ) );
+		File workingDir = new File(
+				JavaDecompilerPlugin.getDefault( ).getPreferenceStore( ).getString( JavaDecompilerPlugin.TEMP_DIR )
+						+ "/" //$NON-NLS-1$
+						+ System.currentTimeMillis( ) );
 
 		try
 		{
 			workingDir.mkdirs( );
-			JarClassExtractor.extract( archivePath,
-					packege,
-					className,
-					true,
-					workingDir.getAbsolutePath( ) );
-			decompile( workingDir.getAbsolutePath( ), packege, className ); //$NON-NLS-1$
+			JarClassExtractor.extract( archivePath, packege, className, true, workingDir.getAbsolutePath( ) );
+			decompile( workingDir.getAbsolutePath( ), packege, className ); // $NON-NLS-1$
 		}
 		catch ( Exception e )
 		{
