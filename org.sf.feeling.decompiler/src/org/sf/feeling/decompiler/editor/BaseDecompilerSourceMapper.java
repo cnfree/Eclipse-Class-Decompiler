@@ -225,7 +225,7 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 			IClassFile input = ( (IClassFileEditorInput) editor
 					.getEditorInput( ) ).getClassFile( );
 			IType inputType = (IType) ReflectionUtils.invokeMethod( input,
-					"getOuterMostEnclosingType",
+					"getOuterMostEnclosingType", //$NON-NLS-1$
 					new Class[0],
 					new Object[0] );
 			return type.equals( inputType );

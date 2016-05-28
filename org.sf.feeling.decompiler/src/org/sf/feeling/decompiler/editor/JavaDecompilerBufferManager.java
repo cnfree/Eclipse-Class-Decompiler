@@ -39,42 +39,10 @@ public class JavaDecompilerBufferManager extends BufferManager
 			while ( enumeration.hasMoreElements( ) )
 			{
 				IBuffer buffer = (IBuffer) enumeration.nextElement( );
-				IOpenable owner = buffer.getOwner( );
-				if ( owner instanceof IClassFile
-//						&& buffer.getContents( ) != null
-						)
-				{
-					resetBuffer( all, manager, buffer, owner );
-				}
+				( (JavaDecompilerBufferManager) manager )
+						.removeBuffer( buffer );
 			}
 		}
-	}
-
-	private static void resetBuffer( boolean all, BufferManager manager,
-			IBuffer buffer, IOpenable owner )
-	{
-		JavaDecompilerBufferManager jManager = (JavaDecompilerBufferManager) manager;
-		jManager.removeBuffer( buffer );
-//		if ( !all ) // restore buffers for files without source
-//		{
-//			IClassFile cf = (IClassFile) owner;
-//			String realSource = null;
-//			try
-//			{
-//				realSource = cf.getSource( );
-//			}
-//			catch ( JavaModelException e )
-//			{
-//				IStatus err = new Status( IStatus.ERROR,
-//						JavaDecompilerPlugin.PLUGIN_ID,
-//						0,
-//						"failed to get source while flushing buffers", //$NON-NLS-1$
-//						e );
-//				JavaDecompilerPlugin.getDefault( ).getLog( ).log( err );
-//			}
-//			if ( realSource == null )
-//				jManager.addBuffer( buffer );
-//		}
 	}
 
 	public JavaDecompilerBufferManager( BufferManager manager )
