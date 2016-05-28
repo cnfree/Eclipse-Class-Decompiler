@@ -14,6 +14,8 @@ package org.sf.feeling.decompiler.editor;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -40,6 +42,7 @@ import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.util.ClassUtil;
 import org.sf.feeling.decompiler.util.DecompileUtil;
+import org.sf.feeling.decompiler.util.DecompilerOutputUtil;
 import org.sf.feeling.decompiler.util.FileUtil;
 import org.sf.feeling.decompiler.util.ReflectionUtils;
 import org.sf.feeling.decompiler.util.UIUtil;
@@ -101,7 +104,8 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 					|| ( origSrc != null
 							&& !always
 							&& !origSrc.startsWith( MARK )
-							&& ( !reuseBuf || force ) ) )
+							&& ( !reuseBuf || force ) )
+					|| debugOptionChange( origSrc ) )
 			{
 				DecompilerSourceMapper sourceMapper = SourceMapperFactory
 						.getSourceMapper( decompilerType );
@@ -148,6 +152,17 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 
 		}
 		return false;
+	}
+
+	private boolean debugOptionChange( String source )
+	{
+		Pattern pattern = Pattern.compile( "/\\*\\s*\\d+\\s*\\*/" ); //$NON-NLS-1$
+		Matcher matcher = pattern.matcher( source );
+		boolean isDebugSource = matcher.find( )
+				|| source.indexOf( DecompilerOutputUtil.NO_LINE_NUMBER ) != -1;
+
+		return isDebugSource != ( UIUtil.isDebugPerspective( )
+				|| JavaDecompilerPlugin.getDefault( ).isDisplayLineNumber( ) );
 	}
 
 	public IBuffer getClassBuffer( )
