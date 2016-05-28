@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Eclipse Class Decompiler Update
 Bundle-SymbolicName: org.sf.feeling.decompiler.update;singleton:=true
-Bundle-Version: 2.6.0.qualifier
+Bundle-Version: 2.6.1.qualifier
 Bundle-Activator: org.sf.feeling.decompiler.update.DecompilerUpdatePlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
