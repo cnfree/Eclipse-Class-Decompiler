@@ -13,12 +13,9 @@ package org.sf.feeling.decompiler.editor;
 
 import java.util.Enumeration;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.IOpenable;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.BufferManager;
 import org.eclipse.jdt.internal.ui.javaeditor.IClassFileEditorInput;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -44,9 +41,8 @@ public class JavaDecompilerBufferManager extends BufferManager
 				IBuffer buffer = (IBuffer) enumeration.nextElement( );
 				IOpenable owner = buffer.getOwner( );
 				if ( owner instanceof IClassFile
-						&& buffer.getContents( ) != null
-						&& buffer.getContents( ).startsWith(
-								JavaDecompilerClassFileEditor.MARK ) )
+//						&& buffer.getContents( ) != null
+						)
 				{
 					resetBuffer( all, manager, buffer, owner );
 				}
@@ -59,26 +55,26 @@ public class JavaDecompilerBufferManager extends BufferManager
 	{
 		JavaDecompilerBufferManager jManager = (JavaDecompilerBufferManager) manager;
 		jManager.removeBuffer( buffer );
-		if ( !all ) // restore buffers for files without source
-		{
-			IClassFile cf = (IClassFile) owner;
-			String realSource = null;
-			try
-			{
-				realSource = cf.getSource( );
-			}
-			catch ( JavaModelException e )
-			{
-				IStatus err = new Status( IStatus.ERROR,
-						JavaDecompilerPlugin.PLUGIN_ID,
-						0,
-						"failed to get source while flushing buffers", //$NON-NLS-1$
-						e );
-				JavaDecompilerPlugin.getDefault( ).getLog( ).log( err );
-			}
-			if ( realSource == null )
-				jManager.addBuffer( buffer );
-		}
+//		if ( !all ) // restore buffers for files without source
+//		{
+//			IClassFile cf = (IClassFile) owner;
+//			String realSource = null;
+//			try
+//			{
+//				realSource = cf.getSource( );
+//			}
+//			catch ( JavaModelException e )
+//			{
+//				IStatus err = new Status( IStatus.ERROR,
+//						JavaDecompilerPlugin.PLUGIN_ID,
+//						0,
+//						"failed to get source while flushing buffers", //$NON-NLS-1$
+//						e );
+//				JavaDecompilerPlugin.getDefault( ).getLog( ).log( err );
+//			}
+//			if ( realSource == null )
+//				jManager.addBuffer( buffer );
+//		}
 	}
 
 	public JavaDecompilerBufferManager( BufferManager manager )
@@ -125,7 +121,7 @@ public class JavaDecompilerBufferManager extends BufferManager
 				buffer
 		};
 
-		if ( requestFromJavadocHover( ) )
+		if ( UIUtil.requestFromJavadocHover( ) )
 		{
 
 			if ( buffers[0] == null
@@ -160,21 +156,5 @@ public class JavaDecompilerBufferManager extends BufferManager
 		}
 
 		return buffers[0];
-	}
-
-	private boolean requestFromJavadocHover( )
-	{
-		StackTraceElement[] stacks = Thread.currentThread( ).getStackTrace( );
-		for ( int i = 0; i < stacks.length; i++ )
-		{
-			if ( stacks[i].getClassName( ).indexOf( "BinaryType" ) != -1 //$NON-NLS-1$
-					&& stacks[i].getMethodName( ).equals( "getJavadocRange" ) ) //$NON-NLS-1$
-				return false;
-
-			if ( stacks[i].getClassName( ).indexOf( "JavadocHover" ) != -1 //$NON-NLS-1$
-					&& stacks[i].getMethodName( ).equals( "getHoverInfo" ) ) //$NON-NLS-1$
-				return true;
-		}
-		return false;
 	}
 }

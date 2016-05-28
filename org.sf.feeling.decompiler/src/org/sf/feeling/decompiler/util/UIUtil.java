@@ -301,4 +301,20 @@ public class UIUtil
 		}
 		return null;
 	}
+
+	public static boolean requestFromJavadocHover( )
+	{
+		StackTraceElement[] stacks = Thread.currentThread( ).getStackTrace( );
+		for ( int i = 0; i < stacks.length; i++ )
+		{
+			if ( stacks[i].getClassName( ).indexOf( "BinaryType" ) != -1 //$NON-NLS-1$
+					&& stacks[i].getMethodName( ).equals( "getJavadocRange" ) ) //$NON-NLS-1$
+				return false;
+
+			if ( stacks[i].getClassName( ).indexOf( "JavadocHover" ) != -1 //$NON-NLS-1$
+					&& stacks[i].getMethodName( ).equals( "getHoverInfo" ) ) //$NON-NLS-1$
+				return true;
+		}
+		return false;
+	}
 }

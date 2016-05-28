@@ -34,8 +34,8 @@ import org.sf.feeling.decompiler.extension.DecompilerAdapterManager;
 import org.sf.feeling.decompiler.update.IDecompilerUpdateHandler;
 import org.sf.feeling.decompiler.util.SortMemberUtil;
 
-public class JavaDecompilerPlugin extends AbstractUIPlugin implements
-		IPropertyChangeListener
+public class JavaDecompilerPlugin extends AbstractUIPlugin
+		implements IPropertyChangeListener
 {
 
 	public static final String EDITOR_ID = "org.sf.feeling.decompiler.ClassFileEditor"; //$NON-NLS-1$
@@ -69,7 +69,8 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 		return decompilerDescriptorMap.keySet( ).toArray( new String[0] );
 	}
 
-	public IDecompilerDescriptor getDecompilerDescriptor( String decompilerType )
+	public IDecompilerDescriptor getDecompilerDescriptor(
+			String decompilerType )
 	{
 		return decompilerDescriptorMap.get( decompilerType );
 	}
@@ -81,16 +82,14 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 
 	public static void logError( Throwable t, String message )
 	{
-		JavaDecompilerPlugin.getDefault( )
-				.getLog( )
-				.log( new Status( Status.ERROR, PLUGIN_ID, 0, message, t ) );
+		JavaDecompilerPlugin.getDefault( ).getLog( ).log(
+				new Status( Status.ERROR, PLUGIN_ID, 0, message, t ) );
 	}
 
 	public static void log( int severity, Throwable t, String message )
 	{
-		JavaDecompilerPlugin.getDefault( )
-				.getLog( )
-				.log( new Status( severity, PLUGIN_ID, 0, message, t ) );
+		JavaDecompilerPlugin.getDefault( ).getLog( ).log(
+				new Status( severity, PLUGIN_ID, 0, message, t ) );
 	}
 
 	public static ImageDescriptor getImageDescriptor( String path )
@@ -120,8 +119,8 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 
 	protected void initializeDefaultPreferences( IPreferenceStore store )
 	{
-		Object[] decompilerAdapters = DecompilerAdapterManager.getAdapters( this,
-				IDecompilerDescriptor.class );
+		Object[] decompilerAdapters = DecompilerAdapterManager
+				.getAdapters( this, IDecompilerDescriptor.class );
 
 		if ( decompilerAdapters != null )
 		{
@@ -133,8 +132,8 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 					IDecompilerDescriptor descriptor = (IDecompilerDescriptor) adapter;
 					if ( descriptor.isEnabled( ) )
 					{
-						decompilerDescriptorMap.put( descriptor.getDecompilerType( ),
-								descriptor );
+						decompilerDescriptorMap.put(
+								descriptor.getDecompilerType( ), descriptor );
 					}
 				}
 			}
@@ -155,8 +154,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 
 	public void propertyChange( PropertyChangeEvent event )
 	{
-		if ( event.getProperty( ).equals( IGNORE_EXISTING )
-				&& event.getNewValue( ).equals( Boolean.FALSE ) )
+		if ( event.getProperty( ).equals( IGNORE_EXISTING ) )
 			JavaDecompilerBufferManager.closeDecompilerBuffers( false );
 	}
 
@@ -174,7 +172,8 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 		{
 			preferenceStore = super.getPreferenceStore( );
 
-			IDecompilerDescriptor descriptor = getDecompilerDescriptor( getPreferenceStore( ).getString( DECOMPILER_TYPE ) );
+			IDecompilerDescriptor descriptor = getDecompilerDescriptor(
+					getPreferenceStore( ).getString( DECOMPILER_TYPE ) );
 			if ( descriptor == null )
 			{
 				preferenceStore.setValue( DECOMPILER_TYPE,
@@ -194,7 +193,8 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 
 	public Boolean isDisplayLineNumber( )
 	{
-		return Boolean.valueOf( getPreferenceStore( ).getBoolean( PREF_DISPLAY_LINE_NUMBERS ) );
+		return Boolean.valueOf(
+				getPreferenceStore( ).getBoolean( PREF_DISPLAY_LINE_NUMBERS ) );
 	}
 
 	public void displayLineNumber( Boolean display )
@@ -216,14 +216,15 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 
 	public String getDefalutDecompilerType( )
 	{
-		Collection<IDecompilerDescriptor> descriptors = JavaDecompilerPlugin.getDefault( )
-				.getDecompilerDescriptorMap( )
-				.values( );
+		Collection<IDecompilerDescriptor> descriptors = JavaDecompilerPlugin
+				.getDefault( ).getDecompilerDescriptorMap( ).values( );
 		if ( descriptors != null )
 		{
-			for ( Iterator iterator = descriptors.iterator( ); iterator.hasNext( ); )
+			for ( Iterator iterator = descriptors.iterator( ); iterator
+					.hasNext( ); )
 			{
-				IDecompilerDescriptor iDecompilerDescriptor = (IDecompilerDescriptor) iterator.next( );
+				IDecompilerDescriptor iDecompilerDescriptor = (IDecompilerDescriptor) iterator
+						.next( );
 				if ( iDecompilerDescriptor.isDefault( ) )
 				{
 					return iDecompilerDescriptor.getDecompilerType( );
