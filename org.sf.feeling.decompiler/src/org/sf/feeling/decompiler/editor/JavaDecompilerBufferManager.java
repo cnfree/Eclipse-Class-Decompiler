@@ -18,9 +18,7 @@ import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.IOpenable;
 import org.eclipse.jdt.internal.core.BufferManager;
 import org.eclipse.jdt.internal.ui.javaeditor.IClassFileEditorInput;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
-import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.util.UIUtil;
 
 /**
@@ -39,8 +37,7 @@ public class JavaDecompilerBufferManager extends BufferManager
 			while ( enumeration.hasMoreElements( ) )
 			{
 				IBuffer buffer = (IBuffer) enumeration.nextElement( );
-				( (JavaDecompilerBufferManager) manager )
-						.removeBuffer( buffer );
+				( (JavaDecompilerBufferManager) manager ).removeBuffer( buffer );
 			}
 		}
 	}
@@ -74,19 +71,9 @@ public class JavaDecompilerBufferManager extends BufferManager
 
 	public IBuffer getBuffer( final IOpenable owner )
 	{
-		IPreferenceStore prefs = JavaDecompilerPlugin.getDefault( )
-				.getPreferenceStore( );
-		boolean always = prefs
-				.getBoolean( JavaDecompilerPlugin.IGNORE_EXISTING );
-
-		if ( !always )
-		{
-			return super.getBuffer( owner );
-		}
-
 		IBuffer buffer = super.getBuffer( owner );
 		final IBuffer[] buffers = new IBuffer[]{
-				buffer
+			buffer
 		};
 
 		if ( UIUtil.requestFromJavadocHover( ) )
@@ -103,19 +90,15 @@ public class JavaDecompilerBufferManager extends BufferManager
 
 					public void run( )
 					{
-						JavaDecompilerClassFileEditor editor = UIUtil
-								.getActiveEditor( );
+						JavaDecompilerClassFileEditor editor = UIUtil.getActiveEditor( );
 						if ( editor != null
-								&& editor
-										.getEditorInput( ) instanceof IClassFileEditorInput )
+								&& editor.getEditorInput( ) instanceof IClassFileEditorInput )
 						{
-							IClassFile input = ( (IClassFileEditorInput) editor
-									.getEditorInput( ) ).getClassFile( );
+							IClassFile input = ( (IClassFileEditorInput) editor.getEditorInput( ) ).getClassFile( );
 							if ( owner.equals( input ) )
 							{
 								buffers[0] = editor.getClassBuffer( );
-								JavaDecompilerBufferManager.this
-										.addBuffer( buffers[0] );
+								JavaDecompilerBufferManager.this.addBuffer( buffers[0] );
 							}
 						}
 					}
