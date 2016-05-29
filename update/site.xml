@@ -3,22 +3,22 @@
    <description name="Chen Chao&apos;s Projects Update" url="http://cnfree.github.io/Eclipse-Class-Decompiler/update">
       Chen Chao&apos;s projects update site.
    </description>
-   <feature url="features/org.sf.feeling.decompiler_2.7.0.201605290054.jar" id="org.sf.feeling.decompiler" version="2.7.0.201605290054">
+   <feature url="features/org.sf.feeling.decompiler_2.7.1.201605291146.jar" id="org.sf.feeling.decompiler" version="2.7.1.201605291146">
       <category name="Eclipse Class Decompiler (Core)"/>
    </feature>
-   <feature url="features/org.sf.feeling.decompiler.jad_2.7.0.201605290054.jar" id="org.sf.feeling.decompiler.jad" version="2.7.0.201605290054" os="linux,macosx,win32" arch="x86,x86_64">
+   <feature url="features/org.sf.feeling.decompiler.jad_2.7.1.201605291146.jar" id="org.sf.feeling.decompiler.jad" version="2.7.1.201605291146" os="linux,macosx,win32" arch="x86,x86_64">
       <category name="Eclipse Class Decompiler (Optioinal)"/>
    </feature>
-   <feature url="features/org.sf.feeling.decompiler.jd_2.7.0.201605290054.jar" id="org.sf.feeling.decompiler.jd" version="2.7.0.201605290054" os="linux,macosx,win32" arch="x86,x86_64">
+   <feature url="features/org.sf.feeling.decompiler.jd_2.7.1.201605291146.jar" id="org.sf.feeling.decompiler.jd" version="2.7.1.201605291146" os="linux,macosx,win32" arch="x86,x86_64">
       <category name="Eclipse Class Decompiler (Optioinal)"/>
    </feature>
-   <feature url="features/org.sf.feeling.decompiler.procyon_2.7.0.201605290054.jar" id="org.sf.feeling.decompiler.procyon" version="2.7.0.201605290054">
+   <feature url="features/org.sf.feeling.decompiler.procyon_2.7.1.201605291146.jar" id="org.sf.feeling.decompiler.procyon" version="2.7.1.201605291146">
       <category name="Eclipse Class Decompiler (Optioinal)"/>
    </feature>
-   <feature url="features/org.sf.feeling.decompiler.cfr_2.7.0.201605290054.jar" id="org.sf.feeling.decompiler.cfr" version="2.7.0.201605290054">
+   <feature url="features/org.sf.feeling.decompiler.cfr_2.7.1.201605291146.jar" id="org.sf.feeling.decompiler.cfr" version="2.7.1.201605291146">
       <category name="Eclipse Class Decompiler (Optioinal)"/>
    </feature>
-   <feature url="features/org.sf.feeling.decompiler.source_2.7.0.201605290054.jar" id="org.sf.feeling.decompiler.source" version="2.7.0.201605290054">
+   <feature url="features/org.sf.feeling.decompiler.source_2.7.1.201605291146.jar" id="org.sf.feeling.decompiler.source" version="2.7.1.201605291146">
       <category name="Eclipse Class Decompiler (Optioinal)"/>
    </feature>
    <category-def name="Eclipse Class Decompiler (Core)" label="Eclipse Class Decompiler (Core)">
