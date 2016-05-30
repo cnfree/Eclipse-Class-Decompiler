@@ -4,8 +4,8 @@ Eclipse Class Decompiler integrates **JD**, **Jad**, **FernFlower**, **CFR**, **
 <p align="center"><img src="http://images.blogjava.net/blogjava_net/cnfree/17092/o_debugclass.png"></p>
 
 - Eclipse Marketplace Page: [https://marketplace.eclipse.org/content/eclipse-class-decompiler](https://marketplace.eclipse.org/content/eclipse-class-decompiler)
-- Plugin Update Site: [http://cnfree.github.io/Eclipse-Class-Decompiler/update](http://cnfree.github.io/Eclipse-Class-Decompiler/update)
-- Github Project Page: [http://cnfree.github.io/Eclipse-Class-Decompiler](http://cnfree.github.io/Eclipse-Class-Decompiler)
+- Plugin Update Site: [http://decompiler.chenchao.tk/update](http://decompiler.chenchao.tk/update)
+- Github Project Page: [http://decompiler.chenchao.tk](http://decompiler.chenchao.tk)
 
 ##Description
 Eclipse Class Decompiler is a plug-in for the Eclipse platform. It integrates JD, Jad, FernFlower, CFR, Procyon seamlessly with Eclipse, 
@@ -33,7 +33,7 @@ and you can debug these class files without source code directly.
   1. Launch _Eclipse_,
   2. Click on _"Help > Install New Software..."_,
   3. Click on button _"Add..."_ to add an new repository,
-  4. Enter name as _"Eclipse Class Decompiler Update Site"_ and enter location as _"http://cnfree.github.io/Eclipse-Class-Decompiler/update"_, then click on button _"OK"_,
+  4. Enter name as _"Eclipse Class Decompiler Update Site"_ and enter location as _"http://decompiler.chenchao.tk/update"_, then click on button _"OK"_,
   5. Check _"Eclipse Class Decompiler"_,
   6. Next, next, next... and restart.
   
