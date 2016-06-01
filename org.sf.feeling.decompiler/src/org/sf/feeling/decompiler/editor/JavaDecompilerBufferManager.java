@@ -59,7 +59,7 @@ public class JavaDecompilerBufferManager extends BufferManager
 
 	public void addBuffer( IBuffer buffer )
 	{
-		if ( buffer.getContents( ) == null )
+		if ( buffer == null || buffer.getContents( ) == null )
 			return;
 		super.addBuffer( buffer );
 	}
