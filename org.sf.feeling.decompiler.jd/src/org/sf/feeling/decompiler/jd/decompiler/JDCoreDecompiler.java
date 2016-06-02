@@ -80,7 +80,7 @@ public class JDCoreDecompiler implements IDecompiler
 
 			FileUtil.zipDir( workingDir, classPackage, zipFileName );
 
-			if ( UIUtil.isDebugPerspective( ) )
+			if ( UIUtil.isDebugPerspective( ) || JavaDecompilerPlugin.getDefault( ).isDebugMode( ) )
 			{
 				displayNumber = JavaDecompilerPlugin.getDefault( ).isDisplayLineNumber( );
 				JavaDecompilerPlugin.getDefault( ).displayLineNumber( Boolean.TRUE );

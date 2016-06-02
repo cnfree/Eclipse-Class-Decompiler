@@ -80,10 +80,11 @@ public class ClassUtil
 		return decompiler;
 	}
 
-	private static boolean isDebug( )
+	public static boolean isDebug( )
 	{
 		return JavaDecompilerPlugin.getDefault( ).isDisplayLineNumber( )
-				|| UIUtil.isDebugPerspective( );
+				|| UIUtil.isDebugPerspective( )
+				|| JavaDecompilerPlugin.getDefault( ).isDebugMode( );
 	}
 
 	public static boolean greatLevel6( File file )
@@ -182,17 +183,19 @@ public class ClassUtil
 
 	public static IDecompiler getDefaultDecompiler( int level, boolean debug )
 	{
-		Collection<IDecompilerDescriptor> descriptors = JavaDecompilerPlugin.getDefault( )
-				.getDecompilerDescriptorMap( )
-				.values( );
+		Collection<IDecompilerDescriptor> descriptors = JavaDecompilerPlugin
+				.getDefault( ).getDecompilerDescriptorMap( ).values( );
 		if ( descriptors != null )
 		{
-			for ( Iterator iterator = descriptors.iterator( ); iterator.hasNext( ); )
+			for ( Iterator iterator = descriptors.iterator( ); iterator
+					.hasNext( ); )
 			{
-				IDecompilerDescriptor iDecompilerDescriptor = (IDecompilerDescriptor) iterator.next( );
+				IDecompilerDescriptor iDecompilerDescriptor = (IDecompilerDescriptor) iterator
+						.next( );
 				if ( iDecompilerDescriptor.isDefault( ) )
 				{
-					IDecompiler decompiler = iDecompilerDescriptor.getDecompiler( );
+					IDecompiler decompiler = iDecompilerDescriptor
+							.getDecompiler( );
 					if ( debug )
 					{
 						if ( decompiler.supportDebug( )

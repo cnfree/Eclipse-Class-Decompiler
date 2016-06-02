@@ -161,7 +161,9 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 		boolean showLineNumber = prefs
 				.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS );
 		boolean align = prefs.getBoolean( JavaDecompilerPlugin.ALIGN );
-		if ( ( showLineNumber && align ) || UIUtil.isDebugPerspective( ) )
+		if ( ( showLineNumber && align )
+				|| UIUtil.isDebugPerspective( )
+				|| JavaDecompilerPlugin.getDefault( ).isDebugMode( ) )
 		{
 			if ( showReport )
 				code = usedDecompiler.removeComment( code );
@@ -172,7 +174,8 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 
 		StringBuffer source = new StringBuffer( );
 
-		if ( !UIUtil.isDebugPerspective( ) )
+		if ( !( UIUtil.isDebugPerspective( )
+				|| JavaDecompilerPlugin.getDefault( ).isDebugMode( ) ) )
 		{
 			boolean useSorter = prefs
 					.getBoolean( JavaDecompilerPlugin.USE_ECLIPSE_SORTER );
@@ -242,7 +245,8 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 				'/' );
 
 		Boolean displayNumber = null;
-		if ( UIUtil.isDebugPerspective( ) )
+		if ( UIUtil.isDebugPerspective( )
+				|| JavaDecompilerPlugin.getDefault( ).isDebugMode( ) )
 		{
 			displayNumber = JavaDecompilerPlugin.getDefault( )
 					.isDisplayLineNumber( );
@@ -323,7 +327,8 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 				.getPreferenceStore( );
 
 		Boolean displayNumber = null;
-		if ( UIUtil.isDebugPerspective( ) )
+		if ( UIUtil.isDebugPerspective( )
+				|| JavaDecompilerPlugin.getDefault( ).isDebugMode( ) )
 		{
 			displayNumber = JavaDecompilerPlugin.getDefault( )
 					.isDisplayLineNumber( );
@@ -362,7 +367,9 @@ public abstract class BaseDecompilerSourceMapper extends DecompilerSourceMapper
 		boolean showLineNumber = prefs
 				.getBoolean( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS );
 		boolean align = prefs.getBoolean( JavaDecompilerPlugin.ALIGN );
-		if ( ( showLineNumber && align ) || UIUtil.isDebugPerspective( ) )
+		if ( ( showLineNumber && align )
+				|| UIUtil.isDebugPerspective( )
+				|| JavaDecompilerPlugin.getDefault( ).isDebugMode( ) )
 		{
 			if ( showReport )
 				code = currentDecompiler.removeComment( code );

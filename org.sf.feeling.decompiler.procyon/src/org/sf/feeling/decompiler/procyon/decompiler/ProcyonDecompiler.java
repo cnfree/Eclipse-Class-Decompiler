@@ -26,9 +26,9 @@ import java.util.regex.Pattern;
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.procyon.ProcyonDecompilerPlugin;
+import org.sf.feeling.decompiler.util.ClassUtil;
 import org.sf.feeling.decompiler.util.FileUtil;
 import org.sf.feeling.decompiler.util.JarClassExtractor;
-import org.sf.feeling.decompiler.util.UIUtil;
 import org.sf.feeling.decompiler.util.UnicodeUtil;
 
 import com.strobel.assembler.metadata.DeobfuscationUtilities;
@@ -65,8 +65,7 @@ public class ProcyonDecompiler implements IDecompiler
 
 		boolean includeLineNumbers = false;
 		boolean stretchLines = false;
-		if ( UIUtil.isDebugPerspective( )
-				|| JavaDecompilerPlugin.getDefault( ).isDisplayLineNumber( ) )
+		if ( ClassUtil.isDebug( ) )
 		{
 			includeLineNumbers = true;
 			stretchLines = true;
@@ -81,8 +80,8 @@ public class ProcyonDecompiler implements IDecompiler
 		decompilationOptions.setSettings( settings );
 		decompilationOptions.setFullDecompilation( true );
 
-		MetadataSystem metadataSystem = new NoRetryMetadataSystem( decompilationOptions.getSettings( )
-				.getTypeLoader( ) );
+		MetadataSystem metadataSystem = new NoRetryMetadataSystem(
+				decompilationOptions.getSettings( ).getTypeLoader( ) );
 		metadataSystem.setEagerMethodLoadingEnabled( false );
 
 		TypeReference type = metadataSystem.lookupType( classPathStr );
@@ -92,7 +91,7 @@ public class ProcyonDecompiler implements IDecompiler
 		{
 			System.err.printf( "!!! ERROR: Failed to load class %s.\n", //$NON-NLS-1$
 					new Object[]{
-						classPathStr
+							classPathStr
 					} );
 			return;
 		}
@@ -101,8 +100,7 @@ public class ProcyonDecompiler implements IDecompiler
 
 		String property = "java.io.tmpdir"; //$NON-NLS-1$
 		String tempDir = System.getProperty( property );
-		File classFile = new File( tempDir, System.currentTimeMillis( )
-				+ className );
+		File classFile = new File( tempDir, System.currentTimeMillis( ) + className );
 		Writer writer = null;
 		try
 		{
@@ -110,8 +108,7 @@ public class ProcyonDecompiler implements IDecompiler
 
 			PlainTextOutput output = new PlainTextOutput( writer );
 
-			output.setUnicodeOutputEnabled( decompilationOptions.getSettings( )
-					.isUnicodeOutputEnabled( ) );
+			output.setUnicodeOutputEnabled( decompilationOptions.getSettings( ).isUnicodeOutputEnabled( ) );
 
 			TypeDecompilationResults results = decompilationOptions.getSettings( )
 					.getLanguage( )
@@ -195,24 +192,18 @@ public class ProcyonDecompiler implements IDecompiler
 	 * 
 	 * @see IDecompiler#decompileFromArchive(String, String, String)
 	 */
-	public void decompileFromArchive( String archivePath, String packege,
-			String className )
+	public void decompileFromArchive( String archivePath, String packege, String className )
 	{
 		start = System.currentTimeMillis( );
-		File workingDir = new File( JavaDecompilerPlugin.getDefault( )
-				.getPreferenceStore( )
-				.getString( JavaDecompilerPlugin.TEMP_DIR )
-				+ "/" //$NON-NLS-1$
-				+ System.currentTimeMillis( ) );
+		File workingDir = new File(
+				JavaDecompilerPlugin.getDefault( ).getPreferenceStore( ).getString( JavaDecompilerPlugin.TEMP_DIR )
+						+ "/" //$NON-NLS-1$
+						+ System.currentTimeMillis( ) );
 
 		try
 		{
 			workingDir.mkdirs( );
-			JarClassExtractor.extract( archivePath,
-					packege,
-					className,
-					true,
-					workingDir.getAbsolutePath( ) );
+			JarClassExtractor.extract( archivePath, packege, className, true, workingDir.getAbsolutePath( ) );
 			decompile( workingDir.getAbsolutePath( ), "", className ); //$NON-NLS-1$
 		}
 		catch ( Exception e )

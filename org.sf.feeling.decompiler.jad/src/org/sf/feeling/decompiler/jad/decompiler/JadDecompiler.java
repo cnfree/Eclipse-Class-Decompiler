@@ -24,6 +24,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.editor.IDecompiler;
 import org.sf.feeling.decompiler.jad.JadDecompilerPlugin;
+import org.sf.feeling.decompiler.util.ClassUtil;
 import org.sf.feeling.decompiler.util.JarClassExtractor;
 import org.sf.feeling.decompiler.util.UnicodeUtil;
 
@@ -116,28 +117,18 @@ public class JadDecompiler implements IDecompiler
 			OPTION_INDENT_TAB,
 			OPTION_VERBOSE,
 			OPTION_ANSI,
-	/* OPTION_REDSTDERR */
+			/* OPTION_REDSTDERR */
 	};
 
 	public static final String[] VALUE_OPTION_STRING = {
 			/* OPTION_DIR, */
-			OPTION_PA,
-			OPTION_PC,
-			OPTION_PE,
-			OPTION_PF,
-			OPTION_PL,
-			OPTION_PM,
-			OPTION_PP,
-	/* OPTION_EXT, */
+			OPTION_PA, OPTION_PC, OPTION_PE, OPTION_PF, OPTION_PL, OPTION_PM, OPTION_PP,
+			/* OPTION_EXT, */
 	};
 
 	public static final String[] VALUE_OPTION_INT = {
 			/* OPTION_INDENT_SPACE, */
-			OPTION_SPLITSTR_MAX,
-			OPTION_LRADIX,
-			OPTION_PI,
-			OPTION_PV,
-			OPTION_IRADIX,
+			OPTION_SPLITSTR_MAX, OPTION_LRADIX, OPTION_PI, OPTION_PV, OPTION_IRADIX,
 	};
 
 	private String source = "/* ERROR? */"; //$NON-NLS-1$
@@ -148,8 +139,7 @@ public class JadDecompiler implements IDecompiler
 	private String[] buildCmdLine( String classFileName )
 	{
 		ArrayList cmdLine = new ArrayList( );
-		IPreferenceStore settings = JavaDecompilerPlugin.getDefault( )
-				.getPreferenceStore( );
+		IPreferenceStore settings = JavaDecompilerPlugin.getDefault( ).getPreferenceStore( );
 
 		// command and special options
 		cmdLine.add( settings.getString( JadDecompilerPlugin.CMD ) );
@@ -177,11 +167,16 @@ public class JadDecompiler implements IDecompiler
 			{
 				if ( OPTION_LNC.equals( TOGGLE_OPTION[i] ) )
 				{
-					cmdLine.add( "-lnc" ); //$NON-NLS-1$
+					//cmdLine.add( "-lnc" ); //$NON-NLS-1$
 				}
 				else
 					cmdLine.add( TOGGLE_OPTION[i] );
 			}
+		}
+
+		if ( ClassUtil.isDebug( ) )
+		{
+			cmdLine.add( "-lnc" ); //$NON-NLS-1$
 		}
 
 		// integers, 0 means disabled
@@ -238,9 +233,7 @@ public class JadDecompiler implements IDecompiler
 		{
 			start = System.currentTimeMillis( );
 			errorsP.println( "\tJad reported messages/errors:" ); //$NON-NLS-1$
-			Process p = Runtime.getRuntime( ).exec( buildCmdLine( className ),
-					new String[]{},
-					workingDir );
+			Process p = Runtime.getRuntime( ).exec( buildCmdLine( className ), new String[]{}, workingDir );
 			StreamRedirectThread outRedirect = new StreamRedirectThread( "output_reader", //$NON-NLS-1$
 					p.getInputStream( ),
 					bos );
@@ -295,24 +288,18 @@ public class JadDecompiler implements IDecompiler
 	 * 
 	 * @see IDecompiler#decompileFromArchive(String, String, String)
 	 */
-	public void decompileFromArchive( String archivePath, String packege,
-			String className )
+	public void decompileFromArchive( String archivePath, String packege, String className )
 	{
 		start = System.currentTimeMillis( );
-		File workingDir = new File( JavaDecompilerPlugin.getDefault( )
-				.getPreferenceStore( )
-				.getString( JavaDecompilerPlugin.TEMP_DIR )
-				+ "/" //$NON-NLS-1$
-				+ System.currentTimeMillis( ) );
+		File workingDir = new File(
+				JavaDecompilerPlugin.getDefault( ).getPreferenceStore( ).getString( JavaDecompilerPlugin.TEMP_DIR )
+						+ "/" //$NON-NLS-1$
+						+ System.currentTimeMillis( ) );
 
 		try
 		{
 			workingDir.mkdirs( );
-			JarClassExtractor.extract( archivePath,
-					packege,
-					className,
-					true,
-					workingDir.getAbsolutePath( ) );
+			JarClassExtractor.extract( archivePath, packege, className, true, workingDir.getAbsolutePath( ) );
 			decompile( workingDir.getAbsolutePath( ), "", className ); //$NON-NLS-1$
 		}
 		catch ( Exception e )

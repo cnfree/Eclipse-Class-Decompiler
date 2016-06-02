@@ -159,6 +159,9 @@
                   name="decompilerGroup">
     		   </separator>
     		   <separator
+                  name="debugGroup">
+    		   </separator>
+    		   <separator
                   name="preferenceGroup">
     		   </separator>
          </menu>
@@ -201,6 +204,14 @@
                label="%Preferences"
                style="push"
                menubarPath="decompilerMenu/preferenceGroup">
+         </action>
+         <action
+               class="org.sf.feeling.decompiler.actions.DebugModeMenuItemAction"
+               enablesFor="*"
+               id="org.sf.feeling.decompiler.actions.debugModeMenu"
+               label="%DebugMode"
+               style="toggle"
+               menubarPath="decompilerMenu/debugGroup">
          </action>
       </actionSet>
    </extension>	 

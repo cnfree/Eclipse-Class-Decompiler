@@ -25,9 +25,9 @@ import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 import org.sf.feeling.decompiler.JavaDecompilerPlugin;
 import org.sf.feeling.decompiler.editor.DecompilerType;
 import org.sf.feeling.decompiler.editor.IDecompiler;
+import org.sf.feeling.decompiler.util.ClassUtil;
 import org.sf.feeling.decompiler.util.FileUtil;
 import org.sf.feeling.decompiler.util.JarClassExtractor;
-import org.sf.feeling.decompiler.util.UIUtil;
 import org.sf.feeling.decompiler.util.UnicodeUtil;
 
 public class FernFlowerDecompiler implements IDecompiler
@@ -60,11 +60,11 @@ public class FernFlowerDecompiler implements IDecompiler
 		mapOptions.put( IFernflowerPreferences.LOG_LEVEL,
 				IFernflowerLogger.Severity.ERROR.name( ) );
 		mapOptions.put( IFernflowerPreferences.ASCII_STRING_CHARACTERS, "1" ); //$NON-NLS-1$
-		if ( UIUtil.isDebugPerspective( )
-				|| JavaDecompilerPlugin.getDefault( ).isDisplayLineNumber( ) )
+		if ( ClassUtil.isDebug( ) )
 		{
 			mapOptions.put( IFernflowerPreferences.DUMP_ORIGINAL_LINES, "1" ); //$NON-NLS-1$
-			mapOptions.put( IFernflowerPreferences.BYTECODE_SOURCE_MAPPING, "1" ); //$NON-NLS-1$
+			mapOptions.put( IFernflowerPreferences.BYTECODE_SOURCE_MAPPING,
+					"1" ); //$NON-NLS-1$
 		}
 
 		File tmpDir = new File( System.getProperty( "java.io.tmpdir" ), //$NON-NLS-1$
