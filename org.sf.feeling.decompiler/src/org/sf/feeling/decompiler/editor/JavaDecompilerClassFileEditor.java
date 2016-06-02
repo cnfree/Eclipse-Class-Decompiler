@@ -160,16 +160,19 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 		return false;
 	}
 
-	private boolean debugOptionChange( String source )
+	public static boolean debugOptionChange( String source )
+	{
+		return isDebug( source ) != ClassUtil.isDebug( );
+	}
+
+	public static boolean isDebug( String source )
 	{
 		if ( source == null )
 			return false;
 		Pattern pattern = Pattern.compile( "/\\*\\s*\\d+\\s*\\*/" ); //$NON-NLS-1$
 		Matcher matcher = pattern.matcher( source );
-		boolean isDebugSource = matcher.find( )
+		return matcher.find( )
 				|| source.indexOf( DecompilerOutputUtil.NO_LINE_NUMBER ) != -1;
-
-		return isDebugSource != ClassUtil.isDebug( );
 	}
 
 	public IBuffer getClassBuffer( )

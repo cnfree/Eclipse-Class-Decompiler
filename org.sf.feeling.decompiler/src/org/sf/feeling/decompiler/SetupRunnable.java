@@ -16,13 +16,18 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IFileEditorMapping;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.registry.EditorRegistry;
 import org.eclipse.ui.internal.registry.FileEditorMapping;
+import org.sf.feeling.decompiler.editor.JavaDecompilerClassFileEditor;
 import org.sf.feeling.decompiler.extension.DecompilerAdapterManager;
 import org.sf.feeling.decompiler.update.IDecompilerUpdateHandler;
+import org.sf.feeling.decompiler.util.ClassUtil;
 import org.sf.feeling.decompiler.util.ReflectionUtils;
 
 public class SetupRunnable implements Runnable
@@ -32,6 +37,51 @@ public class SetupRunnable implements Runnable
 	{
 		checkDecompilerUpdate( );
 		checkClassFileAssociation( );
+		setupPartListener( );
+	}
+
+	private void setupPartListener( )
+	{
+		IWorkbenchPage page = PlatformUI.getWorkbench( )
+				.getActiveWorkbenchWindow( )
+				.getActivePage( );
+		page.addPartListener( new IPartListener( ) {
+
+			public void partOpened( IWorkbenchPart part )
+			{
+
+			}
+
+			public void partDeactivated( IWorkbenchPart part )
+			{
+
+			}
+
+			public void partClosed( IWorkbenchPart part )
+			{
+
+			}
+
+			public void partBroughtToTop( IWorkbenchPart part )
+			{
+				if ( part instanceof JavaDecompilerClassFileEditor )
+				{
+					String code = ( (JavaDecompilerClassFileEditor) part )
+							.getViewer( ).getDocument( ).get( );
+					if ( ClassUtil.isDebug( ) != JavaDecompilerClassFileEditor
+							.isDebug( code ) )
+					{
+						( (JavaDecompilerClassFileEditor) part )
+								.doSetInput( false );
+					}
+				}
+			}
+
+			public void partActivated( IWorkbenchPart part )
+			{
+
+			}
+		} );
 	}
 
 	private void checkDecompilerUpdate( )
