@@ -210,13 +210,14 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 				display.booleanValue( ) );
 	}
 
-	public boolean enableCheckUpdate( )
+	public boolean enableCheckUpdateSetting( )
 	{
 		Object updateAdapter = DecompilerAdapterManager.getAdapter( this,
 				IDecompilerUpdateHandler.class );
 		if ( updateAdapter instanceof IDecompilerUpdateHandler )
 		{
-			return true;
+			IDecompilerUpdateHandler updateHandler = (IDecompilerUpdateHandler) updateAdapter;
+			return !updateHandler.isForce( );
 		}
 		return false;
 	}

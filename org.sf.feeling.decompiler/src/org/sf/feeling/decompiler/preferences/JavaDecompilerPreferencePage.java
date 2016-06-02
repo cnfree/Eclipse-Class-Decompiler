@@ -211,7 +211,7 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage impl
 				startupGroup );
 		addField( defaultViewerEditor );
 
-		if ( JavaDecompilerPlugin.getDefault( ).enableCheckUpdate( ) )
+		if ( JavaDecompilerPlugin.getDefault( ).enableCheckUpdateSetting( ) )
 		{
 			CheckFieldEditor checkUpdate = new CheckFieldEditor( JavaDecompilerPlugin.CHECK_UPDATE,
 					Messages.getString( "JavaDecompilerPreferencePage.Label.CheckForUpdate" ), //$NON-NLS-1$

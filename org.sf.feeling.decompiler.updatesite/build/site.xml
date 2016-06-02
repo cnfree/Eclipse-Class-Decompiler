@@ -3,30 +3,30 @@
    <description name="Chen Chao&apos;s Projects Update" url="http://decompiler.chenchao.tk/update">
       Chen Chao&apos;s projects update site.
    </description>
-   <feature url="features/org.sf.feeling.decompiler_2.7.1.qualifier.jar" id="org.sf.feeling.decompiler" version="2.7.1.qualifier">
+   <feature url="features/org.sf.feeling.decompiler_2.7.3.qualifier.jar" id="org.sf.feeling.decompiler" version="2.7.3.qualifier">
       <category name="Eclipse Class Decompiler (Core)"/>
    </feature>
-   <feature url="features/org.sf.feeling.decompiler.jad_2.7.1.qualifier.jar" id="org.sf.feeling.decompiler.jad" version="2.7.1.qualifier" os="linux,macosx,win32" arch="x86,x86_64">
-      <category name="Eclipse Class Decompiler (Optioinal)"/>
+   <feature url="features/org.sf.feeling.decompiler.jad_2.7.3.qualifier.jar" id="org.sf.feeling.decompiler.jad" version="2.7.3.qualifier" os="linux,macosx,win32" arch="x86,x86_64">
+      <category name="Eclipse Class Decompiler (Optional)"/>
    </feature>
-   <feature url="features/org.sf.feeling.decompiler.jd_2.7.1.qualifier.jar" id="org.sf.feeling.decompiler.jd" version="2.7.1.qualifier" os="linux,macosx,win32" arch="x86,x86_64">
-      <category name="Eclipse Class Decompiler (Optioinal)"/>
+   <feature url="features/org.sf.feeling.decompiler.jd_2.7.3.qualifier.jar" id="org.sf.feeling.decompiler.jd" version="2.7.3.qualifier" os="linux,macosx,win32" arch="x86,x86_64">
+      <category name="Eclipse Class Decompiler (Optional)"/>
    </feature>
-   <feature url="features/org.sf.feeling.decompiler.procyon_2.7.1.qualifier.jar" id="org.sf.feeling.decompiler.procyon" version="2.7.1.qualifier">
-      <category name="Eclipse Class Decompiler (Optioinal)"/>
+   <feature url="features/org.sf.feeling.decompiler.procyon_2.7.3.qualifier.jar" id="org.sf.feeling.decompiler.procyon" version="2.7.3.qualifier">
+      <category name="Eclipse Class Decompiler (Optional)"/>
    </feature>
-   <feature url="features/org.sf.feeling.decompiler.cfr_2.7.1.qualifier.jar" id="org.sf.feeling.decompiler.cfr" version="2.7.1.qualifier">
-      <category name="Eclipse Class Decompiler (Optioinal)"/>
+   <feature url="features/org.sf.feeling.decompiler.cfr_2.7.3.qualifier.jar" id="org.sf.feeling.decompiler.cfr" version="2.7.3.qualifier">
+      <category name="Eclipse Class Decompiler (Optional)"/>
    </feature>
-   <feature url="features/org.sf.feeling.decompiler.source_2.7.1.qualifier.jar" id="org.sf.feeling.decompiler.source" version="2.7.1.qualifier">
-      <category name="Eclipse Class Decompiler (Optioinal)"/>
+   <feature url="features/org.sf.feeling.decompiler.source_2.7.3.qualifier.jar" id="org.sf.feeling.decompiler.source" version="2.7.3.qualifier">
+      <category name="Eclipse Class Decompiler (Optional)"/>
    </feature>
    <category-def name="Eclipse Class Decompiler (Core)" label="Eclipse Class Decompiler (Core)">
       <description>
          Eclipse Class Decompiler integrates JD, Jad, FernFlower, CFR, Procyon with Eclipse seamlessly. It allows Java developers to debug class files without source code directly.
       </description>
    </category-def>
-   <category-def name="Eclipse Class Decompiler (Optioinal)" label="Eclipse Class Decompiler (Optioinal)">
+   <category-def name="Eclipse Class Decompiler (Optional)" label="Eclipse Class Decompiler (Optional)">
       <description>
          Eclipse Class Decompiler integrates JD, Jad, FernFlower, CFR, Procyon with Eclipse seamlessly. It allows Java developers to debug class files without source code directly.
       </description>

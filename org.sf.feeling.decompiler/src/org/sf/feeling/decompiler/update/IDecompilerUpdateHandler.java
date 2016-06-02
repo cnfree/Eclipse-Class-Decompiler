@@ -15,4 +15,6 @@ public interface IDecompilerUpdateHandler
 {
 
 	void execute( );
+
+	boolean isForce( );
 }
