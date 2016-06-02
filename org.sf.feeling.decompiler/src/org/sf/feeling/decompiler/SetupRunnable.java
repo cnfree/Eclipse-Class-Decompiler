@@ -11,9 +11,14 @@
 
 package org.sf.feeling.decompiler;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IFileEditorMapping;
 import org.eclipse.ui.IPartListener;
@@ -86,18 +91,48 @@ public class SetupRunnable implements Runnable
 
 	private void checkDecompilerUpdate( )
 	{
-		IPreferenceStore prefs = JavaDecompilerPlugin.getDefault( )
+		final IPreferenceStore prefs = JavaDecompilerPlugin.getDefault( )
 				.getPreferenceStore( );
-		if ( prefs.getBoolean( JavaDecompilerPlugin.CHECK_UPDATE ) )
-		{
-			Object updateAdapter = DecompilerAdapterManager.getAdapter(
-					JavaDecompilerPlugin.getDefault( ),
-					IDecompilerUpdateHandler.class );
 
-			if ( updateAdapter instanceof IDecompilerUpdateHandler )
-			{
-				( (IDecompilerUpdateHandler) updateAdapter ).execute( );
-			}
+		final Object updateAdapter = DecompilerAdapterManager.getAdapter(
+				JavaDecompilerPlugin.getDefault( ),
+				IDecompilerUpdateHandler.class );
+
+		if ( updateAdapter instanceof IDecompilerUpdateHandler )
+		{
+			final IDecompilerUpdateHandler updateHandler = (IDecompilerUpdateHandler) updateAdapter;
+			Job job = new Job( "Decompiler update job" ) { //$NON-NLS-1$
+
+				protected IStatus run( IProgressMonitor monitor )
+				{
+					monitor.beginTask( "start task", 100 ); //$NON-NLS-1$
+					try
+					{
+						if ( updateHandler.isForce( monitor )
+								|| prefs.getBoolean(
+										JavaDecompilerPlugin.CHECK_UPDATE ) )
+							Display.getDefault( ).asyncExec( new Runnable( ) {
+
+								public void run( )
+								{
+									updateHandler.execute( );
+								}
+							} );
+						monitor.worked( 100 );
+						return Status.OK_STATUS;
+					}
+					catch ( Exception e )
+					{
+						monitor.worked( 100 );
+						return Status.CANCEL_STATUS;
+					}
+				}
+			};
+
+			job.setPriority( Job.DECORATE );
+			job.setSystem( true );
+			job.schedule( );
+
 		}
 	}
 

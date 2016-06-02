@@ -217,7 +217,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 		if ( updateAdapter instanceof IDecompilerUpdateHandler )
 		{
 			IDecompilerUpdateHandler updateHandler = (IDecompilerUpdateHandler) updateAdapter;
-			return !updateHandler.isForce( );
+			return !updateHandler.isForce( null );
 		}
 		return false;
 	}

@@ -32,6 +32,7 @@ public class DebugModeAction extends Action
 		JavaDecompilerClassFileEditor editor = UIUtil.getActiveEditor( );
 		if ( editor != null )
 		{
+			editor.setFocus( );
 			editor.notifyPropertiesChange( );
 		}
 	}

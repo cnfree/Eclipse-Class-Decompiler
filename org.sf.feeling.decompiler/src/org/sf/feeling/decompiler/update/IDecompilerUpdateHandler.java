@@ -11,10 +11,12 @@
 
 package org.sf.feeling.decompiler.update;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
 public interface IDecompilerUpdateHandler
 {
 
 	void execute( );
 
-	boolean isForce( );
+	boolean isForce( IProgressMonitor monitor );
 }
