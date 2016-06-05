@@ -458,7 +458,7 @@ public class DecompilerOutputUtil
 		String regex = "/\\*\\s*\\d+\\s*\\*/"; //$NON-NLS-1$
 		if ( DecompilerType.FernFlower.equals( decompilerType ) )
 		{
-			regex = "//\\s+\\d+\\s*\\d*"; //$NON-NLS-1$
+			regex = "//\\s+\\d+(\\s*\\d*)*"; //$NON-NLS-1$
 		}
 		Pattern pattern = Pattern.compile( regex, Pattern.CASE_INSENSITIVE );
 		Matcher matcher = pattern.matcher( line.trim( ) );

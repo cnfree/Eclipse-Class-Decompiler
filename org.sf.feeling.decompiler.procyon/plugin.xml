@@ -19,14 +19,6 @@
             id="org.sf.feeling.decompiler.decompile.procyon">  
       </command>  
    </extension> 
-   <extension
- 		point="org.eclipse.ui.bindings">
-		<key
-      		sequence="Ctrl+Alt+Q"
-      		commandId="org.sf.feeling.decompiler.decompile.procyon"
-      		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-		</key>
- 	</extension>
  	<extension  
          point="org.eclipse.ui.handlers">  
       <handler  

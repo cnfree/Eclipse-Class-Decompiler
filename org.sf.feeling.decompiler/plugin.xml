@@ -108,11 +108,6 @@
       		commandId="org.sf.feeling.decompiler.decompile"
       		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
-		<key
-      		sequence="Ctrl+Alt+W"
-      		commandId="org.sf.feeling.decompiler.decompile.fernflower"
-      		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-		</key>
  	</extension>
  	<extension  
          point="org.eclipse.ui.handlers">  

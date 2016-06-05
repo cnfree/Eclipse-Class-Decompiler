@@ -19,14 +19,6 @@
             id="org.sf.feeling.decompiler.decompile.cfr">  
       </command>  
    </extension> 
-   <extension
- 		point="org.eclipse.ui.bindings">
-		<key
-      		sequence="Ctrl+Alt+F"
-      		commandId="org.sf.feeling.decompiler.decompile.cfr"
-      		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-		</key>
- 	</extension>
  	<extension  
          point="org.eclipse.ui.handlers">  
       <handler  
