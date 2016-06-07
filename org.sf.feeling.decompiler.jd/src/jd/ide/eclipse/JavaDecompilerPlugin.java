@@ -21,11 +21,6 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 {
 
 	public static final String PLUGIN_ID = "jd.ide.eclipse"; //$NON-NLS-1$
-	public static final String PREF_DISPLAY_LINE_NUMBERS = PLUGIN_ID
-			+ ".prefs.DisplayLineNumbers"; //$NON-NLS-1$
-	public static final String PREF_DISPLAY_METADATA = PLUGIN_ID
-			+ ".prefs.DisplayMetadata"; //$NON-NLS-1$
-	public static final String ALIGN = PLUGIN_ID + ".prefs.Align";; //$NON-NLS-1$
 
 	private static JavaDecompilerPlugin plugin;
 
@@ -35,16 +30,15 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 			plugin = new JavaDecompilerPlugin( );
 
 		IPreferenceStore store = plugin.getPreferenceStore( );
-		store.setDefault( JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS, false );
-		store.setDefault( JavaDecompilerPlugin.PREF_DISPLAY_METADATA, false );
+		store.setDefault( org.sf.feeling.decompiler.JavaDecompilerPlugin.PREF_DISPLAY_LINE_NUMBERS, false );
+		store.setDefault( org.sf.feeling.decompiler.JavaDecompilerPlugin.PREF_DISPLAY_METADATA, false );
 
 		return plugin;
 	}
 
 	public IPreferenceStore getPreferenceStore( )
 	{
-		IPreferenceStore store = org.sf.feeling.decompiler.JavaDecompilerPlugin.getDefault( )
-				.getPreferenceStore( );
+		IPreferenceStore store = org.sf.feeling.decompiler.JavaDecompilerPlugin.getDefault( ).getPreferenceStore( );
 
 		try
 		{
@@ -52,9 +46,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 			if ( field != null )
 			{
 				field.setAccessible( true );
-				field.set( this,
-						org.sf.feeling.decompiler.JavaDecompilerPlugin.getDefault( )
-								.getPluginPreferences( ) );
+				field.set( this, org.sf.feeling.decompiler.JavaDecompilerPlugin.getDefault( ).getPluginPreferences( ) );
 			}
 		}
 

@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -75,25 +75,28 @@ public class SortMemberUtil
 
 			long time = System.currentTimeMillis( );
 
-			File locationFile = new File( sourceFolder
-					.getFolder( packageName.replace( '.', '/' ) )
-					.getFile( className )
+			String javaName = className.replaceAll( "(?i)\\.class", //$NON-NLS-1$
+					time + ".java" ); //$NON-NLS-1$
+			File locationFile = new File( sourceFolder.getFile( javaName )
 					.getLocation( )
-					.toString( )
-					.replaceAll( "(?i)\\.class", time + ".java" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+					.toString( ) );
+
+			IFile javaFile = sourceFolder.getFile( javaName );
 
 			if ( !locationFile.getParentFile( ).exists( ) )
+			{
 				locationFile.getParentFile( ).mkdirs( );
+			}
 
 			PrintWriter writer = new PrintWriter( new BufferedWriter(
 					new FileWriter( locationFile, false ) ) );
 			writer.println( code );
 			writer.close( );
-			project.refreshLocal( IResource.DEPTH_INFINITE, null );
+
+			javaFile.refreshLocal( 0, null );
 
 			ICompilationUnit iCompilationUnit = packageFragment
-					.getCompilationUnit( className.replaceAll( "(?i)\\.class", //$NON-NLS-1$
-							time + ".java" ) ); //$NON-NLS-1$
+					.getCompilationUnit( locationFile.getName( ) );
 			iCompilationUnit.makeConsistent( null );
 			iCompilationUnit.getResource( )
 					.setLocalTimeStamp( new Date( ).getTime( ) );
@@ -104,9 +107,10 @@ public class SortMemberUtil
 			iCompilationUnit.save( null, true );
 			String content = iCompilationUnit.getSource( );
 			iCompilationUnit.delete( true, null );
+			iCompilationUnit.destroy( );
 			if ( content != null )
 				code = content;
-			sourceRootFragment.getJavaProject( ).close( );
+			packageFragment.getJavaProject( ).close( );
 		}
 		catch ( IOException e )
 		{
@@ -138,9 +142,6 @@ public class SortMemberUtil
 
 	public static IPackageFragmentRoot getDecompilerSourceFolder( )
 	{
-		if ( decompilerSourceFolder != null )
-			return decompilerSourceFolder;
-
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace( ).getRoot( );
 		IProject project = root.getProject( ".decompiler" ); //$NON-NLS-1$
 		if ( project == null )
@@ -168,6 +169,21 @@ public class SortMemberUtil
 			if ( !project.isOpen( ) )
 				return null;
 		}
+		else if ( !project.isOpen( ) )
+		{
+			try
+			{
+				project.open( null );
+			}
+			catch ( CoreException e )
+			{
+				JavaDecompilerPlugin.logError( e, "" ); //$NON-NLS-1$
+				return null;
+			}
+		}
+
+		if ( decompilerSourceFolder != null )
+			return decompilerSourceFolder;
 
 		IJavaProject javaProject = JavaCore.create( project );
 

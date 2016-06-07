@@ -89,7 +89,10 @@ public class JDCoreDecompiler implements IDecompiler
 			source = mapper.decompile( zipFileName, ( classPackage.length( ) > 0 ? ( classPackage + "/" ) : "" ) //$NON-NLS-1$ //$NON-NLS-2$
 					+ className );
 
-			zipFile.delete( );
+			if ( !zipFile.delete( ) )
+			{
+				zipFile.deleteOnExit( );
+			}
 		}
 		catch ( Exception e )
 		{
