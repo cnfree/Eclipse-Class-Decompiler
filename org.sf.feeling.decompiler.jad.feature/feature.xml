@@ -41,6 +41,7 @@
       <import plugin="org.eclipse.core.expressions"/>
       <import plugin="org.eclipse.ui.navigator"/>
       <import plugin="org.eclipse.core.filesystem"/>
+      <import plugin="org.sf.feeling.decompiler"/>
    </requires>
 
    <plugin

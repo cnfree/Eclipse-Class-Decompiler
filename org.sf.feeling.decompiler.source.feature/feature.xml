@@ -22,6 +22,10 @@
       <discovery label="%updateSiteName" url="http://decompiler.chenchao.tk/update"/>
    </url>
 
+   <requires>
+      <import feature="org.sf.feeling.decompiler" version="2.8.2.qualifier"/>
+   </requires>
+
    <plugin
          id="org.sf.feeling.decompiler.source"
          download-size="0"
