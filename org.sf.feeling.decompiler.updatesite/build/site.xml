@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <description name="Chen Chao&apos;s Projects Update" url="http://decompiler.chenchao.tk/update">
-      Chen Chao&apos;s projects update site.
+   <description name="Eclipse Class Decompiler Project Update" url="http://decompiler.cpupk.com/update">
+      Eclipse Class Decompiler project update site.
    </description>
    <feature url="features/org.sf.feeling.decompiler_2.8.3.qualifier.jar" id="org.sf.feeling.decompiler" version="2.8.3.qualifier">
       <category name="Eclipse Class Decompiler (Core)"/>

@@ -21,8 +21,8 @@
    </license>
 
    <url>
-      <update label="Eclipse Class Decompiler Updates" url="http://decompiler.chenchao.tk/update"/>
-      <discovery label="%updateSiteName" url="http://decompiler.chenchao.tk/update"/>
+      <update label="Eclipse Class Decompiler Updates" url="http://decompiler.cpupk.com/update"/>
+      <discovery label="%updateSiteName" url="http://decompiler.cpupk.com/update"/>
    </url>
 
    <requires>
