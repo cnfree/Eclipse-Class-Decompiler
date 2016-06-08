@@ -32,6 +32,7 @@ import org.sf.feeling.decompiler.editor.IDecompilerDescriptor;
 import org.sf.feeling.decompiler.editor.JavaDecompilerBufferManager;
 import org.sf.feeling.decompiler.extension.DecompilerAdapterManager;
 import org.sf.feeling.decompiler.update.IDecompilerUpdateHandler;
+import org.sf.feeling.decompiler.util.ProxyHelper;
 import org.sf.feeling.decompiler.util.SortMemberUtil;
 
 public class JavaDecompilerPlugin extends AbstractUIPlugin
@@ -58,6 +59,8 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 	private static JavaDecompilerPlugin plugin;
 
 	private IPreferenceStore preferenceStore;
+
+	private boolean fromChina = false;
 
 	private TreeMap<String, IDecompilerDescriptor> decompilerDescriptorMap = new TreeMap<String, IDecompilerDescriptor>( );
 
@@ -163,6 +166,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 	public void start( BundleContext context ) throws Exception
 	{
 		super.start( context );
+		ProxyHelper.acquireProxyService( );
 		getPreferenceStore( ).addPropertyChangeListener( this );
 		SortMemberUtil.deleteDecompilerProject( );
 		Display.getDefault( ).asyncExec( new SetupRunnable( ) );
@@ -195,6 +199,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 	{
 		super.stop( context );
 		getPreferenceStore( ).removePropertyChangeListener( this );
+		ProxyHelper.releaseProxyService( );
 		plugin = null;
 	}
 
@@ -250,6 +255,16 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 	public void setDebugMode( boolean isDebugMode )
 	{
 		this.isDebugMode = isDebugMode;
+	}
+
+	public boolean isFromChina( )
+	{
+		return fromChina;
+	}
+
+	public void setFromChina( boolean fromChina )
+	{
+		this.fromChina = fromChina;
 	}
 
 }

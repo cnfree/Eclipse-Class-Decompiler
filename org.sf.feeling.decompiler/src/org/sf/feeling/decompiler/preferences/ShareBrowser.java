@@ -39,7 +39,8 @@ public class ShareBrowser
 	public ShareBrowser( final Composite parent, int style )
 	{
 		browser = new Browser( parent, style );
-		browser.setUrl( "http://www.chenchao.tk/decompiler/share.php" ); //$NON-NLS-1$
+		browser.setUrl( "http://www.chenchao.tk/share.html?token=" //$NON-NLS-1$
+				+ System.currentTimeMillis( ) );
 		browser.addProgressListener( new ProgressListener( ) {
 
 			public void completed( ProgressEvent event )
@@ -56,8 +57,8 @@ public class ShareBrowser
 						+ rgb
 						+ "';" ); //$NON-NLS-1$
 
-				if ( Boolean.FALSE
-						.equals( browser.evaluate( "return fromChina();" ) ) ) //$NON-NLS-1$
+				if ( Boolean.TRUE
+						.equals( browser.evaluate( "return isLoaded();" ) ) ) //$NON-NLS-1$
 				{
 					browser.execute( "adjustLayout();" ); //$NON-NLS-1$
 
@@ -66,6 +67,7 @@ public class ShareBrowser
 					gd.grabExcessVerticalSpace = true;
 					gd.horizontalAlignment = SWT.FILL;
 					gd.verticalAlignment = SWT.FILL;
+
 					browser.setLayoutData( gd );
 					browser.getParent( ).layout( );
 					browser.getParent( ).getParent( ).layout( );

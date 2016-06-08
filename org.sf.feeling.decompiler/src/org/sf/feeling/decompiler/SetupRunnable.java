@@ -11,6 +11,14 @@
 
 package org.sf.feeling.decompiler;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -33,7 +41,11 @@ import org.sf.feeling.decompiler.editor.JavaDecompilerClassFileEditor;
 import org.sf.feeling.decompiler.extension.DecompilerAdapterManager;
 import org.sf.feeling.decompiler.update.IDecompilerUpdateHandler;
 import org.sf.feeling.decompiler.util.ClassUtil;
+import org.sf.feeling.decompiler.util.HttpUtil;
 import org.sf.feeling.decompiler.util.ReflectionUtils;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 public class SetupRunnable implements Runnable
 {
@@ -43,6 +55,58 @@ public class SetupRunnable implements Runnable
 		checkDecompilerUpdate( );
 		checkClassFileAssociation( );
 		setupPartListener( );
+		queryLocation( );
+	}
+
+	private void queryLocation( )
+	{
+		Job job = new Job( "Decompiler Location Query" ) { //$NON-NLS-1$
+
+			protected IStatus run( IProgressMonitor monitor )
+			{
+				monitor.beginTask( "start task", 100 ); //$NON-NLS-1$
+				try
+				{
+					URL location = new URL( "http://test.ip138.com/query/" ); //$NON-NLS-1$
+					String target = location.toURI( ).toString( );
+					HttpClient client = HttpUtil.createHttpClient( target );
+					HttpGet method = new HttpGet( target );
+					HttpResponse response = client.execute( method );
+					InputStream stream = response.getEntity( ).getContent( );
+					BufferedReader br = new BufferedReader(
+							new InputStreamReader( stream, "UTF-8" ) ); //$NON-NLS-1$
+					StringBuffer buffer = new StringBuffer( );
+					String line = null;
+					while ( ( line = br.readLine( ) ) != null )
+					{
+						buffer.append( line ).append( "\n" ); //$NON-NLS-1$
+					}
+					br.close( );
+					JSONObject json = JSONObject
+							.parseObject( buffer.toString( ) );
+					if ( json != null && json.containsKey( "data" ) ) //$NON-NLS-1$
+					{
+						JSONArray array = json.getJSONArray( "data" ); //$NON-NLS-1$
+						if ( array.size( ) > 0 )
+						{
+							JavaDecompilerPlugin.getDefault( ).setFromChina(
+									"中国".equals( array.getString( 0 ) ) ); //$NON-NLS-1$
+						}
+					}
+					monitor.worked( 100 );
+					return Status.OK_STATUS;
+				}
+				catch ( Exception e )
+				{
+					monitor.worked( 100 );
+					return Status.CANCEL_STATUS;
+				}
+			}
+		};
+
+		job.setPriority( Job.DECORATE );
+		job.setSystem( true );
+		job.schedule( );
 	}
 
 	private void setupPartListener( )

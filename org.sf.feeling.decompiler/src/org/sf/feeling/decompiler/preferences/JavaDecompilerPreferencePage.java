@@ -74,7 +74,6 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 	private Group debugGroup;
 	private StringChoiceFieldEditor defaultDecompiler;
 	private CheckFieldEditor showReport;
-	private ShareBrowser browser;
 
 	public JavaDecompilerPreferencePage( )
 	{
@@ -250,25 +249,23 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 		layout.marginWidth = layout.marginHeight = 5;
 		startupGroup.layout( );
 
-		browser = new ShareBrowser( getFieldEditorParent( ), SWT.NONE );
-		gd = new GridData( GridData.FILL_HORIZONTAL );
-		gd.horizontalSpan = defaultDecompiler.getNumberOfControls( );
-		gd.heightHint = 100;
-		browser.getBrowser( ).setLayoutData( gd );
-		browser.getBrowser( ).setVisible( false );
-		getFieldEditorParent( ).layout( );
-	}
+		if ( !JavaDecompilerPlugin.getDefault( ).isFromChina( ) )
+		{
+			ShareBrowser browser = new ShareBrowser( getFieldEditorParent( ),
+					SWT.NONE );
+			gd = new GridData( GridData.FILL_HORIZONTAL );
+			gd.horizontalSpan = defaultDecompiler.getNumberOfControls( );
+			gd.heightHint = 100;
+			browser.getBrowser( ).setLayoutData( gd );
+			browser.getBrowser( ).setVisible( false );
+		}
 
-	@Override
-	public void dispose( )
-	{
-		browser.getBrowser( ).close( );
-		browser.getBrowser( ).dispose( );
-		super.dispose( );
+		getFieldEditorParent( ).layout( );
 	}
 
 	public void init( IWorkbench arg0 )
 	{
+
 	}
 
 	protected void initialize( )
