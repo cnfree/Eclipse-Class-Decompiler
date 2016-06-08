@@ -21,6 +21,8 @@ import org.eclipse.swt.browser.OpenWindowListener;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.browser.WindowEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -32,6 +34,7 @@ public class ShareBrowser
 {
 
 	private Browser browser;
+	private Shell shell;
 
 	public ShareBrowser( final Composite parent, int style )
 	{
@@ -80,9 +83,14 @@ public class ShareBrowser
 
 			public void open( WindowEvent e )
 			{
-				final Shell shell = new Shell( Display.getDefault( ) );
+				if ( shell != null && !shell.isDisposed( ) )
+				{
+					shell.dispose( );
+				}
+
+				shell = new Shell( Display.getDefault( ) );
 				shell.setVisible( false );
-				
+
 				final Browser linkBrowser = new Browser( shell, SWT.NONE );
 				linkBrowser.setVisible( true );
 				e.browser = linkBrowser;
@@ -124,6 +132,17 @@ public class ShareBrowser
 						}
 					}
 				} );
+			}
+		} );
+
+		browser.addDisposeListener( new DisposeListener( ) {
+
+			public void widgetDisposed( DisposeEvent e )
+			{
+				if ( shell != null && !shell.isDisposed( ) )
+				{
+					shell.dispose( );
+				}
 			}
 		} );
 	}
