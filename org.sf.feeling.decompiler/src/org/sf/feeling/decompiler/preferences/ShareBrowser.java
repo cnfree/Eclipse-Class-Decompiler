@@ -39,7 +39,7 @@ public class ShareBrowser
 	public ShareBrowser( final Composite parent, int style )
 	{
 		browser = new Browser( parent, style );
-		browser.setUrl( "http://www.chenchao.tk/share.html?token=" //$NON-NLS-1$
+		browser.setUrl( "http://www.chenchao.tk/decompiler/share.html?token=" //$NON-NLS-1$
 				+ System.currentTimeMillis( ) );
 		browser.addProgressListener( new ProgressListener( ) {
 

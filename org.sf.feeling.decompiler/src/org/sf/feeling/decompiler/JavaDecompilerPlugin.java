@@ -32,11 +32,10 @@ import org.sf.feeling.decompiler.editor.IDecompilerDescriptor;
 import org.sf.feeling.decompiler.editor.JavaDecompilerBufferManager;
 import org.sf.feeling.decompiler.extension.DecompilerAdapterManager;
 import org.sf.feeling.decompiler.update.IDecompilerUpdateHandler;
-import org.sf.feeling.decompiler.util.ProxyHelper;
 import org.sf.feeling.decompiler.util.SortMemberUtil;
 
-public class JavaDecompilerPlugin extends AbstractUIPlugin
-		implements IPropertyChangeListener
+public class JavaDecompilerPlugin extends AbstractUIPlugin implements
+		IPropertyChangeListener
 {
 
 	public static final String EDITOR_ID = "org.sf.feeling.decompiler.ClassFileEditor"; //$NON-NLS-1$
@@ -74,8 +73,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 		return decompilerDescriptorMap.keySet( ).toArray( new String[0] );
 	}
 
-	public IDecompilerDescriptor getDecompilerDescriptor(
-			String decompilerType )
+	public IDecompilerDescriptor getDecompilerDescriptor( String decompilerType )
 	{
 		return decompilerDescriptorMap.get( decompilerType );
 	}
@@ -87,14 +85,16 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 
 	public static void logError( Throwable t, String message )
 	{
-		JavaDecompilerPlugin.getDefault( ).getLog( ).log(
-				new Status( Status.ERROR, PLUGIN_ID, 0, message, t ) );
+		JavaDecompilerPlugin.getDefault( )
+				.getLog( )
+				.log( new Status( Status.ERROR, PLUGIN_ID, 0, message, t ) );
 	}
 
 	public static void log( int severity, Throwable t, String message )
 	{
-		JavaDecompilerPlugin.getDefault( ).getLog( ).log(
-				new Status( severity, PLUGIN_ID, 0, message, t ) );
+		JavaDecompilerPlugin.getDefault( )
+				.getLog( )
+				.log( new Status( severity, PLUGIN_ID, 0, message, t ) );
 	}
 
 	public static ImageDescriptor getImageDescriptor( String path )
@@ -124,8 +124,8 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 
 	protected void initializeDefaultPreferences( IPreferenceStore store )
 	{
-		Object[] decompilerAdapters = DecompilerAdapterManager
-				.getAdapters( this, IDecompilerDescriptor.class );
+		Object[] decompilerAdapters = DecompilerAdapterManager.getAdapters( this,
+				IDecompilerDescriptor.class );
 
 		if ( decompilerAdapters != null )
 		{
@@ -137,8 +137,8 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 					IDecompilerDescriptor descriptor = (IDecompilerDescriptor) adapter;
 					if ( descriptor.isEnabled( ) )
 					{
-						decompilerDescriptorMap.put(
-								descriptor.getDecompilerType( ), descriptor );
+						decompilerDescriptorMap.put( descriptor.getDecompilerType( ),
+								descriptor );
 					}
 				}
 			}
@@ -166,7 +166,6 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 	public void start( BundleContext context ) throws Exception
 	{
 		super.start( context );
-		ProxyHelper.acquireProxyService( );
 		getPreferenceStore( ).addPropertyChangeListener( this );
 		SortMemberUtil.deleteDecompilerProject( );
 		Display.getDefault( ).asyncExec( new SetupRunnable( ) );
@@ -178,12 +177,10 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 		{
 			preferenceStore = super.getPreferenceStore( );
 
-			String decompilerType = preferenceStore
-					.getString( DECOMPILER_TYPE );
+			String decompilerType = preferenceStore.getString( DECOMPILER_TYPE );
 			if ( !DecompilerType.FernFlower.equals( decompilerType ) )
 			{
-				IDecompilerDescriptor descriptor = getDecompilerDescriptor(
-						decompilerType );
+				IDecompilerDescriptor descriptor = getDecompilerDescriptor( decompilerType );
 				if ( descriptor == null )
 				{
 					preferenceStore.setValue( DECOMPILER_TYPE,
@@ -199,14 +196,12 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 	{
 		super.stop( context );
 		getPreferenceStore( ).removePropertyChangeListener( this );
-		ProxyHelper.releaseProxyService( );
 		plugin = null;
 	}
 
 	public Boolean isDisplayLineNumber( )
 	{
-		return Boolean.valueOf(
-				getPreferenceStore( ).getBoolean( PREF_DISPLAY_LINE_NUMBERS ) );
+		return Boolean.valueOf( getPreferenceStore( ).getBoolean( PREF_DISPLAY_LINE_NUMBERS ) );
 	}
 
 	public void displayLineNumber( Boolean display )
@@ -229,15 +224,14 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin
 
 	public String getDefalutDecompilerType( )
 	{
-		Collection<IDecompilerDescriptor> descriptors = JavaDecompilerPlugin
-				.getDefault( ).getDecompilerDescriptorMap( ).values( );
+		Collection<IDecompilerDescriptor> descriptors = JavaDecompilerPlugin.getDefault( )
+				.getDecompilerDescriptorMap( )
+				.values( );
 		if ( descriptors != null )
 		{
-			for ( Iterator iterator = descriptors.iterator( ); iterator
-					.hasNext( ); )
+			for ( Iterator iterator = descriptors.iterator( ); iterator.hasNext( ); )
 			{
-				IDecompilerDescriptor iDecompilerDescriptor = (IDecompilerDescriptor) iterator
-						.next( );
+				IDecompilerDescriptor iDecompilerDescriptor = (IDecompilerDescriptor) iterator.next( );
 				if ( iDecompilerDescriptor.isDefault( ) )
 				{
 					return iDecompilerDescriptor.getDecompilerType( );

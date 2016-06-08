@@ -1,8 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
- lib/fernflower.jar,
- lib/fastjson-1.1.8.jar
+ lib/fernflower.jar
 Bundle-Name: Eclipse Class Decompiler
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
@@ -21,11 +20,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.expressions,
  org.eclipse.ui.navigator,
  org.eclipse.ui.ide;resolution:=optional,
- org.eclipse.core.filesystem,
- org.apache.commons.httpclient,
- org.eclipse.core.net,
- org.apache.httpcomponents.httpcore,
- org.apache.httpcomponents.httpclient
+ org.eclipse.core.filesystem
 Bundle-Vendor: Chen Chao
 Bundle-Version: 2.8.4.qualifier
 Bundle-ManifestVersion: 2

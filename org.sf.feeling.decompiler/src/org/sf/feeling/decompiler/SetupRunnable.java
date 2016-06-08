@@ -12,13 +12,12 @@
 package org.sf.feeling.decompiler;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -41,11 +40,7 @@ import org.sf.feeling.decompiler.editor.JavaDecompilerClassFileEditor;
 import org.sf.feeling.decompiler.extension.DecompilerAdapterManager;
 import org.sf.feeling.decompiler.update.IDecompilerUpdateHandler;
 import org.sf.feeling.decompiler.util.ClassUtil;
-import org.sf.feeling.decompiler.util.HttpUtil;
 import org.sf.feeling.decompiler.util.ReflectionUtils;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 public class SetupRunnable implements Runnable
 {
@@ -67,30 +62,32 @@ public class SetupRunnable implements Runnable
 				monitor.beginTask( "start task", 100 ); //$NON-NLS-1$
 				try
 				{
-					URL location = new URL( "http://test.ip138.com/query/" ); //$NON-NLS-1$
-					String target = location.toURI( ).toString( );
-					HttpClient client = HttpUtil.createHttpClient( target );
-					HttpGet method = new HttpGet( target );
-					HttpResponse response = client.execute( method );
-					InputStream stream = response.getEntity( ).getContent( );
-					BufferedReader br = new BufferedReader(
-							new InputStreamReader( stream, "UTF-8" ) ); //$NON-NLS-1$
-					StringBuffer buffer = new StringBuffer( );
-					String line = null;
-					while ( ( line = br.readLine( ) ) != null )
+					URL location = new URL( "http://test.ip138.com/query/?datatype=xml" ); //$NON-NLS-1$
+					HttpURLConnection con = (HttpURLConnection) location.openConnection( );
+					con.setRequestMethod( "GET" ); //$NON-NLS-1$
+					con.setRequestProperty( "User-Agent", "Mozilla/5.0" ); //$NON-NLS-1$ //$NON-NLS-2$
+					int responseCode = con.getResponseCode( );
+					if ( responseCode == HttpURLConnection.HTTP_OK )
 					{
-						buffer.append( line ).append( "\n" ); //$NON-NLS-1$
-					}
-					br.close( );
-					JSONObject json = JSONObject
-							.parseObject( buffer.toString( ) );
-					if ( json != null && json.containsKey( "data" ) ) //$NON-NLS-1$
-					{
-						JSONArray array = json.getJSONArray( "data" ); //$NON-NLS-1$
-						if ( array.size( ) > 0 )
+						BufferedReader in = new BufferedReader( new InputStreamReader( con.getInputStream( ),
+								"UTF-8" ) ); //$NON-NLS-1$
+						StringBuffer response = new StringBuffer( );
+						String inputLine;
+						while ( ( inputLine = in.readLine( ) ) != null )
 						{
-							JavaDecompilerPlugin.getDefault( ).setFromChina(
-									"中国".equals( array.getString( 0 ) ) ); //$NON-NLS-1$
+							response.append( inputLine );
+						}
+						in.close( );
+						Pattern pattern = Pattern.compile( "<country>.+</country>" ); //$NON-NLS-1$
+						Matcher matcher = pattern.matcher( response.toString( ) );
+						if ( matcher.find( ) )
+						{
+							String country = matcher.group( )
+									.replace( "<country>", "" ) //$NON-NLS-1$ //$NON-NLS-2$
+									.replace( "</country>", "" ) //$NON-NLS-1$ //$NON-NLS-2$
+									.trim( );
+							JavaDecompilerPlugin.getDefault( )
+									.setFromChina( "中国".equals( country ) ); //$NON-NLS-1$
 						}
 					}
 					monitor.worked( 100 );
@@ -135,13 +132,12 @@ public class SetupRunnable implements Runnable
 			{
 				if ( part instanceof JavaDecompilerClassFileEditor )
 				{
-					String code = ( (JavaDecompilerClassFileEditor) part )
-							.getViewer( ).getDocument( ).get( );
-					if ( ClassUtil.isDebug( ) != JavaDecompilerClassFileEditor
-							.isDebug( code ) )
+					String code = ( (JavaDecompilerClassFileEditor) part ).getViewer( )
+							.getDocument( )
+							.get( );
+					if ( ClassUtil.isDebug( ) != JavaDecompilerClassFileEditor.isDebug( code ) )
 					{
-						( (JavaDecompilerClassFileEditor) part )
-								.doSetInput( false );
+						( (JavaDecompilerClassFileEditor) part ).doSetInput( false );
 					}
 				}
 			}
@@ -158,8 +154,7 @@ public class SetupRunnable implements Runnable
 		final IPreferenceStore prefs = JavaDecompilerPlugin.getDefault( )
 				.getPreferenceStore( );
 
-		final Object updateAdapter = DecompilerAdapterManager.getAdapter(
-				JavaDecompilerPlugin.getDefault( ),
+		final Object updateAdapter = DecompilerAdapterManager.getAdapter( JavaDecompilerPlugin.getDefault( ),
 				IDecompilerUpdateHandler.class );
 
 		if ( updateAdapter instanceof IDecompilerUpdateHandler )
@@ -173,8 +168,7 @@ public class SetupRunnable implements Runnable
 					try
 					{
 						if ( updateHandler.isForce( monitor )
-								|| prefs.getBoolean(
-										JavaDecompilerPlugin.CHECK_UPDATE ) )
+								|| prefs.getBoolean( JavaDecompilerPlugin.CHECK_UPDATE ) )
 							Display.getDefault( ).asyncExec( new Runnable( ) {
 
 								public void run( )
@@ -214,8 +208,7 @@ public class SetupRunnable implements Runnable
 
 				public void propertyChange( PropertyChangeEvent event )
 				{
-					if ( IPreferenceConstants.RESOURCES
-							.equals( event.getProperty( ) ) )
+					if ( IPreferenceConstants.RESOURCES.equals( event.getProperty( ) ) )
 					{
 						updateClassDefaultEditor( );
 					}
@@ -265,14 +258,13 @@ public class SetupRunnable implements Runnable
 					{
 						try
 						{
-							ReflectionUtils.invokeMethod(
-									(FileEditorMapping) mapping,
+							ReflectionUtils.invokeMethod( (FileEditorMapping) mapping,
 									"setDefaultEditor", //$NON-NLS-1$
 									new Class[]{
-											Class.forName(
-													"org.eclipse.ui.IEditorDescriptor" ) //$NON-NLS-1$
-									}, new Object[]{
-											editor
+										Class.forName( "org.eclipse.ui.IEditorDescriptor" ) //$NON-NLS-1$
+									},
+									new Object[]{
+										editor
 									} );
 						}
 						catch ( ClassNotFoundException e )
@@ -281,14 +273,13 @@ public class SetupRunnable implements Runnable
 
 						try
 						{
-							ReflectionUtils.invokeMethod(
-									(FileEditorMapping) mapping,
+							ReflectionUtils.invokeMethod( (FileEditorMapping) mapping,
 									"setDefaultEditor", //$NON-NLS-1$
 									new Class[]{
-											Class.forName(
-													"org.eclipse.ui.internal.registry.EditorDescriptor" ) //$NON-NLS-1$
-									}, new Object[]{
-											editor
+										Class.forName( "org.eclipse.ui.internal.registry.EditorDescriptor" ) //$NON-NLS-1$
+									},
+									new Object[]{
+										editor
 									} );
 						}
 						catch ( ClassNotFoundException e )
