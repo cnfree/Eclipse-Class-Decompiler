@@ -108,7 +108,7 @@ public class ShareBrowser
 							linkBrowser.dispose( );
 							shell.dispose( );
 						}
-						catch ( Exception e )
+						catch ( Throwable e )
 						{
 							e.printStackTrace( );
 						}
@@ -126,7 +126,7 @@ public class ShareBrowser
 							linkBrowser.dispose( );
 							shell.dispose( );
 						}
-						catch ( Exception e )
+						catch ( Throwable e )
 						{
 							e.printStackTrace( );
 						}
