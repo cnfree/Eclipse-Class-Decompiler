@@ -22,7 +22,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide;resolution:=optional,
  org.eclipse.core.filesystem
 Bundle-Vendor: Chen Chao
-Bundle-Version: 2.8.3.qualifier
+Bundle-Version: 2.8.4.qualifier
 Bundle-ManifestVersion: 2
 Bundle-Activator: org.sf.feeling.decompiler.JavaDecompilerPlugin
 Bundle-SymbolicName: org.sf.feeling.decompiler;singleton:=true
