@@ -24,6 +24,8 @@ import org.eclipse.swt.browser.WindowEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 public class ShareBrowser
@@ -78,14 +80,30 @@ public class ShareBrowser
 
 			public void open( WindowEvent e )
 			{
-				final Browser linkBrowser = new Browser( parent, SWT.NONE );
-				linkBrowser.setVisible( false );
+				final Shell shell = new Shell( Display.getDefault( ) );
+				shell.setVisible( false );
+				
+				final Browser linkBrowser = new Browser( shell, SWT.NONE );
+				linkBrowser.setVisible( true );
 				e.browser = linkBrowser;
 				linkBrowser.addLocationListener( new LocationListener( ) {
 
 					public void changing( LocationEvent event )
 					{
-
+						try
+						{
+							PlatformUI.getWorkbench( )
+									.getBrowserSupport( )
+									.getExternalBrowser( )
+									.openURL( new URL( event.location ) );
+							linkBrowser.close( );
+							linkBrowser.dispose( );
+							shell.dispose( );
+						}
+						catch ( Exception e )
+						{
+							e.printStackTrace( );
+						}
 					}
 
 					public void changed( LocationEvent event )
@@ -96,6 +114,9 @@ public class ShareBrowser
 									.getBrowserSupport( )
 									.getExternalBrowser( )
 									.openURL( new URL( event.location ) );
+							linkBrowser.close( );
+							linkBrowser.dispose( );
+							shell.dispose( );
 						}
 						catch ( Exception e )
 						{
@@ -103,7 +124,6 @@ public class ShareBrowser
 						}
 					}
 				} );
-				linkBrowser.dispose( );
 			}
 		} );
 	}
