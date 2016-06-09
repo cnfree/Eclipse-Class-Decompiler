@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Eclipse Class Decompiler Procyon Extension
 Bundle-SymbolicName: org.sf.feeling.decompiler.procyon;singleton:=true
-Bundle-Version: 2.8.4.qualifier
+Bundle-Version: 2.8.5.qualifier
 Bundle-Activator: org.sf.feeling.decompiler.procyon.ProcyonDecompilerPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.sf.feeling.decompiler,

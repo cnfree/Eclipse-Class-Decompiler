@@ -2,7 +2,7 @@
 <feature
       id="org.sf.feeling.decompiler"
       label="%featureName"
-      version="2.8.4.qualifier"
+      version="2.8.5.qualifier"
       provider-name="%providerName"
       plugin="org.sf.feeling.decompiler">
 
