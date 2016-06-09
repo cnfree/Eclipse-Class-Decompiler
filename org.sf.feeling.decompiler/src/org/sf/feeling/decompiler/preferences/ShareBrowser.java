@@ -106,9 +106,16 @@ public class ShareBrowser
 									.getBrowserSupport( )
 									.getExternalBrowser( )
 									.openURL( new URL( event.location ) );
-							linkBrowser.close( );
-							linkBrowser.dispose( );
-							shell.dispose( );
+							Display.getDefault( ).asyncExec( new Runnable( ) {
+
+								public void run( )
+								{
+									if ( shell != null && !shell.isDisposed( ) )
+									{
+										shell.dispose( );
+									}
+								}
+							} );
 						}
 						catch ( Throwable e )
 						{
@@ -124,9 +131,16 @@ public class ShareBrowser
 									.getBrowserSupport( )
 									.getExternalBrowser( )
 									.openURL( new URL( event.location ) );
-							linkBrowser.close( );
-							linkBrowser.dispose( );
-							shell.dispose( );
+							Display.getDefault( ).asyncExec( new Runnable( ) {
+
+								public void run( )
+								{
+									if ( shell != null && !shell.isDisposed( ) )
+									{
+										shell.dispose( );
+									}
+								}
+							} );
 						}
 						catch ( Throwable e )
 						{
