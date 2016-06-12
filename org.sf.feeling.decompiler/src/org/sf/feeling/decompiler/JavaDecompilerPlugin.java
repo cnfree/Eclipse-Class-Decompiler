@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -48,6 +49,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 	public static final String USE_ECLIPSE_SORTER = "org.sf.feeling.decompiler.use_eclipse_sorter"; //$NON-NLS-1$
 	public static final String DECOMPILER_TYPE = "org.sf.feeling.decompiler.type"; //$NON-NLS-1$
 	public static final String PREF_DISPLAY_LINE_NUMBERS = "jd.ide.eclipse.prefs.DisplayLineNumbers"; //$NON-NLS-1$
+	public static final String DECOMPILE_COUNT = "decompile.count"; //$NON-NLS-1$
 	public static final String PREF_DISPLAY_METADATA = "jd.ide.eclipse.prefs.DisplayMetadata"; //$NON-NLS-1$
 	public static final String ALIGN = "jd.ide.eclipse.prefs.RealignLineNumbers"; //$NON-NLS-1$
 	public static final String DEFAULT_EDITOR = "org.sf.feeling.decompiler.default_editor"; //$NON-NLS-1$ ;
@@ -59,9 +61,14 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 
 	private IPreferenceStore preferenceStore;
 
-	private boolean fromChina = false;
-
 	private TreeMap<String, IDecompilerDescriptor> decompilerDescriptorMap = new TreeMap<String, IDecompilerDescriptor>( );
+
+	private AtomicInteger decompileCount = new AtomicInteger( 0 );
+
+	public AtomicInteger getDecompileCount( )
+	{
+		return decompileCount;
+	}
 
 	public Map<String, IDecompilerDescriptor> getDecompilerDescriptorMap( )
 	{
@@ -155,6 +162,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 		store.setDefault( DECOMPILER_TYPE, getDefalutDecompilerType( ) );
 		store.setDefault( DEFAULT_EDITOR, true );
 		store.setDefault( CHECK_UPDATE, true );
+		store.setDefault( DECOMPILE_COUNT, 0 );
 	}
 
 	public void propertyChange( PropertyChangeEvent event )
@@ -167,6 +175,9 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 	{
 		super.start( context );
 		getPreferenceStore( ).addPropertyChangeListener( this );
+
+		decompileCount.set( getPreferenceStore( ).getInt( DECOMPILE_COUNT ) );
+
 		SortMemberUtil.deleteDecompilerProject( );
 		Display.getDefault( ).asyncExec( new SetupRunnable( ) );
 	}
@@ -194,6 +205,7 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 
 	public void stop( BundleContext context ) throws Exception
 	{
+		getPreferenceStore( ).setValue( DECOMPILE_COUNT, decompileCount.get( ) );
 		super.stop( context );
 		getPreferenceStore( ).removePropertyChangeListener( this );
 		plugin = null;
@@ -253,12 +265,12 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 
 	public boolean isFromChina( )
 	{
-		return fromChina;
+		return "CN".equalsIgnoreCase( System.getProperty( "user.country" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	public void setFromChina( boolean fromChina )
+	public void resetDecompileCount( )
 	{
-		this.fromChina = fromChina;
+		decompileCount.set( 0 );
+		getPreferenceStore( ).setValue( DECOMPILE_COUNT, decompileCount.get( ) );
 	}
-
 }

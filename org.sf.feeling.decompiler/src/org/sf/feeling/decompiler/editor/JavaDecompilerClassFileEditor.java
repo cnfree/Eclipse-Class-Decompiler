@@ -67,20 +67,17 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 	{
 		IPreferenceStore prefs = JavaDecompilerPlugin.getDefault( )
 				.getPreferenceStore( );
-		String decompilerType = prefs
-				.getString( JavaDecompilerPlugin.DECOMPILER_TYPE );
+		String decompilerType = prefs.getString( JavaDecompilerPlugin.DECOMPILER_TYPE );
 		return doOpenBuffer( input, decompilerType, force );
 	}
 
-	private boolean doOpenBuffer( IEditorInput input, String type,
-			boolean force ) throws JavaModelException
+	private boolean doOpenBuffer( IEditorInput input, String type, boolean force )
+			throws JavaModelException
 	{
 		IPreferenceStore prefs = JavaDecompilerPlugin.getDefault( )
 				.getPreferenceStore( );
-		boolean reuseBuf = prefs
-				.getBoolean( JavaDecompilerPlugin.REUSE_BUFFER );
-		boolean always = prefs
-				.getBoolean( JavaDecompilerPlugin.IGNORE_EXISTING );
+		boolean reuseBuf = prefs.getBoolean( JavaDecompilerPlugin.REUSE_BUFFER );
+		boolean always = prefs.getBoolean( JavaDecompilerPlugin.IGNORE_EXISTING );
 		return doOpenBuffer( input, type, force, reuseBuf, always );
 	}
 
@@ -101,39 +98,30 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 			String decompilerType = type;
 			String origSrc = cf.getSource( );
 			if ( origSrc == null
-					|| ( origSrc != null
-							&& always
-							&& ( !origSrc.startsWith( MARK )
-									|| ( origSrc.startsWith( MARK )
-											&& !reuseBuf ) ) )
+					|| ( origSrc != null && always && ( !origSrc.startsWith( MARK ) || ( origSrc.startsWith( MARK ) && !reuseBuf ) ) )
 					|| ( origSrc != null
 							&& !always
-							&& !origSrc.startsWith( MARK )
-							&& !reuseBuf )
+							&& !origSrc.startsWith( MARK ) && !reuseBuf )
 					|| debugOptionChange( origSrc )
 					|| force )
 			{
-				DecompilerSourceMapper sourceMapper = SourceMapperFactory
-						.getSourceMapper( decompilerType );
+				DecompilerSourceMapper sourceMapper = SourceMapperFactory.getSourceMapper( decompilerType );
 				char[] src = sourceMapper == null ? null
 						: sourceMapper.findSource( cf.getType( ) );
 				if ( src == null )
 				{
 					if ( DecompilerType.FernFlower.equals( decompilerType ) )
 					{
-						src = SourceMapperFactory
-								.getSourceMapper( DecompilerType.FernFlower )
+						src = SourceMapperFactory.getSourceMapper( DecompilerType.FernFlower )
 								.findSource( cf.getType( ) );
 					}
 					else
 					{
-						IDecompilerDescriptor decompilerDescriptor = JavaDecompilerPlugin
-								.getDefault( )
+						IDecompilerDescriptor decompilerDescriptor = JavaDecompilerPlugin.getDefault( )
 								.getDecompilerDescriptor( decompilerType );
 						if ( decompilerDescriptor != null )
 						{
-							src = decompilerDescriptor
-									.getDecompilerSourceMapper( )
+							src = decompilerDescriptor.getDecompilerSourceMapper( )
 									.findSource( cf.getType( ) );
 						}
 					}
@@ -220,19 +208,21 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 
 	protected void doSetInput( IEditorInput input ) throws CoreException
 	{
+		JavaDecompilerPlugin.getDefault( )
+				.getDecompileCount( )
+				.getAndIncrement( );
 		if ( input instanceof IFileEditorInput )
 		{
-			String filePath = UIUtil.getPathLocation(
-					( (IFileEditorInput) input ).getStorage( ).getFullPath( ) );
+			String filePath = UIUtil.getPathLocation( ( (IFileEditorInput) input ).getStorage( )
+					.getFullPath( ) );
 			if ( filePath == null || !new File( filePath ).exists( ) )
 			{
 				super.doSetInput( input );
 			}
 			else
 			{
-				doSetInput( new DecompilerClassEditorInput(
-						EFS.getLocalFileSystem( )
-								.getStore( new Path( filePath ) ) ) );
+				doSetInput( new DecompilerClassEditorInput( EFS.getLocalFileSystem( )
+						.getStore( new Path( filePath ) ) ) );
 			}
 		}
 		else if ( input instanceof FileStoreEditorInput )
@@ -241,21 +231,18 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 			FileStoreEditorInput storeInput = (FileStoreEditorInput) input;
 			IPreferenceStore prefs = JavaDecompilerPlugin.getDefault( )
 					.getPreferenceStore( );
-			String decompilerType = prefs
-					.getString( JavaDecompilerPlugin.DECOMPILER_TYPE );
+			String decompilerType = prefs.getString( JavaDecompilerPlugin.DECOMPILER_TYPE );
 			String source = DecompileUtil.decompiler( storeInput,
 					decompilerType );
 
 			if ( source != null )
 			{
 				String packageName = DecompileUtil.getPackageName( source );
-				String classFullName = packageName == null
-						? storeInput.getName( )
-						: packageName
-								+ "." //$NON-NLS-1$
-								+ storeInput.getName( ).replaceAll(
-										"(?i)\\.class", //$NON-NLS-1$
-										"" ); //$NON-NLS-1$
+				String classFullName = packageName == null ? storeInput.getName( )
+						: packageName + "." //$NON-NLS-1$
+								+ storeInput.getName( )
+										.replaceAll( "(?i)\\.class", //$NON-NLS-1$
+												"" ); //$NON-NLS-1$
 
 				File file = new File( System.getProperty( "java.io.tmpdir" ), //$NON-NLS-1$
 						storeInput.getName( ).replaceAll( "(?i)\\.class", //$NON-NLS-1$
@@ -265,9 +252,8 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 						ResourcesPlugin.getEncoding( ) );
 				file.deleteOnExit( );
 
-				DecompilerClassEditorInput editorInput = new DecompilerClassEditorInput(
-						EFS.getLocalFileSystem( ).getStore(
-								new Path( file.getAbsolutePath( ) ) ) );
+				DecompilerClassEditorInput editorInput = new DecompilerClassEditorInput( EFS.getLocalFileSystem( )
+						.getStore( new Path( file.getAbsolutePath( ) ) ) );
 				editorInput.setToolTipText( classFullName );
 
 				IEditorPart editor = PlatformUI.getWorkbench( )
@@ -277,23 +263,21 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 								"org.eclipse.jdt.ui.CompilationUnitEditor" ); //$NON-NLS-1$
 				try
 				{
-					ReflectionUtils.invokeMethod( editor,
-							"setPartName", //$NON-NLS-1$
+					ReflectionUtils.invokeMethod( editor, "setPartName", //$NON-NLS-1$
 							new Class[]{
-									String.class
-							}, new String[]{
-									storeInput.getName( )
+								String.class
+							},
+							new String[]{
+								storeInput.getName( )
 							} );
 
-					ReflectionUtils.invokeMethod( editor,
-							"setTitleImage", //$NON-NLS-1$
+					ReflectionUtils.invokeMethod( editor, "setTitleImage", //$NON-NLS-1$
 							new Class[]{
-									Image.class
-							}, new Object[]{
-									JavaDecompilerPlugin
-											.getImageDescriptor(
-													"icons/decompiler.png" ) //$NON-NLS-1$
-											.createImage( )
+								Image.class
+							},
+							new Object[]{
+								JavaDecompilerPlugin.getImageDescriptor( "icons/decompiler.png" ) //$NON-NLS-1$
+										.createImage( )
 							} );
 
 					ReflectionUtils.setFieldValue( editor,
@@ -316,12 +300,11 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 				}
 			} );
 
-			throw new CoreException(
-					new Status( 8,
-							JavaDecompilerPlugin.PLUGIN_ID,
-							1,
-							"", //$NON-NLS-1$
-							null ) );
+			throw new CoreException( new Status( 8,
+					JavaDecompilerPlugin.PLUGIN_ID,
+					1,
+					"", //$NON-NLS-1$
+					null ) );
 		}
 		else
 		{
@@ -333,23 +316,20 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 						.getParent( )
 						.getPath( );
 				String location = UIUtil.getPathLocation( relativePath );
-				if ( !( FileUtil.isZipFile( location )
-						|| FileUtil.isZipFile( relativePath.toOSString( ) ) ) )
+				if ( !( FileUtil.isZipFile( location ) || FileUtil.isZipFile( relativePath.toOSString( ) ) ) )
 				{
-					String filePath = UIUtil.getPathLocation(
-							classInput.getClassFile( ).getPath( ) );
+					String filePath = UIUtil.getPathLocation( classInput.getClassFile( )
+							.getPath( ) );
 					if ( filePath != null )
 					{
-						DecompilerClassEditorInput editorInput = new DecompilerClassEditorInput(
-								EFS.getLocalFileSystem( )
-										.getStore( new Path( filePath ) ) );
+						DecompilerClassEditorInput editorInput = new DecompilerClassEditorInput( EFS.getLocalFileSystem( )
+								.getStore( new Path( filePath ) ) );
 						doSetInput( editorInput );
 					}
 					else
 					{
-						doSetInput( new DecompilerClassEditorInput(
-								EFS.getLocalFileSystem( ).getStore( classInput
-										.getClassFile( ).getPath( ) ) ) );
+						doSetInput( new DecompilerClassEditorInput( EFS.getLocalFileSystem( )
+								.getStore( classInput.getClassFile( ).getPath( ) ) ) );
 					}
 					return;
 				}
@@ -363,28 +343,22 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 				IClassFileEditorInput classFileEditorInput = (IClassFileEditorInput) input;
 				IClassFile file = classFileEditorInput.getClassFile( );
 
-				if ( file.getSourceRange( ) == null
-						&& file.getBytes( ) != null )
+				if ( file.getSourceRange( ) == null && file.getBytes( ) != null )
 				{
 					if ( ClassUtil.isClassFile( file.getBytes( ) ) )
 					{
-						File classFile = new File(
-								JavaDecompilerPlugin.getDefault( )
-										.getPreferenceStore( )
-										.getString(
-												JavaDecompilerPlugin.TEMP_DIR ),
+						File classFile = new File( JavaDecompilerPlugin.getDefault( )
+								.getPreferenceStore( )
+								.getString( JavaDecompilerPlugin.TEMP_DIR ),
 								file.getElementName( ) );
 						try
 						{
-							FileOutputStream fos = new FileOutputStream(
-									classFile );
+							FileOutputStream fos = new FileOutputStream( classFile );
 							fos.write( file.getBytes( ) );
 							fos.close( );
 
-							doSetInput( new DecompilerClassEditorInput(
-									EFS.getLocalFileSystem( )
-											.getStore( new Path( classFile
-													.getAbsolutePath( ) ) ) ) );
+							doSetInput( new DecompilerClassEditorInput( EFS.getLocalFileSystem( )
+									.getStore( new Path( classFile.getAbsolutePath( ) ) ) ) );
 							classFile.delete( );
 							return;
 						}
@@ -420,11 +394,11 @@ public class JavaDecompilerClassFileEditor extends ClassFileEditor
 		ReflectionUtils.invokeMethod( this.getViewer( ),
 				"fireSelectionChanged", //$NON-NLS-1$
 				new Class[]{
-						SelectionChangedEvent.class
-				}, new Object[]{
-						new SelectionChangedEvent(
-								(ISelectionProvider) this.getViewer( ),
-								new StructuredSelection( ) )
+					SelectionChangedEvent.class
+				},
+				new Object[]{
+					new SelectionChangedEvent( (ISelectionProvider) this.getViewer( ),
+							new StructuredSelection( ) )
 				} );
 	}
 

@@ -11,13 +11,6 @@
 
 package org.sf.feeling.decompiler;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -50,60 +43,6 @@ public class SetupRunnable implements Runnable
 		checkDecompilerUpdate( );
 		checkClassFileAssociation( );
 		setupPartListener( );
-		queryLocation( );
-	}
-
-	private void queryLocation( )
-	{
-		Job job = new Job( "Decompiler Location Query" ) { //$NON-NLS-1$
-
-			protected IStatus run( IProgressMonitor monitor )
-			{
-				monitor.beginTask( "start task", 100 ); //$NON-NLS-1$
-				try
-				{
-					URL location = new URL( "http://test.ip138.com/query/?datatype=xml" ); //$NON-NLS-1$
-					HttpURLConnection con = (HttpURLConnection) location.openConnection( );
-					con.setRequestMethod( "GET" ); //$NON-NLS-1$
-					con.setRequestProperty( "User-Agent", "Mozilla/5.0" ); //$NON-NLS-1$ //$NON-NLS-2$
-					int responseCode = con.getResponseCode( );
-					if ( responseCode == HttpURLConnection.HTTP_OK )
-					{
-						BufferedReader in = new BufferedReader( new InputStreamReader( con.getInputStream( ),
-								"UTF-8" ) ); //$NON-NLS-1$
-						StringBuffer response = new StringBuffer( );
-						String inputLine;
-						while ( ( inputLine = in.readLine( ) ) != null )
-						{
-							response.append( inputLine );
-						}
-						in.close( );
-						Pattern pattern = Pattern.compile( "<country>.+</country>" ); //$NON-NLS-1$
-						Matcher matcher = pattern.matcher( response.toString( ) );
-						if ( matcher.find( ) )
-						{
-							String country = matcher.group( )
-									.replace( "<country>", "" ) //$NON-NLS-1$ //$NON-NLS-2$
-									.replace( "</country>", "" ) //$NON-NLS-1$ //$NON-NLS-2$
-									.trim( );
-							JavaDecompilerPlugin.getDefault( )
-									.setFromChina( "中国".equals( country ) ); //$NON-NLS-1$
-						}
-					}
-					monitor.worked( 100 );
-					return Status.OK_STATUS;
-				}
-				catch ( Exception e )
-				{
-					monitor.worked( 100 );
-					return Status.CANCEL_STATUS;
-				}
-			}
-		};
-
-		job.setPriority( Job.DECORATE );
-		job.setSystem( true );
-		job.schedule( );
 	}
 
 	private void setupPartListener( )
@@ -190,7 +129,6 @@ public class SetupRunnable implements Runnable
 			job.setPriority( Job.DECORATE );
 			job.setSystem( true );
 			job.schedule( );
-
 		}
 	}
 
