@@ -263,11 +263,6 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin implements
 		this.isDebugMode = isDebugMode;
 	}
 
-	public boolean isFromChina( )
-	{
-		return "CN".equalsIgnoreCase( System.getProperty( "user.country" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
 	public void resetDecompileCount( )
 	{
 		decompileCount.set( 0 );

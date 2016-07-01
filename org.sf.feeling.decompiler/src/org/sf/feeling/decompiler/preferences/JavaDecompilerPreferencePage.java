@@ -249,17 +249,6 @@ public class JavaDecompilerPreferencePage extends FieldEditorPreferencePage
 		layout.marginWidth = layout.marginHeight = 5;
 		startupGroup.layout( );
 
-		if ( !JavaDecompilerPlugin.getDefault( ).isFromChina( ) )
-		{
-			ShareBrowser browser = new ShareBrowser( getFieldEditorParent( ),
-					SWT.NONE );
-			gd = new GridData( GridData.FILL_HORIZONTAL );
-			gd.horizontalSpan = defaultDecompiler.getNumberOfControls( );
-			gd.heightHint = 100;
-			browser.getBrowser( ).setLayoutData( gd );
-			browser.getBrowser( ).setVisible( false );
-		}
-
 		getFieldEditorParent( ).layout( );
 	}
 
