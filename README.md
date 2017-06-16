@@ -33,7 +33,7 @@ and you can debug these class files without source code directly.
   1. Launch _Eclipse_,
   2. Click on _"Help > Install New Software..."_,
   3. Click on button _"Add..."_ to add an new repository,
-  4. Enter name as _"Eclipse Class Decompiler Update Site"_ and enter location as _"http://raw.githubusercontent.com/cnfree/eclipse/master/decompiler/update"_, then click on button _"OK"_,
+  4. Enter name as _"Eclipse Class Decompiler Update Site"_ and enter location as _[http://raw.githubusercontent.com/cnfree/eclipse/master/decompiler/update]_, then click on button _"OK"_,
   5. Check _"Eclipse Class Decompiler"_,
   6. Next, next, next... and restart.
   
