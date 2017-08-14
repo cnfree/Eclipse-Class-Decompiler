@@ -13,23 +13,6 @@ allows you to display all the Java sources during your debugging process, even i
 and you can debug these class files without source code directly.
 
 ## How to install Eclipse Class Decompiler ?
-
-#### First way
-  1. Launch _Eclipse_,
-  2. Drag the following install button to eclipse toolbar, [<img src="https://marketplace.eclipse.org/sites/all/themes/solstice/public/images/marketplace/btn-install.png">](http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=472922)
-  3. Check _"Eclipse Class Decompiler"_,
-  4. Next, next, next... and restart.
-  
-
-#### Second way
-  1. Launch _Eclipse_,
-  2. Click on _"Help > Eclipse Marketplace..."_,
-  3. Search _"Eclipse Class Decompiler"_ in the Eclipse marketplace dialog,
-  4. Find _"Eclipse Class Decompiler"_ and click on button _"install"_,
-  5. Check _"Eclipse Class Decompiler"_,
-  6. Next, next, next... and restart.
-  
-#### Third way
   1. Launch _Eclipse_,
   2. Click on _"Help > Install New Software..."_,
   3. Click on button _"Add..."_ to add an new repository,
