@@ -3,7 +3,7 @@ Eclipse Class Decompiler integrates **JD**, **Jad**, **FernFlower**, **CFR**, **
 
 <p align="center"><img src="http://www.cpupk.com/decompiler/images/o_debug_class.png"></p>
 
-- Plugin Update Site: [http://www.cpupk.com/decompiler/update/](http://raw.githubusercontent.com/cnfree/eclipse/master/decompiler/update)
+- Plugin Update Site: [http://raw.githubusercontent.com/cnfree/eclipse/master/decompiler/update/](http://raw.githubusercontent.com/cnfree/eclipse/master/decompiler/update)
 - Github Project Page: [http://www.cpupk.com/decompiler](http://www.cpupk.com/decompiler)
 
 ## Description
